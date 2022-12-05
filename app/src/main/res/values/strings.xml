@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Bookworm</string>
+    <string name="create_user">Создать пользователя</string>
+    <string name="save">Сохранить</string>
+    <string name="user_name">Имя</string>
+    <string name="berth_date">Дата рождения</string>
+    <string name="address">Адрес</string>
+    <string name="email">E-mail</string>
+    <string name="send">Отправить</string>
+    <string name="send_message">Send message…</string>
+    <string name="name_error_message">Введите корректное имя</string>
+    <string name="berth_error_message">Введите корректную дату рождения</string>
+    <string name="address_error_message">Введите корректный адрес</string>
+    <string name="email_error_message">Введите корректный e-mail</string>
+    <string name="date_format_helper">формат дд.мм.гггг</string>
 </resources>
