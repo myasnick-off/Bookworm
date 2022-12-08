@@ -1,18 +1,27 @@
-package com.dev.miasnikoff.bookworm
+package com.dev.miasnikoff.bookworm.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.dev.miasnikoff.bookworm.create.CreateFragment
+import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.ActivityMainBinding
+import com.dev.miasnikoff.bookworm.utils.PrefsHandler
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        navigateToFragment(CreateFragment.newInstance())
+
+        loadTheme()
+        navigateToFragment(MainFragment.newInstance())
+    }
+
+    private fun loadTheme() {
+        val themePrefs = PrefsHandler(this)
+        AppCompatDelegate.setDefaultNightMode(themePrefs.loadInt(PrefsHandler.THEME_KEY))
     }
 
     private fun navigateToFragment(fragment: Fragment) {

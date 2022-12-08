@@ -5,6 +5,7 @@
         <item name="buttonStyle">@style/BookwormButton</item>
         <item name="textInputStyle">@style/BookwormTextInputLayout</item>
         <item name="toolbarStyle">@style/BookwormToolbar</item>
+        <item name="textInputOutlinedExposedDropdownMenuStyle">@style/BookwormDropdownMenu</item>
     </style>
 
     <style name="Theme.Bookworm" parent="Theme.Bookworm.Base">
@@ -17,7 +18,8 @@
         <item name="colorSecondaryVariant">@color/color_yellow_medium</item>
         <item name="colorOnSecondary">@color/color_yellow_light</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" >?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" >?attr/colorPrimary</item>
+        <item name="textFillColor">@color/white</item>
     </style>
 
     <style name="BookwormButton" parent="Widget.AppCompat.Button">
@@ -30,7 +32,16 @@
         <item name="hintTextColor">?attr/colorSecondary</item>
     </style>
 
-    <style name="BookwormToolbar" parent="Widget.MaterialComponents.Toolbar">
+    <style name="BookwormToolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="android:background">?attr/colorPrimary</item>
+        <item name="titleTextColor">?attr/textFillColor</item>
     </style>
+
+    <style name="BookwormDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="startIconTint">?attr/colorSecondary</item>
+        <item name="endIconTint">?attr/colorSecondary</item>
+        <item name="hintTextColor">?attr/colorSecondary</item>
+    </style>
+
+
 </resources>

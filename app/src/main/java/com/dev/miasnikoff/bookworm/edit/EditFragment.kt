@@ -1,11 +1,9 @@
 package com.dev.miasnikoff.bookworm.edit
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doOnTextChanged
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.core.BaseFragment
@@ -68,7 +66,7 @@ class EditFragment : BaseFragment(), EditView {
             val isAddressValid = presenter.checkAddress(binding.addressEditText.text)
             val isEmailValid = presenter.checkEmail(binding.emailEditText.text)
             if (isNameValid && isBerthDateValid && isAddressValid && isEmailValid) {
-                navigateToFragment(InfoFragment.newInstance(presenter.user))
+                navigateToFragment(R.id.host_container, InfoFragment.newInstance(presenter.user))
             }
         }
     }
@@ -117,15 +115,6 @@ class EditFragment : BaseFragment(), EditView {
             }
         }
         datePickerDialog.show(parentFragmentManager, null)
-    }
-
-    private fun hideSoftKeyboard() {
-        binding.root.findFocus()?.clearFocus()
-        view?.let { view ->
-            val imm =
-                requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
     }
 
     companion object {

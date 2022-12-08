@@ -11,5 +11,6 @@
         <item name="colorOnSecondary">@color/color_yellow_dark</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" >?attr/colorPrimary</item>
+        <item name="textFillColor">@color/black</item>
     </style>
 </resources>
