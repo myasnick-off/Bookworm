@@ -8,7 +8,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name_input_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/user_name">
@@ -26,7 +25,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/berth_input_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_24"
@@ -46,7 +44,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/address_input_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_24"
@@ -66,7 +63,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_input_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_24"
@@ -88,7 +84,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_24"
-        android:background="@color/teal_700"
         android:padding="@dimen/padding_16"
         android:text="@string/save"
         android:textAllCaps="false"

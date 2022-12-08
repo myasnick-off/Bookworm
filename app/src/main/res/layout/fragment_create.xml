@@ -9,7 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginHorizontal="@dimen/margin_24"
-        android:background="@color/teal_700"
         android:padding="@dimen/padding_36"
         android:text="@string/create_user"
         android:textAllCaps="false"
