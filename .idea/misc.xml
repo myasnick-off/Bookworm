@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/StudioProjects/Bookworm/app/src/main/res/layout/activity_main.xml" value="0.28940217391304346" />
+        <entry key="..\:/StudioProjects/Bookworm/app/src/main/res/layout/fragment_create.xml" value="0.27049180327868855" />
+        <entry key="..\:/StudioProjects/Bookworm/app/src/main/res/layout/fragment_edit.xml" value="0.36666666666666664" />
+        <entry key="..\:/StudioProjects/Bookworm/app/src/main/res/layout/fragment_info.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>
