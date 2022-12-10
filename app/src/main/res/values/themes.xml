@@ -6,6 +6,7 @@
         <item name="textInputStyle">@style/BookwormTextInputLayout</item>
         <item name="toolbarStyle">@style/BookwormToolbar</item>
         <item name="textInputOutlinedExposedDropdownMenuStyle">@style/BookwormDropdownMenu</item>
+        <item name="leafViewStyle">@style/BookwormLeafView</item>
     </style>
 
     <style name="Theme.Bookworm" parent="Theme.Bookworm.Base">
@@ -41,6 +42,11 @@
         <item name="startIconTint">?attr/colorSecondary</item>
         <item name="endIconTint">?attr/colorSecondary</item>
         <item name="hintTextColor">?attr/colorSecondary</item>
+    </style>
+
+    <style name="BookwormLeafView" parent="@style/LeafViewStyle">
+        <item name="leafColor">?attr/colorPrimary</item>
+        <item name="leafIconsTint">?attr/textFillColor</item>
     </style>
 
 
