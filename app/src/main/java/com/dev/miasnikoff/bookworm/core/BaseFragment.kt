@@ -1,10 +1,7 @@
 package com.dev.miasnikoff.bookworm.core
 
 import android.app.Activity
-import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.IntegerRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewbinding.ViewBinding

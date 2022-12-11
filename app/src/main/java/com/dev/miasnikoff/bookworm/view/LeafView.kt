@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
 import androidx.cardview.widget.CardView
