@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:backgroundTint="?attr/colorPrimary"
+    android:backgroundTint="@color/cardview_shadow_start_color"
     app:cardCornerRadius="@dimen/margin_24"
     tools:parentTag="androidx.cardview.widget.CardView">
 
@@ -23,7 +23,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white"
             tools:ignore="ContentDescription" />
 
         <ImageView
@@ -31,12 +30,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_8"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_chevron_left_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/lv_first_page"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/lv_counter_img"
@@ -49,7 +48,7 @@
             app:layout_constraintEnd_toStartOf="@id/lv_next_page"
             app:layout_constraintStart_toEndOf="@id/lv_previous_page"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
         <EditText
             android:id="@+id/lv_counter"
@@ -76,12 +75,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="@dimen/margin_8"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_chevron_right_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/lv_last_page"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/lv_last_page"
@@ -93,10 +92,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </merge>

@@ -1,19 +1,19 @@
-package com.dev.miasnikoff.bookworm.utils
+package com.dev.miasnikoff.bookworm.view
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
-import android.os.Build
+import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.widget.doOnTextChanged
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.LeafViewBinding
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
-@RequiresApi(Build.VERSION_CODES.M)
 class LeafView
 @JvmOverloads constructor(
     context: Context,
@@ -27,6 +27,7 @@ class LeafView
     private var maxValue: Int = 0
     private var viewColor: Int = 0
     private var iconsColor: Int = 0
+    private var textColor: Int = 0
     private var viewCornerRadius: Float = 0f
 
     private var binding: LeafViewBinding
@@ -43,6 +44,7 @@ class LeafView
         binding.lvNextPage.setOnClickListener { onNextPageClick() }
         binding.lvPreviousPage.setOnClickListener { onPreviousPageClick() }
         binding.lvCounter.setText(counter.toString())
+        binding.lvCounter.setTextColor(textColor)
         binding.lvCounter.doOnTextChanged { text, _, _, _ ->
             text?.toString()?.toInt()?.let { newValue ->
                 if (newValue != counter) {
@@ -50,14 +52,18 @@ class LeafView
                 }
             }
         }
+        //isSaveEnabled = true
+        isSaveFromParentEnabled = true
     }
 
     private fun initAttrs(attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) {
-        context.theme.obtainStyledAttributes(attrs, R.styleable.LeafView, defStyleAttr, defStyleRes).apply {
+        context.theme.obtainStyledAttributes(attrs, R.styleable.LeafView, defStyleAttr, defStyleRes)
+            .apply {
             try {
                 maxValue = getInteger(R.styleable.LeafView_leafMaxCount, 0)
                 viewColor = getColor(R.styleable.LeafView_leafColor, 0)
                 iconsColor = getColor(R.styleable.LeafView_leafIconsTint, 0)
+                textColor = getColor(R.styleable.LeafView_leafTextColor, 0)
                 viewCornerRadius = getDimension(R.styleable.LeafView_leafCornerRadius, 0f)
             } finally {
                 recycle()
@@ -75,7 +81,7 @@ class LeafView
     private fun onFirstPageClick() {
         unFocus()
         hideKeyboard()
-        setCounter(0)
+        setCounter(ABSOLUT_MIN_VALUE)
     }
 
     private fun onLastPageClick() {
@@ -97,12 +103,12 @@ class LeafView
     }
 
     fun setCounter(value: Int) {
-        counter = value.coerceIn(0, maxValue)
+        counter = value.coerceIn(ABSOLUT_MIN_VALUE, maxValue)
         binding.lvCounter.setText(counter.toString())
     }
 
     fun setMaxValue(value: Int) {
-        maxValue = value
+        maxValue = if (value <= ABSOLUT_MAX_VALUE) value else ABSOLUT_MAX_VALUE
     }
 
     fun getCounter(): Int = counter
@@ -116,7 +122,27 @@ class LeafView
         imm.hideSoftInputFromWindow(this.windowToken, 0)
     }
 
-    private fun Float.toDp(): Float {
-        return context.resources.displayMetrics.density * this
+    override fun onSaveInstanceState(): Parcelable {
+        val state = super.onSaveInstanceState()
+        Log.d("###", "LeafView:onSaveInstanceState----counter = $counter")
+        return SavedState(counter, state)
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        state as SavedState
+        super.onRestoreInstanceState(state.superState)
+        Log.d("###", "LeafView:onRestoreInstanceState----counter = ${state.counter}")
+        setCounter(state.counter)
+    }
+
+    @Parcelize
+    class SavedState(
+        val counter: Int,
+        @IgnoredOnParcel val source: Parcelable? = null
+    ) : BaseSavedState(source)
+
+    companion object {
+        const val ABSOLUT_MIN_VALUE = 0
+        const val ABSOLUT_MAX_VALUE = 999
     }
 }

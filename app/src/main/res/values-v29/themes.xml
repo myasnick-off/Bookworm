@@ -7,6 +7,7 @@
         <item name="textInputStyle">@style/BookwormTextInputLayout</item>
         <item name="toolbarStyle">@style/BookwormToolbar</item>
         <item name="textInputOutlinedExposedDropdownMenuStyle">@style/BookwormDropdownMenu</item>
+        <item name="leafViewStyle">@style/BookwormLeafView</item>
         <item name="android:forceDarkAllowed">false</item>
     </style>
 </resources>
