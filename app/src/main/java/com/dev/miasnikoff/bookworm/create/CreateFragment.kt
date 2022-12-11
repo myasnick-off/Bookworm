@@ -24,6 +24,12 @@ class CreateFragment: BaseFragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        initMenu()
+    }
+
     override fun initView() {
         binding.createButton.setOnClickListener {
             navigateToFragment(R.id.host_container, EditFragment.newInstance())

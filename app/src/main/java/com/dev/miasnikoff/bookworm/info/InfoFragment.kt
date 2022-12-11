@@ -37,6 +37,12 @@ class InfoFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        initMenu()
+    }
+
     override fun initView() = with(binding) {
         nameEditText.setText(user.name)
         berthEditText.setText(user.berthDate?.let { dateFormat.format(it) })

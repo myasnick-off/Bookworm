@@ -29,6 +29,16 @@ class SettingsFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initMenu()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initView()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         menu.clear()
@@ -59,6 +69,7 @@ class SettingsFragment : BaseFragment() {
             Themes.values().map { getString(it.textResId) }
         )
         val themeResId = Themes.getTextResId(themePrefs.loadInt(PrefsHandler.THEME_KEY))
+
         selectAppThemeText.setText(themeResId)
         selectAppThemeText.setAdapter(adapter)
         selectAppThemeText.onItemClickListener =
@@ -70,8 +81,8 @@ class SettingsFragment : BaseFragment() {
                     else -> Themes.AS_SYSTEM.id
                 }
                 if (mode != themePrefs.loadInt(PrefsHandler.THEME_KEY)) {
-                    AppCompatDelegate.setDefaultNightMode(mode)
                     themePrefs.save(PrefsHandler.THEME_KEY, mode)
+                    AppCompatDelegate.setDefaultNightMode(mode)
                 }
             }
     }

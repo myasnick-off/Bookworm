@@ -124,20 +124,20 @@ class LeafView
 
     override fun onSaveInstanceState(): Parcelable {
         val state = super.onSaveInstanceState()
-        Log.d("###", "LeafView:onSaveInstanceState----counter = $counter")
-        return SavedState(counter, state)
+        return SavedState(counter, maxValue, state)
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         state as SavedState
         super.onRestoreInstanceState(state.superState)
-        Log.d("###", "LeafView:onRestoreInstanceState----counter = ${state.counter}")
         setCounter(state.counter)
+        setMaxValue(state.maxValue)
     }
 
     @Parcelize
     class SavedState(
         val counter: Int,
+        val maxValue: Int,
         @IgnoredOnParcel val source: Parcelable? = null
     ) : BaseSavedState(source)
 

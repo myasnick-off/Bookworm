@@ -14,12 +14,6 @@ abstract class BaseFragment: Fragment() {
 
     protected abstract val binding: ViewBinding
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-        initMenu()
-    }
-
     open fun initMenu() {}
 
     protected abstract fun initView()
@@ -34,6 +28,21 @@ abstract class BaseFragment: Fragment() {
         } else {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.host_container, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit()
+        }
+    }
+
+    protected fun addFragment(container: Int, fragment: Fragment, isAddToBackStack: Boolean = false) {
+        if (isAddToBackStack) {
+            parentFragmentManager.beginTransaction()
+                .add(container, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
+                .commit()
+        } else {
+            parentFragmentManager.beginTransaction()
+                .add(R.id.host_container, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit()
         }

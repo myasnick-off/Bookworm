@@ -14,9 +14,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         loadTheme()
-        navigateToFragment(MainFragment.newInstance())
+        if (savedInstanceState == null) {
+            navigateToFragment(MainFragment.newInstance())
+        }
     }
 
     private fun loadTheme() {

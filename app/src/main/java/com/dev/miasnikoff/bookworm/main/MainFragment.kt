@@ -23,6 +23,14 @@ class MainFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState == null) {
+            initView()
+        }
+        initMenu()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         menu.clear()
@@ -31,7 +39,7 @@ class MainFragment : BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.menu_settings -> navigateToFragment(
+            R.id.menu_settings -> addFragment(
                 R.id.main_container,
                 SettingsFragment.newInstance(),
                 true
