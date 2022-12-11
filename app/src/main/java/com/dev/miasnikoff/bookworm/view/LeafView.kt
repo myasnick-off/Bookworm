@@ -52,7 +52,7 @@ class LeafView
                 }
             }
         }
-        //isSaveEnabled = true
+        isSaveEnabled = true
         isSaveFromParentEnabled = true
     }
 
