@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.core.BaseFragment
+import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentEditBinding
 import com.dev.miasnikoff.bookworm.info.InfoFragment
 import com.google.android.material.datepicker.MaterialDatePicker

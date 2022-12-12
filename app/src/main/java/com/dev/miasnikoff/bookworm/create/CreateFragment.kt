@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.edit.EditFragment
-import com.dev.miasnikoff.bookworm.core.BaseFragment
+import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentCreateBinding
 
 class CreateFragment: BaseFragment() {

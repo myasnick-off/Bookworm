@@ -1,4 +1,4 @@
-package com.dev.miasnikoff.bookworm.core
+package com.dev.miasnikoff.bookworm.core.ui
 
 import android.app.Activity
 import android.view.inputmethod.InputMethodManager
