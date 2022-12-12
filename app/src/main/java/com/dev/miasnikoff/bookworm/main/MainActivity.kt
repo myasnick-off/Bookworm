@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.ActivityMainBinding
-import com.dev.miasnikoff.bookworm.utils.PrefsHandler
+import com.dev.miasnikoff.bookworm.utils.ThemePrefsHandler
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,8 +20,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadTheme() {
-        val themePrefs = PrefsHandler(this)
-        AppCompatDelegate.setDefaultNightMode(themePrefs.loadInt(PrefsHandler.THEME_KEY))
+        val themePrefs = ThemePrefsHandler(this)
+        AppCompatDelegate.setDefaultNightMode(themePrefs.appTheme.id)
     }
 
     private fun navigateToFragment(fragment: Fragment) {

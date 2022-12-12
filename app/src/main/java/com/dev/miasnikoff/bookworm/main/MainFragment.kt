@@ -31,7 +31,7 @@ class MainFragment : BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.menu_settings -> navigateToFragment(
+            R.id.menu_settings -> openFragment(
                 R.id.main_container,
                 SettingsFragment.newInstance(),
                 true

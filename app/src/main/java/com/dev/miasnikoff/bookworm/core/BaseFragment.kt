@@ -39,6 +39,21 @@ abstract class BaseFragment: Fragment() {
         }
     }
 
+    protected fun openFragment(container: Int, fragment: Fragment, isAddToBackStack: Boolean = false) {
+        if (isAddToBackStack) {
+            parentFragmentManager.beginTransaction()
+                .add(container, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
+                .commit()
+        } else {
+            parentFragmentManager.beginTransaction()
+                .add(R.id.host_container, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit()
+        }
+    }
+
     protected fun hideSoftKeyboard() {
         binding.root.findFocus()?.clearFocus()
         view?.let { view ->
