@@ -30,7 +30,7 @@ abstract class BaseFragment: Fragment() {
         }
     }
 
-    protected fun addFragment(container: Int, fragment: Fragment, isAddToBackStack: Boolean = false) {
+    protected fun openFragment(container: Int, fragment: Fragment, isAddToBackStack: Boolean = false) {
         if (isAddToBackStack) {
             parentFragmentManager.beginTransaction()
                 .add(container, fragment)

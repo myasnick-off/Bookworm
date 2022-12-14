@@ -7,6 +7,7 @@
         <item name="toolbarStyle">@style/BookwormToolbar</item>
         <item name="textInputOutlinedExposedDropdownMenuStyle">@style/BookwormDropdownMenu</item>
         <item name="leafViewStyle">@style/BookwormLeafView</item>
+        <item name="toolbarNavigationButtonStyle">@style/BookwormToolbarButton</item>
     </style>
 
     <style name="Theme.Bookworm" parent="Theme.Bookworm.Base">
@@ -21,21 +22,32 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" >?attr/colorPrimary</item>
         <item name="textFillColor">@color/white</item>
+        <item name="textOutlineColor">@color/black</item>
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
     <style name="BookwormButton" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_shape</item>
+        <item name="android:textColor">?attr/textFillColor</item>
+        <item name="android:textSize">@dimen/text_l</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:padding">@dimen/padding_16</item>
     </style>
 
     <style name="BookwormTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="startIconTint">?attr/colorSecondary</item>
         <item name="endIconTint">?attr/colorSecondary</item>
         <item name="hintTextColor">?attr/colorSecondary</item>
+        <item name="android:textColor">?attr/textFillColor</item>
     </style>
 
     <style name="BookwormToolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="titleTextColor">?attr/textFillColor</item>
+    </style>
+
+    <style name="BookwormToolbarButton" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="iconTint">?attr/controlBackground</item>
     </style>
 
     <style name="BookwormDropdownMenu" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
