@@ -62,8 +62,6 @@ class MainFragment : BaseFragment() {
         navigateToFragment(R.id.host_container, ListFragment.newInstance())
     }
 
-
-
     companion object {
         fun newInstance(): MainFragment = MainFragment()
     }

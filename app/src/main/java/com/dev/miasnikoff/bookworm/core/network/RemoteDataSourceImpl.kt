@@ -28,5 +28,6 @@ class RemoteDataSourceImpl: RemoteDataSource {
 
     companion object {
         private const val BASE_URL = "https://www.googleapis.com"
+        const val API_KEY = "AIzaSyBaAqPeUdUOHol2ryiTkz4fEktX1LrFeSg"
     }
 }

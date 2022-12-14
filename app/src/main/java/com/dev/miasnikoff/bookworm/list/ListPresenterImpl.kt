@@ -21,7 +21,11 @@ class ListPresenterImpl(private val dataSource: RemoteDataSource = RemoteDataSou
     }
 
     override fun getVolumeList(query: String) {
-        dataSource.getVolumeList(query = query, startIndex = 0, maxResults = 20, object :Callback<VolumeResponse> {
+        dataSource.getVolumeList(
+            query = query,
+            startIndex = DEFAULT_START_INDEX,
+            maxResults = DEFAULT_MAX_VALUES,
+            object : Callback<VolumeResponse> {
             override fun onResponse(
                 call: Call<VolumeResponse>,
                 response: Response<VolumeResponse>
@@ -38,5 +42,10 @@ class ListPresenterImpl(private val dataSource: RemoteDataSource = RemoteDataSou
                 view?.showError(t.message ?: "Unknown error!")
             }
         })
+    }
+
+    companion object {
+        private const val DEFAULT_START_INDEX = 0
+        private const val DEFAULT_MAX_VALUES = 20
     }
 }

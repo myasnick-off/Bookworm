@@ -16,14 +16,14 @@ interface ApiService {
         @Query("langRestrict") langCode: String? = null,
         @Query("printType") printType: String? = null,
         @Query("orderBy") orderBy: String? = null,
-        @Query("startIndex") startIndex: Int = 0,
-        @Query("maxResults") maxResults: Int = 20,
-        @Query("key") apiKey: String = "AIzaSyAwbJFLmVWNozOF62bp-Sf6Dq8ayX7UpVE"
+        @Query("startIndex") startIndex: Int,
+        @Query("maxResults") maxResults: Int,
+        @Query("key") apiKey: String = RemoteDataSourceImpl.API_KEY
     ): Call<VolumeResponse>
 
     @GET("/books/v1/volumes/{volumeId}")
     fun getVolume(
         @Path("volumeId") volumeId: String,
-        @Query("key") apiKey: String = "AIzaSyAwbJFLmVWNozOF62bp-Sf6Dq8ayX7UpVE"
+        @Query("key") apiKey: String = RemoteDataSourceImpl.API_KEY
     ): Call<Volume>
 }

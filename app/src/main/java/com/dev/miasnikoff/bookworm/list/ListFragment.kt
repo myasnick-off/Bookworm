@@ -29,10 +29,15 @@ class ListFragment: BaseFragment(), ListView {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initMenu()
-        presenter.attachView(this)
+        initPresenter()
     }
 
     override fun initView() {
+    }
+
+    private fun initPresenter() {
+        presenter.attachView(this)
+        presenter.getVolumeList(DEFAULT_QUERY)
     }
 
     override fun showList(volumes: List<Volume>) {
@@ -44,6 +49,7 @@ class ListFragment: BaseFragment(), ListView {
     }
 
     companion object {
+        private const val DEFAULT_QUERY = "+subject:Education"
         fun newInstance(): ListFragment = ListFragment()
     }
 }
