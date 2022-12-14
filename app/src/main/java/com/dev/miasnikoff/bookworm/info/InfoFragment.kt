@@ -44,10 +44,10 @@ class InfoFragment : BaseFragment() {
     }
 
     override fun initView() = with(binding) {
-        nameEditText.setText(user.name)
-        berthEditText.setText(user.berthDate?.let { dateFormat.format(it) })
-        addressEditText.setText(user.address)
-        emailEditText.setText(user.email)
+        nameText.text = user.name
+        berthText.text = user.berthDate?.let { dateFormat.format(it) }
+        addressText.text = user.address
+        emailText.text = user.email
         sendButton.setOnClickListener {
             sendData()
         }

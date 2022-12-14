@@ -9,5 +9,6 @@
         <item name="textInputOutlinedExposedDropdownMenuStyle">@style/BookwormDropdownMenu</item>
         <item name="leafViewStyle">@style/BookwormLeafView</item>
         <item name="android:forceDarkAllowed">false</item>
+        <item name="toolbarNavigationButtonStyle">@style/BookwormToolbarButton</item>
     </style>
 </resources>
