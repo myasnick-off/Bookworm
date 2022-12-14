@@ -8,8 +8,12 @@ class ThemePrefsHandler(context: Context) {
 
     val appTheme: Themes
         get() {
-            val name = prefs.getString(THEME_KEY, Themes.AS_SYSTEM.name)
-            return name?.let { Themes.valueOf(it) } ?: Themes.AS_SYSTEM
+            return try {
+                val name = prefs.getString(THEME_KEY, Themes.AS_SYSTEM.name)
+                name?.let { Themes.valueOf(it) } ?: Themes.AS_SYSTEM
+            } catch (ex: Exception) {
+                Themes.AS_SYSTEM
+            }
         }
 
     fun save(appTheme: Themes) {
