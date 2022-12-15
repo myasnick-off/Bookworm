@@ -4,16 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.core.network.model.Volume
 import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
 import com.dev.miasnikoff.bookworm.core.ui.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
 import com.dev.miasnikoff.bookworm.list.adapter.VolumeListAdapter
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 
-class ListFragment: BaseFragment(), ListView {
+class ListFragment : BaseFragment(), ListView {
 
     private lateinit var _binding: FragmentListBinding
     override val binding: FragmentListBinding

@@ -1,6 +1,7 @@
 package com.dev.miasnikoff.bookworm.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
