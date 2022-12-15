@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import com.dev.miasnikoff.bookworm.core.network.model.Volume
 import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
+import com.dev.miasnikoff.bookworm.core.ui.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
+import com.dev.miasnikoff.bookworm.list.adapter.VolumeListAdapter
 
 class ListFragment: BaseFragment(), ListView {
 
@@ -15,6 +18,7 @@ class ListFragment: BaseFragment(), ListView {
         get() = _binding
 
     private val presenter: ListPresenter = ListPresenterImpl()
+    private val volumeListAdapter: VolumeListAdapter = VolumeListAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +37,7 @@ class ListFragment: BaseFragment(), ListView {
     }
 
     override fun initView() {
+        binding.volumeList.adapter = volumeListAdapter
     }
 
     private fun initPresenter() {
@@ -40,8 +45,8 @@ class ListFragment: BaseFragment(), ListView {
         presenter.getVolumeList(DEFAULT_QUERY)
     }
 
-    override fun showList(volumes: List<Volume>) {
-        //TODO("Not yet implemented")
+    override fun showList(volumes: List<RecyclerItem>) {
+        volumeListAdapter.submitList(volumes)
     }
 
     override fun showError(message: String) {

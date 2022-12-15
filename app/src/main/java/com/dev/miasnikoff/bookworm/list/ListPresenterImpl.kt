@@ -3,11 +3,15 @@ package com.dev.miasnikoff.bookworm.list
 import com.dev.miasnikoff.bookworm.core.network.RemoteDataSource
 import com.dev.miasnikoff.bookworm.core.network.RemoteDataSourceImpl
 import com.dev.miasnikoff.bookworm.core.network.model.VolumeResponse
+import com.dev.miasnikoff.bookworm.list.mapper.VolumeDataMapper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ListPresenterImpl(private val dataSource: RemoteDataSource = RemoteDataSourceImpl()) :
+class ListPresenterImpl(
+    private val dataSource: RemoteDataSource = RemoteDataSourceImpl(),
+    private val mapper: VolumeDataMapper = VolumeDataMapper()
+) :
     ListPresenter {
 
     private var view: ListView? = null
@@ -26,22 +30,22 @@ class ListPresenterImpl(private val dataSource: RemoteDataSource = RemoteDataSou
             startIndex = DEFAULT_START_INDEX,
             maxResults = DEFAULT_MAX_VALUES,
             object : Callback<VolumeResponse> {
-            override fun onResponse(
-                call: Call<VolumeResponse>,
-                response: Response<VolumeResponse>
-            ) {
-                val body = response.body()
-                if (response.isSuccessful && body != null) {
-                    view?.showList(body.volumes)
-                } else {
-                    view?.showError("Data failure!")
+                override fun onResponse(
+                    call: Call<VolumeResponse>,
+                    response: Response<VolumeResponse>
+                ) {
+                    val body = response.body()
+                    if (response.isSuccessful && body != null) {
+                        view?.showList(mapper.toRecyclerItems(body.volumes))
+                    } else {
+                        view?.showError("Data failure!")
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<VolumeResponse>, t: Throwable) {
-                view?.showError(t.message ?: "Unknown error!")
-            }
-        })
+                override fun onFailure(call: Call<VolumeResponse>, t: Throwable) {
+                    view?.showError(t.message ?: "Unknown error!")
+                }
+            })
     }
 
     companion object {
