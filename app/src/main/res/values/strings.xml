@@ -13,4 +13,13 @@
     <string name="address_error_message">Введите корректный адрес</string>
     <string name="email_error_message">Введите корректный e-mail</string>
     <string name="date_format_helper">формат дд.мм.гггг</string>
+    <string name="select_app_theme">Выберите тему приложения</string>
+    <string name="light_mode">Светлая тема</string>
+    <string name="night_mode">Темная тема</string>
+    <string name="system_mode">Как в системе</string>
+    <string name="settings">Настройки</string>
+    <string name="user_name_label">Имя:</string>
+    <string name="user_berth_label">Дата рождения:</string>
+    <string name="user_address_label">Адрес:</string>
+    <string name="user_email_label">E-mail:</string>
 </resources>

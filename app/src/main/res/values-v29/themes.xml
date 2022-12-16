@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Bookworm.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="buttonStyle">@style/BookwormButton</item>
+        <item name="textInputStyle">@style/BookwormTextInputLayout</item>
+        <item name="toolbarStyle">@style/BookwormToolbar</item>
+        <item name="textInputOutlinedExposedDropdownMenuStyle">@style/BookwormDropdownMenu</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="toolbarNavigationButtonStyle">@style/BookwormToolbarButton</item>
+    </style>
+</resources>

@@ -1,93 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/padding_24">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:hint="@string/user_name"
-        app:expandedHintEnabled="false">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/name_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_l" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/name_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_24"
-        android:enabled="false"
-        android:hint="@string/berth_date"
-        app:expandedHintEnabled="false">
+        android:text="@string/user_name_label" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/berth_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_l" />
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/user_name"
+        android:textColor="?attr/textOutlineColor"
+        android:textSize="@dimen/text_l" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <View
         android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/margin_4"
+        android:background="?attr/colorOnSecondary" />
+
+    <TextView
+        android:id="@+id/berth_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_24"
-        android:enabled="false"
-        android:hint="@string/address"
-        app:expandedHintEnabled="false">
+        android:text="@string/user_berth_label" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/address_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:maxLines="2"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_l" />
+    <TextView
+        android:id="@+id/berth_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/berth_date"
+        android:textColor="?attr/textOutlineColor"
+        android:textSize="@dimen/text_l" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <View
         android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/margin_4"
+        android:background="?attr/colorOnSecondary" />
+
+    <TextView
+        android:id="@+id/address_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_24"
-        android:enabled="false"
-        android:hint="@string/email"
-        app:expandedHintEnabled="false">
+        android:text="@string/user_address_label" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/email_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_l" />
+    <TextView
+        android:id="@+id/address_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/address"
+        android:textColor="?attr/textOutlineColor"
+        android:textSize="@dimen/text_l" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/margin_4"
+        android:background="?attr/colorOnSecondary" />
+
+    <TextView
+        android:id="@+id/email_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_24"
+        android:text="@string/user_email_label" />
+
+    <TextView
+        android:id="@+id/email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        android:textColor="?attr/textOutlineColor"
+        android:textSize="@dimen/text_l" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/margin_4"
+        android:background="?attr/colorOnSecondary" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/send_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_24"
-        android:background="@color/teal_700"
-        android:padding="@dimen/padding_16"
-        android:text="@string/send"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_l" />
+        android:layout_marginTop="@dimen/margin_36"
+        android:text="@string/send" />
 
 </LinearLayout>
