@@ -22,12 +22,25 @@ class VolumeListViewModel(
     private val _liveData: MutableLiveData<VolumeListState> = MutableLiveData()
     val liveData: LiveData<VolumeListState> get() = _liveData
 
-    fun getVolumeList(query: String) {
+    private var currentList: MutableList<RecyclerItem> = mutableListOf()
+
+    fun getInitialPage(query: String) {
+        getVolumeList(query, DEFAULT_START_INDEX)
+    }
+
+    fun loadNextPage(query: String) {
+        _liveData.value = VolumeListState.MoreLoading
+        getVolumeList(query, currentList.size)
+    }
+
+    private fun getVolumeList(query: String, startIndex: Int) {
         if (liveData.value !is VolumeListState.Success) {
-            _liveData.value = VolumeListState.Loading
+            if (startIndex == DEFAULT_START_INDEX) {
+                _liveData.value = VolumeListState.Loading
+            }
             dataSource.getVolumeList(
                 query = query,
-                startIndex = DEFAULT_START_INDEX,
+                startIndex = startIndex,
                 maxResults = DEFAULT_MAX_VALUES,
                 object : Callback<VolumeResponse> {
                     override fun onResponse(
@@ -36,8 +49,11 @@ class VolumeListViewModel(
                     ) {
                         val body = response.body()
                         if (response.isSuccessful && body != null) {
-                            val volumeList = mapper.toRecyclerItems(body.volumes)
-                            _liveData.postValue(VolumeListState.Success(volumeList))
+                            currentList += mapper.toRecyclerItems(body.volumes)
+                            val newList = mutableListOf<RecyclerItem>().apply { addAll(currentList) }
+                            _liveData.postValue(
+                                VolumeListState.Success(newList, newList.size < body.totalItems)
+                            )
                         } else {
                             _liveData.postValue(VolumeListState.Failure("Data failure!"))
                         }
@@ -52,16 +68,19 @@ class VolumeListViewModel(
 
     fun setFavorite(itemId: String) {
         val newList: MutableList<RecyclerItem> = mutableListOf()
-        (liveData.value as? VolumeListState.Success)?.data?.let { newList.addAll(it) }
-        val index = newList.indexOfFirst { it.id == itemId }
-        val volumeItem = (newList.firstOrNull { it.id == itemId } as? VolumeItem)
-        if (index > -1 && volumeItem != null) {
-            newList[index] = if (volumeItem.isFavorite)
-                volumeItem.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24)
-            else
-                volumeItem.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24)
+        val currentState = liveData.value as? VolumeListState.Success
+        currentState?.let { state ->
+            newList.addAll(state.data)
+            val index = newList.indexOfFirst { it.id == itemId }
+            val volumeItem = (newList.firstOrNull { it.id == itemId } as? VolumeItem)
+            if (index > -1 && volumeItem != null) {
+                newList[index] = if (volumeItem.isFavorite)
+                    volumeItem.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24)
+                else
+                    volumeItem.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24)
+            }
+            _liveData.value = state.copy(data = newList)
         }
-        _liveData.value = VolumeListState.Success(newList)
     }
 
     companion object {

@@ -17,10 +17,10 @@ class VolumeViewHolder(
     BaseViewHolder(binding.root) {
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    override fun bind(item: RecyclerItem) {
+    override fun bind(item: RecyclerItem, position: Int) {
         if (item is VolumeItem) {
             binding.bookTitle.text = item.title
-            binding.bookAuthors.text = item.authors
+            binding.bookAuthors.text = "$position"
             Glide.with(binding.bookImage.context)
                 .load(item.imageLink)
                 .error(R.drawable.ic_broken_image_48)

@@ -5,5 +5,5 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseViewHolder(viewItem: View) :
     RecyclerView.ViewHolder(viewItem) {
-    abstract fun bind(item: RecyclerItem)
+    abstract fun bind(item: RecyclerItem, position: Int)
 }

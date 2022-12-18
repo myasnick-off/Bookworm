@@ -9,8 +9,13 @@ import com.dev.miasnikoff.bookworm.core.ui.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.core.ui.adapter.diffUtilItemCallback
 import com.dev.miasnikoff.bookworm.databinding.ItemVolumeListBinding
 
-class VolumeListAdapter(private val itemClickListener: ItemClickListener) :
+class VolumeListAdapter(
+    private val itemClickListener: ItemClickListener,
+    private val pageListener: PageListener
+) :
     ListAdapter<RecyclerItem, BaseViewHolder>(diffUtilItemCallback) {
+
+    var loadMore: Boolean = false
 
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
@@ -27,7 +32,11 @@ class VolumeListAdapter(private val itemClickListener: ItemClickListener) :
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        if (loadMore && (position + ITEMS_LEFT) >=  itemCount) {
+            loadMore = false
+            pageListener.loadNextPage()
+        }
+        holder.bind(item, position)
     }
 
     override fun onBindViewHolder(
@@ -49,7 +58,13 @@ class VolumeListAdapter(private val itemClickListener: ItemClickListener) :
         fun onIconClick(itemId: String)
     }
 
+    interface PageListener {
+        fun loadNextPage()
+    }
+
+
     companion object {
         private const val VOLUME_ITEM_TYPE = 1
+        private const val ITEMS_LEFT = 2
     }
 }

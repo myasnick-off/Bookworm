@@ -40,7 +40,14 @@ class VolumeListFragment : BaseFragment() {
         }
     }
 
-    private val volumeListAdapter: VolumeListAdapter = VolumeListAdapter(itemClickListener)
+    private val pageListener = object : VolumeListAdapter.PageListener {
+        override fun loadNextPage() {
+            viewModel.loadNextPage(DEFAULT_QUERY)
+        }
+    }
+
+    private val volumeListAdapter: VolumeListAdapter =
+        VolumeListAdapter(itemClickListener, pageListener)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,8 +77,9 @@ class VolumeListFragment : BaseFragment() {
     private fun renderState(state: VolumeListState) {
         when (state) {
             is VolumeListState.Loading -> showLoading()
+            is VolumeListState.MoreLoading -> showMoreLoading()
             is VolumeListState.Failure -> showError(state.message)
-            is VolumeListState.Success -> showData(state.data)
+            is VolumeListState.Success -> showData(state.data, state.loadMore)
         }
     }
 
@@ -81,11 +89,18 @@ class VolumeListFragment : BaseFragment() {
         binding.volumeList.visibility = View.GONE
     }
 
-    private fun showData(volumes: List<RecyclerItem>) {
+    private fun showMoreLoading() {
+        binding.listLoader.visibility = View.VISIBLE
+        binding.volumeList.visibility = View.VISIBLE
+        binding.errorImage.visibility = View.GONE
+    }
+
+    private fun showData(volumes: List<RecyclerItem>, loadMore: Boolean) {
         binding.listLoader.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.VISIBLE
         volumeListAdapter.submitList(volumes)
+        volumeListAdapter.loadMore = loadMore
     }
 
     private fun showError(message: String) {
@@ -99,11 +114,11 @@ class VolumeListFragment : BaseFragment() {
     }
 
     private fun getData(query: String = DEFAULT_QUERY) {
-        viewModel.getVolumeList(query)
+        viewModel.getInitialPage(query)
     }
 
     companion object {
-        private const val DEFAULT_QUERY = "+subject:Education"
+        private const val DEFAULT_QUERY = "The"
         fun newInstance(): VolumeListFragment = VolumeListFragment()
     }
 }
