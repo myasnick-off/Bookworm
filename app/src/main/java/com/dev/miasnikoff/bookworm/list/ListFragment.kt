@@ -18,7 +18,24 @@ class ListFragment : BaseFragment(), ListView {
         get() = _binding
 
     private val presenter: ListPresenter = ListPresenterImpl()
-    private val volumeListAdapter: VolumeListAdapter = VolumeListAdapter()
+
+    private val itemClickListener = object : VolumeListAdapter.ItemClickListener {
+        override fun onItemClick() {
+            //TODO("Not yet implemented")
+        }
+
+        override fun onItemLongClick(): Boolean {
+            //TODO("Not yet implemented")
+            return true
+        }
+
+        override fun onIconClick(itemId: String) {
+            volumeListAdapter.markAsFavorite(itemId)
+        }
+
+    }
+
+    private val volumeListAdapter: VolumeListAdapter = VolumeListAdapter(itemClickListener)
 
     override fun onCreateView(
         inflater: LayoutInflater,

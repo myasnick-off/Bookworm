@@ -1,5 +1,6 @@
 package com.dev.miasnikoff.bookworm.list.adapter
 
+import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.core.ui.adapter.RecyclerItem
 
 data class VolumeItem(
@@ -10,5 +11,7 @@ data class VolumeItem(
     val mainCategory: String,
     val averageRating: Float,
     val imageLink: String?,
-    val language: String
+    val language: String,
+    val isFavorite: Boolean = false,
+    val favoriteIcon: Int = R.drawable.ic_bookmark_border_24
     ) : RecyclerItem

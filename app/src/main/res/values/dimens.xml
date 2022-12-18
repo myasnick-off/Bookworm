@@ -17,5 +17,5 @@
     <dimen name="margin_8">8dp</dimen>
     <dimen name="margin_4">4dp</dimen>
     <dimen name="high_280">280dp</dimen>
-    <dimen name="img_height_230">230dp</dimen>
+    <dimen name="img_height_200">200dp</dimen>
 </resources>

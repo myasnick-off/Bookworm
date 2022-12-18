@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/high_280"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/margin_8">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +13,8 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/book_image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/img_height_230"
+            android:layout_height="@dimen/img_height_200"
+            android:layout_margin="@dimen/margin_16"
             android:background="?attr/colorControlNormal"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +31,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="@dimen/text_s"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/favorite_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/book_image"
             tools:text="Book title" />
@@ -41,14 +42,23 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_8"
             android:alpha="0.6"
-            android:paddingBottom="@dimen/padding_4"
-            android:textSize="@dimen/text_xs"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingBottom="@dimen/padding_4"
+            android:textSize="@dimen/text_xs"
+            app:layout_constraintEnd_toStartOf="@id/favorite_icon"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/book_title"
             tools:text="Book Author" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/favorite_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_8"
+            android:src="@drawable/ic_bookmark_border_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
