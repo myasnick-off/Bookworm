@@ -4,4 +4,5 @@ interface ListPresenter {
     fun attachView(view: ListView)
     fun detachView()
     fun getVolumeList(query: String)
+    fun setFavorite(itemId: String)
 }

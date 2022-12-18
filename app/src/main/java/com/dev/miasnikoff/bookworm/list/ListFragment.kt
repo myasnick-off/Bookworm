@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
 import com.dev.miasnikoff.bookworm.core.ui.adapter.RecyclerItem
@@ -20,17 +21,17 @@ class ListFragment : BaseFragment(), ListView {
     private val presenter: ListPresenter = ListPresenterImpl()
 
     private val itemClickListener = object : VolumeListAdapter.ItemClickListener {
-        override fun onItemClick() {
-            //TODO("Not yet implemented")
+        override fun onItemClick(itemId: String) {
+            Toast.makeText(context, "Made click on item with id #$itemId", Toast.LENGTH_SHORT).show()
         }
 
-        override fun onItemLongClick(): Boolean {
-            //TODO("Not yet implemented")
+        override fun onItemLongClick(itemId: String): Boolean {
+            Toast.makeText(context, "Made long click on item with id #$itemId", Toast.LENGTH_SHORT).show()
             return true
         }
 
         override fun onIconClick(itemId: String) {
-            volumeListAdapter.markAsFavorite(itemId)
+            presenter.setFavorite(itemId)
         }
 
     }

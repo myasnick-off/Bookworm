@@ -30,23 +30,22 @@ class VolumeListAdapter(private val itemClickListener: ItemClickListener) :
         holder.bind(item)
     }
 
-    fun markAsFavorite(itemId: String) {
-        val newList: MutableList<RecyclerItem> = mutableListOf()
-        newList.addAll(currentList)
-        val index = newList.indexOfFirst { it.id == itemId }
-        val volumeItem = (newList.firstOrNull { it.id == itemId } as? VolumeItem)
-        if (index > -1 && volumeItem != null) {
-            newList[index] = if (volumeItem.isFavorite)
-                volumeItem.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24)
-            else
-                volumeItem.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24)
+    override fun onBindViewHolder(
+        holder: BaseViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty() || payloads.any { it !is Int }) {
+            onBindViewHolder(holder, position)
+        } else {
+            val iconRes = payloads.first { it is Int } as Int
+            (holder as? VolumeViewHolder)?.updateFavorite(iconRes)
         }
-        submitList(newList)
     }
 
     interface ItemClickListener {
-        fun onItemClick()
-        fun onItemLongClick(): Boolean
+        fun onItemClick(itemId: String)
+        fun onItemLongClick(itemId: String): Boolean
         fun onIconClick(itemId: String)
     }
 

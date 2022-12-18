@@ -1,12 +1,14 @@
 package com.dev.miasnikoff.bookworm.list.adapter
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.core.ui.adapter.BaseViewHolder
 import com.dev.miasnikoff.bookworm.core.ui.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.databinding.ItemVolumeListBinding
+import com.dev.miasnikoff.bookworm.utils.extensions.vibrate
 
 class VolumeViewHolder(
     private val binding: ItemVolumeListBinding,
@@ -14,6 +16,7 @@ class VolumeViewHolder(
 ) :
     BaseViewHolder(binding.root) {
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun bind(item: RecyclerItem) {
         if (item is VolumeItem) {
             binding.bookTitle.text = item.title
@@ -27,9 +30,21 @@ class VolumeViewHolder(
                 setOnClickListener { itemClickListener.onIconClick(item.id) }
             }
             binding.root.apply {
-                setOnClickListener { itemClickListener.onItemClick() }
-                setOnLongClickListener { itemClickListener.onItemLongClick() }
+                setOnClickListener { itemClickListener.onItemClick(item.id) }
+                setOnLongClickListener {
+                    vibrate(VIBRATE_DURATION)
+                    itemClickListener.onItemLongClick(item.id)
+                }
             }
         }
+    }
+
+    fun updateFavorite(iconRes: Int) {
+        binding.favoriteIcon
+            .setImageDrawable( ContextCompat.getDrawable(binding.favoriteIcon.context, iconRes))
+    }
+
+    companion object {
+        private const val VIBRATE_DURATION = 50L
     }
 }
