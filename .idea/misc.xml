@@ -12,10 +12,11 @@
         <entry key="..\:/StudioProjects/Bookworm/app/src/main/res/layout/fragment_settings.xml" value="0.36666666666666664" />
         <entry key="..\:/StudioProjects/Bookworm/app/src/main/res/layout/item_dropdown_menu.xml" value="0.365625" />
         <entry key="..\:/StudioProjects/Bookworm/app/src/main/res/menu/menu_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/app/src/main/res/layout/leaf_view.xml" value="0.16875" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
