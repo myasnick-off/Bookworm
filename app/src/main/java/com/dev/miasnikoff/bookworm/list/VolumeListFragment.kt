@@ -1,9 +1,15 @@
 package com.dev.miasnikoff.bookworm.list
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.dev.miasnikoff.bookworm.R
@@ -49,6 +55,12 @@ class VolumeListFragment : BaseFragment() {
     private val volumeListAdapter: VolumeListAdapter =
         VolumeListAdapter(itemClickListener, pageListener)
 
+    private val fabAnim: Animation by lazy {
+        AnimationUtils.loadAnimation(requireContext(), R.anim.fab_appearance_anim).apply {
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,6 +79,28 @@ class VolumeListFragment : BaseFragment() {
 
     override fun initView() {
         binding.volumeList.adapter = volumeListAdapter
+        binding.listFab?.startAnimation(fabAnim)
+        binding.listFab?.visibility = View.VISIBLE
+        /*val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
+            duration = 1500
+            interpolator = AccelerateDecelerateInterpolator()
+            start()
+        }
+        val animScaleY = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_Y, 0f, 1f).apply {
+            duration = 1500
+
+            interpolator = AccelerateDecelerateInterpolator()
+            start()
+        }
+        val animAlpha = ValueAnimator.ofFloat( 0f, 1f).apply {
+            duration = 1500
+            interpolator = AccelerateDecelerateInterpolator()
+            start()
+        }
+        val animSet = AnimatorSet().apply {
+            playTogether(animScaleX, animScaleY, animAlpha)
+            start()
+        }*/
     }
 
     private fun initPresenter() {
