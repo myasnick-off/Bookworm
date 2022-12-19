@@ -3,15 +3,19 @@ package com.dev.miasnikoff.bookworm.view
 import android.app.Activity
 import android.content.Context
 import android.os.Parcelable
+import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.widget.doOnTextChanged
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.LeafViewBinding
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import java.lang.NumberFormatException
+import kotlin.math.abs
 
 class LeafView
 @JvmOverloads constructor(
@@ -45,10 +49,18 @@ class LeafView
         binding.lvCounter.setText(counter.toString())
         binding.lvCounter.setTextColor(textColor)
         binding.lvCounter.doOnTextChanged { text, _, _, _ ->
-            text?.toString()?.toInt()?.let { newValue ->
-                if (newValue != counter) {
-                    counter = newValue.coerceIn(0, maxValue)
+            try {
+                text?.toString()?.toInt()?.let { newValue ->
+                    if (newValue != counter) {
+                        counter = newValue.coerceIn(0, maxValue)
+                    }
                 }
+            } catch (ex: NumberFormatException ) {
+                Toast.makeText(
+                    binding.lvCounter.context,
+                    resources.getText(R.string.wrong_input),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         isSaveEnabled = true
@@ -107,7 +119,7 @@ class LeafView
     }
 
     fun setMaxValue(value: Int) {
-        maxValue = if (value <= ABSOLUT_MAX_VALUE) value else ABSOLUT_MAX_VALUE
+        maxValue = value.coerceIn(ABSOLUT_MIN_VALUE, ABSOLUT_MAX_VALUE)
     }
 
     fun getCounter(): Int = counter
