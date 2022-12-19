@@ -3,9 +3,9 @@ package com.dev.miasnikoff.bookworm.main
 import android.os.Bundle
 import android.view.*
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.core.BaseFragment
-import com.dev.miasnikoff.bookworm.create.CreateFragment
+import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentMainBinding
+import com.dev.miasnikoff.bookworm.list.ListFragment
 import com.dev.miasnikoff.bookworm.settings.SettingsFragment
 
 class MainFragment : BaseFragment() {
@@ -21,6 +21,14 @@ class MainFragment : BaseFragment() {
     ): View {
         _binding = FragmentMainBinding.inflate(layoutInflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (savedInstanceState == null) {
+            initView()
+        }
+        initMenu()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -51,10 +59,8 @@ class MainFragment : BaseFragment() {
     }
 
     override fun initView() {
-        navigateToFragment(R.id.host_container, CreateFragment.newInstance())
+        navigateToFragment(R.id.host_container, ListFragment.newInstance())
     }
-
-
 
     companion object {
         fun newInstance(): MainFragment = MainFragment()

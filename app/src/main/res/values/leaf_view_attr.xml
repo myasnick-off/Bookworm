@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LeafView">
+        <attr name="leafMaxCount" format="integer"/>
+        <attr name="leafColor" format="color"/>
+        <attr name="leafIconsTint" format="color"/>
+        <attr name="leafCornerRadius" format="dimension"/>
+        <attr name="leafTextColor" format="color"/>
+        <attr name="leafViewStyle" format="reference"/>
+    </declare-styleable>
+
+    <style name="LeafViewStyle">
+        <item name="leafColor">?attr/colorPrimaryVariant</item>
+        <item name="leafIconsTint">@color/white</item>
+        <item name="leafCornerRadius">24dp</item>
+        <item name="leafTextColor">@color/black</item>
+        <item name="leafMaxCount">999</item>
+    </style>
+</resources>

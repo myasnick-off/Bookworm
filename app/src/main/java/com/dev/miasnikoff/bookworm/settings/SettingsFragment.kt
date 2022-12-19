@@ -6,7 +6,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.core.BaseFragment
+import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentSettingsBinding
 import com.dev.miasnikoff.bookworm.main.MainActivity
 import com.dev.miasnikoff.bookworm.utils.ThemePrefsHandler
@@ -25,6 +25,16 @@ class SettingsFragment : BaseFragment() {
     ): View {
         _binding = FragmentSettingsBinding.inflate(layoutInflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initMenu()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

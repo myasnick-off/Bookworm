@@ -1,10 +1,7 @@
-package com.dev.miasnikoff.bookworm.core
+package com.dev.miasnikoff.bookworm.core.ui
 
 import android.app.Activity
-import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.IntegerRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.viewbinding.ViewBinding
@@ -13,12 +10,6 @@ import com.dev.miasnikoff.bookworm.R
 abstract class BaseFragment: Fragment() {
 
     protected abstract val binding: ViewBinding
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-        initMenu()
-    }
 
     open fun initMenu() {}
 
