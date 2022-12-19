@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.core.BaseFragment
+import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentInfoBinding
 import com.dev.miasnikoff.bookworm.model.UserEntity
 import java.text.SimpleDateFormat
