@@ -3,6 +3,7 @@ package com.dev.miasnikoff.bookworm.view
 import android.app.Activity
 import android.content.Context
 import android.os.Parcelable
+import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
@@ -118,8 +119,7 @@ class LeafView
     }
 
     fun setMaxValue(value: Int) {
-        maxValue =
-            if (value > ABSOLUT_MAX_VALUE || value < ABSOLUT_MIN_VALUE) ABSOLUT_MAX_VALUE else value
+        maxValue = value.coerceIn(ABSOLUT_MIN_VALUE, ABSOLUT_MAX_VALUE)
     }
 
     fun getCounter(): Int = counter
