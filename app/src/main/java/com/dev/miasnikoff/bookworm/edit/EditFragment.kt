@@ -30,6 +30,8 @@ class EditFragment : BaseFragment(), EditView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+        initMenu()
         presenter.attachView(this)
     }
 

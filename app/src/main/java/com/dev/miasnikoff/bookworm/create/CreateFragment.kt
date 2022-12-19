@@ -24,13 +24,23 @@ class CreateFragment: BaseFragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        initMenu()
+    }
+
     override fun initView() {
         binding.createButton.setOnClickListener {
             navigateToFragment(R.id.host_container, EditFragment.newInstance())
         }
+        binding.leafView.setCounter(LEAF_INIT_VALUE)
+        binding.leafView.setMaxValue(LEAF_MAX_VALUE)
     }
 
     companion object {
+        private const val LEAF_INIT_VALUE = 100
+        private const val LEAF_MAX_VALUE = 500
         fun newInstance(): CreateFragment = CreateFragment()
     }
 }
