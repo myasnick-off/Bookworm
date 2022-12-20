@@ -1,9 +1,11 @@
 package com.dev.miasnikoff.bookworm.utils.extensions
 
+import android.app.Activity
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import com.google.android.material.snackbar.Snackbar
@@ -21,4 +23,10 @@ fun View.showSnackBar(
 fun View.vibrate(duration: Long) {
     val vibrator = this.context.getSystemService<Vibrator>()
     vibrator?.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.EFFECT_HEAVY_CLICK))
+}
+
+fun View.hideSoftKeyboard() {
+    this.findFocus()?.clearFocus()
+    val imm = this.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(this.windowToken, 0)
 }

@@ -39,10 +39,9 @@
         android:id="@+id/list_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/margin_16"
         android:contentDescription="@string/settings"
-        android:src="@drawable/ic_settings_24" />
+        android:src="@drawable/ic_search_24" />
 
 </FrameLayout>

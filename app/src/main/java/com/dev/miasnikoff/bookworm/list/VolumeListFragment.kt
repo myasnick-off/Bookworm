@@ -2,21 +2,21 @@ package com.dev.miasnikoff.bookworm.list
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
 import com.dev.miasnikoff.bookworm.core.ui.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
 import com.dev.miasnikoff.bookworm.list.adapter.VolumeListAdapter
+import com.dev.miasnikoff.bookworm.search.SearchClickListener
+import com.dev.miasnikoff.bookworm.search.SearchDialogFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 
 class VolumeListFragment : BaseFragment() {
@@ -55,11 +55,7 @@ class VolumeListFragment : BaseFragment() {
     private val volumeListAdapter: VolumeListAdapter =
         VolumeListAdapter(itemClickListener, pageListener)
 
-    private val fabAnim: Animation by lazy {
-        AnimationUtils.loadAnimation(requireContext(), R.anim.fab_appearance_anim).apply {
-            interpolator = AccelerateDecelerateInterpolator()
-        }
-    }
+    private var fabAnimSet: AnimatorSet? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,6 +66,7 @@ class VolumeListFragment : BaseFragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
@@ -77,30 +74,43 @@ class VolumeListFragment : BaseFragment() {
         initPresenter()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun initView() {
         binding.volumeList.adapter = volumeListAdapter
-        binding.listFab?.startAnimation(fabAnim)
-        binding.listFab?.visibility = View.VISIBLE
-        /*val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
-            duration = 1500
-            interpolator = AccelerateDecelerateInterpolator()
+        val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
+            duration = 500
             start()
         }
         val animScaleY = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_Y, 0f, 1f).apply {
-            duration = 1500
-
-            interpolator = AccelerateDecelerateInterpolator()
+            duration = 500
             start()
         }
-        val animAlpha = ValueAnimator.ofFloat( 0f, 1f).apply {
-            duration = 1500
-            interpolator = AccelerateDecelerateInterpolator()
+        val animAlpha = ObjectAnimator.ofFloat(binding.listFab, View.ALPHA, 0f, 1f).apply {
+            duration = 500
             start()
         }
-        val animSet = AnimatorSet().apply {
+        fabAnimSet = AnimatorSet().apply {
             playTogether(animScaleX, animScaleY, animAlpha)
             start()
-        }*/
+        }
+        binding.listFab?.setOnClickListener {
+            fabAnimSet?.reverse()
+            showSearchDialog()
+        }
+    }
+
+    private fun showSearchDialog() {
+        SearchDialogFragment.newInstance().apply {
+            setOnSearchClickListener(object : SearchClickListener {
+                override fun onSearchClick(phrase: String) {
+                    viewModel.getInitialPage(phrase)
+                }
+
+                override fun onDialogDismiss() {
+                    fabAnimSet?.start()
+                }
+            })
+        }.show(parentFragmentManager, null)
     }
 
     private fun initPresenter() {
