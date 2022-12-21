@@ -99,8 +99,7 @@ class VolumeListFragment : BaseFragment() {
         binding.listLoader.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.VISIBLE
-        volumeListAdapter.submitList(volumes)
-        volumeListAdapter.loadMore = loadMore
+        volumeListAdapter.updateList(volumes, loadMore)
     }
 
     private fun showError(message: String) {

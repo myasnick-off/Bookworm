@@ -15,7 +15,12 @@ class VolumeListAdapter(
 ) :
     ListAdapter<RecyclerItem, VolumeViewHolder>(diffUtilItemCallback) {
 
-    var loadMore: Boolean = false
+    private var loadMore: Boolean = false
+
+    fun updateList(volumeList: List<RecyclerItem>, isLoadMore: Boolean) {
+        submitList(volumeList)
+        loadMore = isLoadMore
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VolumeViewHolder {
         val inflater = LayoutInflater.from(parent.context)
