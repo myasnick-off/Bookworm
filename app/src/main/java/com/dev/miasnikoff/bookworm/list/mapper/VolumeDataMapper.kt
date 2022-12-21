@@ -13,7 +13,7 @@ class VolumeDataMapper {
         VolumeItem(
             id = volume.id,
             title = volume.volumeInfo.title.orEmpty(),
-            authors = volume.volumeInfo.authors?.toString()?.trim('[', ']').orEmpty(),
+            authors = volume.volumeInfo.authors?.joinToString().orEmpty(),
             publishedDate = volume.volumeInfo.publishedDate.orEmpty(),
             mainCategory = volume.volumeInfo.mainCategory.orEmpty(),
             averageRating = volume.volumeInfo.averageRating?.toFloat() ?: 0f,

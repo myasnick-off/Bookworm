@@ -79,7 +79,8 @@ class VolumeListViewModel(
                 else
                     volumeItem.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24)
             }
-            _liveData.value = state.copy(data = newList)
+            currentList = newList
+            _liveData.value = state.copy(data = currentList)
         }
     }
 

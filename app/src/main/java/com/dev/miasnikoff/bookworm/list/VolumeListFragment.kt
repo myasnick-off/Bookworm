@@ -35,7 +35,7 @@ class VolumeListFragment : BaseFragment() {
             return true
         }
 
-        override fun onIconClick(itemId: String) {
+        override fun onFavoriteClick(itemId: String) {
             viewModel.setFavorite(itemId)
         }
     }
