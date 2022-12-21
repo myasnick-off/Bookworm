@@ -23,4 +23,6 @@
     <string name="user_address_label">Адрес:</string>
     <string name="user_email_label">E-mail:</string>
     <string name="wrong_input">Неверный ввод</string>
+    <string name="error">Ошибка!</string>
+    <string name="reload">Еще раз!</string>
 </resources>

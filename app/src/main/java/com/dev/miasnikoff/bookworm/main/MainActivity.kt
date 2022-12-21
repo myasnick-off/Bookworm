@@ -1,6 +1,7 @@
 package com.dev.miasnikoff.bookworm.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
@@ -14,15 +15,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        loadTheme()
         if (savedInstanceState == null) {
             navigateToFragment(MainFragment.newInstance())
         }
-    }
-
-    private fun loadTheme() {
-        val themePrefs = ThemePrefsHandler(this)
-        AppCompatDelegate.setDefaultNightMode(themePrefs.appTheme.id)
     }
 
     private fun navigateToFragment(fragment: Fragment) {
