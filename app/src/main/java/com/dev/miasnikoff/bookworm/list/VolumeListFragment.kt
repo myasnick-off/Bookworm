@@ -78,15 +78,15 @@ class VolumeListFragment : BaseFragment() {
     override fun initView() {
         binding.volumeList.adapter = volumeListAdapter
         val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
-            duration = 500
+            duration = FAB_ANIMATION_DURATION
             start()
         }
         val animScaleY = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_Y, 0f, 1f).apply {
-            duration = 500
+            duration = FAB_ANIMATION_DURATION
             start()
         }
         val animAlpha = ObjectAnimator.ofFloat(binding.listFab, View.ALPHA, 0f, 1f).apply {
-            duration = 500
+            duration = FAB_ANIMATION_DURATION
             start()
         }
         fabAnimSet = AnimatorSet().apply {
@@ -163,6 +163,7 @@ class VolumeListFragment : BaseFragment() {
 
     companion object {
         private const val DEFAULT_QUERY = "The"
+        private const val FAB_ANIMATION_DURATION = 500L
         fun newInstance(): VolumeListFragment = VolumeListFragment()
     }
 }
