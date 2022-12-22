@@ -49,6 +49,7 @@ class InfoFragment : BaseFragment() {
         addressText.text = user.address
         emailText.text = user.email
         sendButton.setOnClickListener {
+            parentFragmentManager.popBackStack()
             sendData()
         }
     }

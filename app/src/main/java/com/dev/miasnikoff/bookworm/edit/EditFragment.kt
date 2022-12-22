@@ -70,7 +70,7 @@ class EditFragment : BaseFragment() {
             )
             if (hasNoErrors) {
                 viewModel.liveData.value?.let { user ->
-                    navigateToFragment(R.id.host_container, InfoFragment.newInstance(user))
+                    openFragment(R.id.main_container, InfoFragment.newInstance(user), true)
                 }
             }
         }
@@ -81,40 +81,17 @@ class EditFragment : BaseFragment() {
     }
 
     private fun renderData(user: UserEntity) {
-        user.errorFields.forEach { field ->
-            when (field) {
-                EditField.NAME_FIELD -> handleNameError()
-                EditField.BERTH_FIELD -> handleBerthDateError()
-                EditField.ADDRESS_FIELD -> handleAddressError()
-                EditField.EMAIL_FIELD -> handleEmailError()
-            }
-        }
+        user.errorFields.forEach { field -> showFieldError(field) }
     }
 
-    private fun handleNameError() {
-        binding.nameInputLayout.apply {
-            error = getString(R.string.name_error_message)
-            isErrorEnabled = true
-        }
-    }
-
-    private fun handleBerthDateError() {
-        binding.berthInputLayout.apply {
-            error = getString(R.string.berth_error_message)
-            isErrorEnabled = true
-        }
-    }
-
-    private fun handleAddressError() {
-        binding.addressInputLayout.apply {
-            error = getString(R.string.address_error_message)
-            isErrorEnabled = true
-        }
-    }
-
-    private fun handleEmailError() {
-        binding.emailInputLayout.apply {
-            error = getString(R.string.email_error_message)
+    private fun showFieldError(field: EditField) {
+        when (field) {
+            EditField.NAME_FIELD -> binding.nameInputLayout
+            EditField.BERTH_FIELD -> binding.berthInputLayout
+            EditField.ADDRESS_FIELD -> binding.addressInputLayout
+            EditField.EMAIL_FIELD -> binding.emailInputLayout
+        }.apply {
+            error = getString(field.messageResId)
             isErrorEnabled = true
         }
     }
