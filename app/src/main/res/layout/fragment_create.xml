@@ -13,11 +13,4 @@
         android:text="@string/create_user"
         android:textSize="@dimen/text_xl" />
 
-    <com.dev.miasnikoff.bookworm.view.LeafView
-        android:id="@+id/leaf_view"
-        android:layout_marginTop="@dimen/margin_24"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
 </FrameLayout>

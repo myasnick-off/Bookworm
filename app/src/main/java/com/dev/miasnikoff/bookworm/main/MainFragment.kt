@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
+import com.dev.miasnikoff.bookworm.create.CreateFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentMainBinding
 import com.dev.miasnikoff.bookworm.list.VolumeListFragment
 import com.dev.miasnikoff.bookworm.settings.SettingsFragment
@@ -44,6 +45,7 @@ class MainFragment : BaseFragment() {
                 SettingsFragment.newInstance(),
                 true
             )
+            R.id.menu_profile -> navigateToFragment(R.id.main_container, CreateFragment.newInstance())
         }
         return super.onOptionsItemSelected(item)
     }

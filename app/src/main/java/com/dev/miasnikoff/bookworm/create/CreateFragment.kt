@@ -34,13 +34,9 @@ class CreateFragment: BaseFragment() {
         binding.createButton.setOnClickListener {
             navigateToFragment(R.id.host_container, EditFragment.newInstance())
         }
-        binding.leafView.setCounter(LEAF_INIT_VALUE)
-        binding.leafView.setMaxValue(LEAF_MAX_VALUE)
     }
 
     companion object {
-        private const val LEAF_INIT_VALUE = 100
-        private const val LEAF_MAX_VALUE = 500
         fun newInstance(): CreateFragment = CreateFragment()
     }
 }

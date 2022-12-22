@@ -7,5 +7,10 @@
         android:icon="@drawable/ic_settings_24"
         android:title="@string/settings"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_profile"
+        android:icon="@drawable/ic_person_add_24"
+        android:title="@string/add_user"
+        app:showAsAction="ifRoom"/>
 
 </menu>
