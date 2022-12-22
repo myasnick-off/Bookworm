@@ -62,12 +62,13 @@ class EditFragment : BaseFragment() {
         }
         saveButton.setOnClickListener {
             hideSoftKeyboard()
-            //viewModel.checkFields()
-            val isNameValid = viewModel.checkName(binding.nameEditText.text)
-            val isBerthDateValid = viewModel.checkBerthDate(binding.berthEditText.text)
-            val isAddressValid = viewModel.checkAddress(binding.addressEditText.text)
-            val isEmailValid = viewModel.checkEmail(binding.emailEditText.text)
-            if (isNameValid && isBerthDateValid && isAddressValid && isEmailValid) {
+            val hasNoErrors = viewModel.checkFields(
+                name = binding.nameEditText.text,
+                date = binding.berthEditText.text,
+                address = binding.addressEditText.text,
+                email = binding.emailEditText.text
+            )
+            if (hasNoErrors) {
                 viewModel.liveData.value?.let { user ->
                     navigateToFragment(R.id.host_container, InfoFragment.newInstance(user))
                 }

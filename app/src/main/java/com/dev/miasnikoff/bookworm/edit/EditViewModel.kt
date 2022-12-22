@@ -16,91 +16,72 @@ class EditViewModel : ViewModel() {
     val liveData: LiveData<UserEntity> get() = _liveData
 
     val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-    private var userEntity = UserEntity()
-    val user: UserEntity
-        get() = userEntity
+    private var user = UserEntity()
 
-    fun checkName(name: Editable?): Boolean {
-        return if (name.isNullOrBlank()) {
-            liveData.value?.let { user ->
-                val errorFields = user.errorFields.toMutableList()
-                errorFields.add(EditField.NAME_FIELD)
-                _liveData.value = user.copy(errorFields = errorFields)
-            }
-            false
+    fun checkFields(
+        name: Editable?,
+        date: Editable?,
+        address: Editable?,
+        email: Editable?
+    ): Boolean {
+        checkName(name)
+        checkBerthDate(date)
+        checkAddress(address)
+        checkEmail(email)
+        _liveData.value = user
+        return user.errorFields.isEmpty()
+    }
+
+    private fun checkName(name: Editable?) {
+        val errorFields = user.errorFields.toMutableList()
+        user = if (name.isNullOrBlank()) {
+            errorFields.add(EditField.NAME_FIELD)
+            user.copy(errorFields = errorFields)
         } else {
-            liveData.value?.let { user ->
-                val errorFields = user.errorFields.toMutableList()
-                errorFields.remove(EditField.NAME_FIELD)
-                _liveData.value = user.copy(name = name.toString(), errorFields = errorFields)
-            }
-            true
+            errorFields.removeAll { it == EditField.NAME_FIELD }
+            user.copy(name = name.toString(), errorFields = errorFields)
         }
     }
 
-    fun checkAddress(address: Editable?): Boolean {
-        return if (address.isNullOrBlank()) {
-            liveData.value?.let { user ->
-                val errorFields = user.errorFields.toMutableList()
-                errorFields.add(EditField.ADDRESS_FIELD)
-                _liveData.value = user.copy(errorFields = errorFields)
-            }
-            false
+    private fun checkAddress(address: Editable?) {
+        val errorFields = user.errorFields.toMutableList()
+        user = if (address.isNullOrBlank()) {
+            errorFields.add(EditField.ADDRESS_FIELD)
+            user.copy(errorFields = errorFields)
         } else {
-            liveData.value?.let { user ->
-                val errorFields = user.errorFields.toMutableList()
-                errorFields.remove(EditField.ADDRESS_FIELD)
-                _liveData.value = user.copy(address = address.toString(), errorFields = errorFields)
-            }
-            true
+            errorFields.removeAll { it == EditField.ADDRESS_FIELD }
+            user.copy(address = address.toString(), errorFields = errorFields)
         }
     }
 
-    fun checkBerthDate(date: Editable?): Boolean {
+    private fun checkBerthDate(date: Editable?) {
+        val errorFields = user.errorFields.toMutableList()
         if (!date.isNullOrBlank()) {
             try {
                 val now = Date()
                 val berthDate = dateFormat.parse(date.toString())
                 if (berthDate < now) {
-                    liveData.value?.let { user ->
-                        val errorFields = user.errorFields.toMutableList()
-                        errorFields.remove(EditField.BERTH_FIELD)
-                        _liveData.value = user.copy(berthDate = berthDate, errorFields = errorFields)
-                    }
-                    return true
+                    errorFields.removeAll { it == EditField.BERTH_FIELD }
+                    user = user.copy(berthDate = berthDate, errorFields = errorFields)
+                    return
                 }
             } catch (e: ParseException) {
             }
         }
-        liveData.value?.let { user ->
-            val errorFields = user.errorFields.toMutableList()
-            errorFields.add(EditField.BERTH_FIELD)
-            _liveData.value = user.copy(errorFields = errorFields)
-        }
-        return false
+        errorFields.add(EditField.BERTH_FIELD)
+        user = user.copy(errorFields = errorFields)
     }
 
-    fun checkEmail(email: Editable?): Boolean {
-        return if (email.isNullOrBlank() ||
+    private fun checkEmail(email: Editable?) {
+        val errorFields = user.errorFields.toMutableList()
+        user = if (email.isNullOrBlank() ||
             !android.util.Patterns.EMAIL_ADDRESS.matcher(email.toString()).matches()
         ) {
-            liveData.value?.let { user ->
-                val errorFields = user.errorFields.toMutableList()
-                errorFields.add(EditField.EMAIL_FIELD)
-                _liveData.value = user.copy(errorFields = errorFields)
-            }
-            false
+            errorFields.add(EditField.EMAIL_FIELD)
+            user.copy(errorFields = errorFields)
         } else {
-            liveData.value?.let { user ->
-                val errorFields = user.errorFields.toMutableList()
-                errorFields.remove(EditField.EMAIL_FIELD)
-                _liveData.value = user.copy(email = email.toString(), errorFields = errorFields)
-            }
-            true
+            errorFields.removeAll { it == EditField.EMAIL_FIELD }
+            user.copy(email = email.toString(), errorFields = errorFields)
         }
-    }
-
-    fun checkFields(name: Editable?, date: Editable?, address: Editable?, email: Editable?): Boolean {
-        TODO("Not yet implemented")
     }
 }
