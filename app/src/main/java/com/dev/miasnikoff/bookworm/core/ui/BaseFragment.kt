@@ -24,7 +24,7 @@ abstract class BaseFragment: Fragment() {
                 .commit()
         } else {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.host_container, fragment)
+                .replace(container, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit()
         }
@@ -39,7 +39,7 @@ abstract class BaseFragment: Fragment() {
                 .commit()
         } else {
             parentFragmentManager.beginTransaction()
-                .add(R.id.host_container, fragment)
+                .add(container, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit()
         }

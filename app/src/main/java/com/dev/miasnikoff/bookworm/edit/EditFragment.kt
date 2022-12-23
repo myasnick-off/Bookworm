@@ -5,19 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.ViewModelProvider
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentEditBinding
 import com.dev.miasnikoff.bookworm.info.InfoFragment
+import com.dev.miasnikoff.bookworm.model.EditField
+import com.dev.miasnikoff.bookworm.model.UserEntity
 import com.google.android.material.datepicker.MaterialDatePicker
+import java.util.*
 
-class EditFragment : BaseFragment(), EditView {
+class EditFragment : BaseFragment() {
 
     private lateinit var _binding: FragmentEditBinding
     override val binding: FragmentEditBinding
         get() = _binding
 
-    private val presenter: EditPresenter = EditPresenterImpl()
+    private val viewModel: EditViewModel by lazy {
+        ViewModelProvider(this)[EditViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,18 +38,11 @@ class EditFragment : BaseFragment(), EditView {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initMenu()
-        presenter.attachView(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.detachView()
+        initViewModel()
     }
 
     override fun initView() = with(binding) {
-        root.setOnClickListener {
-            hideSoftKeyboard()
-        }
+        root.setOnClickListener { hideSoftKeyboard() }
         nameEditText.doOnTextChanged { _, _, _, _ ->
             nameInputLayout.isErrorEnabled = false
         }
@@ -63,45 +62,37 @@ class EditFragment : BaseFragment(), EditView {
         }
         saveButton.setOnClickListener {
             hideSoftKeyboard()
-            val isNameValid = presenter.checkName(binding.nameEditText.text)
-            val isBerthDateValid = presenter.checkBerthDate(binding.berthEditText.text)
-            val isAddressValid = presenter.checkAddress(binding.addressEditText.text)
-            val isEmailValid = presenter.checkEmail(binding.emailEditText.text)
-            if (isNameValid && isBerthDateValid && isAddressValid && isEmailValid) {
-                navigateToFragment(R.id.host_container, InfoFragment.newInstance(presenter.user))
+            val hasNoErrors = viewModel.checkFields(
+                name = binding.nameEditText.text,
+                date = binding.berthEditText.text,
+                address = binding.addressEditText.text,
+                email = binding.emailEditText.text
+            )
+            if (hasNoErrors) {
+                viewModel.liveData.value?.let { user ->
+                    openFragment(R.id.main_container, InfoFragment.newInstance(user), true)
+                }
             }
         }
     }
 
-    override fun showBerthDate(dateString: String) {
-        binding.berthEditText.setText(dateString)
+    private fun initViewModel() {
+        viewModel.liveData.observe(viewLifecycleOwner, ::renderData)
     }
 
-    override fun handleNameError(isError: Boolean) {
-        binding.nameInputLayout.apply {
-            error = getString(R.string.name_error_message)
-            isErrorEnabled = isError
-        }
+    private fun renderData(user: UserEntity) {
+        user.errorFields.forEach { field -> showFieldError(field) }
     }
 
-    override fun handleBerthDateError(isError: Boolean) {
-        binding.berthInputLayout.apply {
-            error = getString(R.string.berth_error_message)
-            isErrorEnabled = isError
-        }
-    }
-
-    override fun handleAddressError(isError: Boolean) {
-        binding.addressInputLayout.apply {
-            error = getString(R.string.address_error_message)
-            isErrorEnabled = isError
-        }
-    }
-
-    override fun handleEmailError(isError: Boolean) {
-        binding.emailInputLayout.apply {
-            error = getString(R.string.email_error_message)
-            isErrorEnabled = isError
+    private fun showFieldError(field: EditField) {
+        when (field) {
+            EditField.NAME_FIELD -> binding.nameInputLayout
+            EditField.BERTH_FIELD -> binding.berthInputLayout
+            EditField.ADDRESS_FIELD -> binding.addressInputLayout
+            EditField.EMAIL_FIELD -> binding.emailInputLayout
+        }.apply {
+            error = getString(field.messageResId)
+            isErrorEnabled = true
         }
     }
 
@@ -112,11 +103,13 @@ class EditFragment : BaseFragment(), EditView {
             .setSelection(MaterialDatePicker.thisMonthInUtcMilliseconds())
             .build()
         datePickerDialog.addOnPositiveButtonClickListener {
-            datePickerDialog.selection?.let { date ->
-                presenter.setBerthDate(date)
-            }
+            datePickerDialog.selection?.let { date -> setBerthDate(date) }
         }
         datePickerDialog.show(parentFragmentManager, null)
+    }
+
+    private fun setBerthDate(date: Long) {
+        binding.berthEditText.setText(viewModel.dateFormat.format(Date(date)))
     }
 
     companion object {
