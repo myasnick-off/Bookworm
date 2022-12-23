@@ -1,22 +1,25 @@
-package com.dev.miasnikoff.bookworm.list.mapper
+package com.dev.miasnikoff.bookworm.details
 
 import com.dev.miasnikoff.bookworm.core.network.model.ImageLinksDTO
 import com.dev.miasnikoff.bookworm.core.network.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.core.ui.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.list.adapter.VolumeItem
 
-class VolumeDataMapper {
-    fun toRecyclerItems(volumes: List<VolumeDTO>): List<RecyclerItem> =
-        volumes.map { toItem(it) }
+class VolumeDetailsMapper {
 
-    private fun toItem(volumeDTO: VolumeDTO): RecyclerItem =
-        VolumeItem(
+    operator fun invoke(volumeDTO: VolumeDTO): Volume =
+        Volume(
             id = volumeDTO.id,
             title = volumeDTO.volumeInfo.title.orEmpty(),
-            authors = volumeDTO.volumeInfo.authors?.toString()?.trim('[', ']').orEmpty(),
+            subtitle = volumeDTO.volumeInfo.subtitle.orEmpty(),
+            authors = volumeDTO.volumeInfo.authors?.joinToString().orEmpty(),
+            publisher = volumeDTO.volumeInfo.publisher.orEmpty(),
             publishedDate = volumeDTO.volumeInfo.publishedDate.orEmpty(),
-            mainCategory = volumeDTO.volumeInfo.mainCategory.orEmpty(),
+            categories = volumeDTO.volumeInfo.categories?.joinToString()
+                ?: volumeDTO.volumeInfo.mainCategory.orEmpty(),
             averageRating = volumeDTO.volumeInfo.averageRating?.toFloat() ?: 0f,
+            ratingsCount = volumeDTO.volumeInfo.ratingsCount ?: 0,
+            description = volumeDTO.volumeInfo.description.orEmpty(),
             imageLink = getSmallImage(volumeDTO.volumeInfo.imageLinks),
             language = volumeDTO.volumeInfo.language.orEmpty()
         )

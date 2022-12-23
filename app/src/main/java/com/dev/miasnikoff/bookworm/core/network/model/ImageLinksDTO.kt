@@ -2,7 +2,7 @@ package com.dev.miasnikoff.bookworm.core.network.model
 
 import com.google.gson.annotations.SerializedName
 
-data class ImageLinks(
+data class ImageLinksDTO(
     @SerializedName("smallThumbnail") val smallThumbnail: String?,
     @SerializedName("thumbnail") val thumbnail: String?,
     @SerializedName("small") val small: String?,

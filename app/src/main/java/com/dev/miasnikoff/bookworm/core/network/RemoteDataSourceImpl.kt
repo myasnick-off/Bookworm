@@ -1,6 +1,6 @@
 package com.dev.miasnikoff.bookworm.core.network
 
-import com.dev.miasnikoff.bookworm.core.network.model.Volume
+import com.dev.miasnikoff.bookworm.core.network.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.core.network.model.VolumeResponse
 import okhttp3.OkHttpClient
 import retrofit2.Callback
@@ -22,7 +22,7 @@ class RemoteDataSourceImpl: RemoteDataSource {
         apiService.getVolumes(query = query, startIndex = startIndex, maxResults = maxResults).enqueue(callback)
     }
 
-    override fun getVolume(id: String, callback: Callback<Volume>) {
+    override fun getVolume(id: String, callback: Callback<VolumeDTO>) {
         apiService.getVolume(volumeId = id).enqueue(callback)
     }
 

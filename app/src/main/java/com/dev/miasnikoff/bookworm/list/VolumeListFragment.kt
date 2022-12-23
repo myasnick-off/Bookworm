@@ -14,6 +14,7 @@ import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.core.ui.BaseFragment
 import com.dev.miasnikoff.bookworm.core.ui.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
+import com.dev.miasnikoff.bookworm.details.VolumeDetailsFragment
 import com.dev.miasnikoff.bookworm.list.adapter.VolumeListAdapter
 import com.dev.miasnikoff.bookworm.search.SearchClickListener
 import com.dev.miasnikoff.bookworm.search.SearchDialogFragment
@@ -31,8 +32,7 @@ class VolumeListFragment : BaseFragment() {
 
     private val itemClickListener = object : VolumeListAdapter.ItemClickListener {
         override fun onItemClick(itemId: String) {
-            Toast.makeText(context, "Made click on item with id #$itemId", Toast.LENGTH_SHORT)
-                .show()
+            openFragment(R.id.main_container, VolumeDetailsFragment.newInstance(itemId), true)
         }
 
         override fun onItemLongClick(itemId: String): Boolean {

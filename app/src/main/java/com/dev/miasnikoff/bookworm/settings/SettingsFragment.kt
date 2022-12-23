@@ -44,9 +44,7 @@ class SettingsFragment : BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> {
-                requireActivity().onBackPressed()
-            }
+            android.R.id.home -> requireActivity().onBackPressed()
         }
         return super.onOptionsItemSelected(item)
     }

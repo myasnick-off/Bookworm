@@ -2,7 +2,7 @@ package com.dev.miasnikoff.bookworm.core.network.model
 
 import com.google.gson.annotations.SerializedName
 
-data class VolumeInfo(
+data class VolumeInfoDTO(
     @SerializedName("title") val title: String?,
     @SerializedName("subtitle") val subtitle: String?,
     @SerializedName("authors") val authors: List<String>?,
@@ -16,7 +16,7 @@ data class VolumeInfo(
     @SerializedName("averageRating") val averageRating: Double?,
     @SerializedName("ratingsCount") val ratingsCount: Int?,
     @SerializedName("contentVersion") val contentVersion: String?,
-    @SerializedName("imageLinks") val imageLinks: ImageLinks?,
+    @SerializedName("imageLinks") val imageLinks: ImageLinksDTO?,
     @SerializedName("language") val language: String?,
     @SerializedName("previewLink") val previewLink: String?,
     @SerializedName("infoLink") val infoLink: String?,
