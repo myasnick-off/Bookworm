@@ -18,7 +18,7 @@
         android:theme="@style/Theme.Bookworm"
         tools:targetApi="31">
         <activity
-            android:name=".splash.SplashActivity"
+            android:name="com.dev.miasnikoff.bookworm.presentation.splash.SplashActivity"
             android:noHistory="true"
             android:exported="true">
             <intent-filter>
@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".main.MainActivity"
+            android:name="com.dev.miasnikoff.bookworm.presentation.main.MainActivity"
             android:exported="true">
         </activity>
     </application>
