@@ -1,6 +1,6 @@
 package com.dev.miasnikoff.bookworm.core.network
 
-import com.dev.miasnikoff.bookworm.core.network.model.Volume
+import com.dev.miasnikoff.bookworm.core.network.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.core.network.model.VolumeResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -25,5 +25,5 @@ interface ApiService {
     fun getVolume(
         @Path("volumeId") volumeId: String,
         @Query("key") apiKey: String = RemoteDataSourceImpl.API_KEY
-    ): Call<Volume>
+    ): Call<VolumeDTO>
 }
