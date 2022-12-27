@@ -11,7 +11,7 @@ import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentEditBinding
 import com.dev.miasnikoff.bookworm.presentation.info.InfoFragment
 import com.dev.miasnikoff.bookworm.presentation._core.model.EditField
-import com.dev.miasnikoff.bookworm.presentation._core.model.UserEntity
+import com.dev.miasnikoff.bookworm.presentation._core.model.UserModel
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.util.*
 
@@ -80,7 +80,7 @@ class EditFragment : BaseFragment() {
         viewModel.liveData.observe(viewLifecycleOwner, ::renderData)
     }
 
-    private fun renderData(user: UserEntity) {
+    private fun renderData(user: UserModel) {
         user.errorFields.forEach { field -> showFieldError(field) }
     }
 

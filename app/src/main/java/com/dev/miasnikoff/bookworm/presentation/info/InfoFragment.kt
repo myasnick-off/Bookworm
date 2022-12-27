@@ -12,7 +12,7 @@ import androidx.core.os.bundleOf
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentInfoBinding
-import com.dev.miasnikoff.bookworm.presentation._core.model.UserEntity
+import com.dev.miasnikoff.bookworm.presentation._core.model.UserModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,7 +22,7 @@ class InfoFragment : BaseFragment() {
     override val binding: FragmentInfoBinding
         get() = _binding
 
-    private val user: UserEntity
+    private val user: UserModel
         get() = arguments?.getParcelable(ARG_USER_DATA) ?: throw IllegalStateException("No data!")
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
@@ -72,7 +72,7 @@ class InfoFragment : BaseFragment() {
         private const val LOG_TAG = "InfoFragment"
         private const val ERROR_MESSAGE = "Failed to send e-mail!"
 
-        fun newInstance(user: UserEntity): InfoFragment = InfoFragment().apply {
+        fun newInstance(user: UserModel): InfoFragment = InfoFragment().apply {
             arguments = bundleOf(ARG_USER_DATA to user)
         }
     }

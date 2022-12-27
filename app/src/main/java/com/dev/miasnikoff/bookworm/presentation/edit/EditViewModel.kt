@@ -5,18 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dev.miasnikoff.bookworm.presentation._core.model.EditField
-import com.dev.miasnikoff.bookworm.presentation._core.model.UserEntity
+import com.dev.miasnikoff.bookworm.presentation._core.model.UserModel
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class EditViewModel : ViewModel() {
 
-    private var _liveData: MutableLiveData<UserEntity> = MutableLiveData(UserEntity())
-    val liveData: LiveData<UserEntity> get() = _liveData
+    private var _liveData: MutableLiveData<UserModel> = MutableLiveData(UserModel())
+    val liveData: LiveData<UserModel> get() = _liveData
 
     val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-    private var user = UserEntity()
+    private var user = UserModel()
 
     fun checkFields(
         name: Editable?,
