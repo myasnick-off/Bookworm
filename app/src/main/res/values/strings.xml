@@ -25,4 +25,14 @@
     <string name="wrong_input">Неверный ввод</string>
     <string name="error">Ошибка!</string>
     <string name="reload">Еще раз!</string>
+    <string name="enter_text">Введите текст…</string>
+    <string name="add_user">Добавить пользователя</string>
+    <string name="categories">Категории:</string>
+    <string name="about">О книге:</string>
+    <string name="about_volume">О книге</string>
+    <string name="published_date">Дата публикации:</string>
+    <string name="publisher">Издательство:</string>
+    <string name="authors">Авторы:</string>
+    <string name="subtitle">Подзаголовок:</string>
+    <string name="language">Язык:</string>
 </resources>
