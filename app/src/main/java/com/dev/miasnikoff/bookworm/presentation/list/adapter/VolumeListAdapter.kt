@@ -1,13 +1,12 @@
-package com.dev.miasnikoff.bookworm.list.adapter
+package com.dev.miasnikoff.bookworm.presentation.list.adapter
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.ListAdapter
-import com.dev.miasnikoff.bookworm.core.ui.adapter.RecyclerItem
-import com.dev.miasnikoff.bookworm.core.ui.adapter.diffUtilItemCallback
 import com.dev.miasnikoff.bookworm.databinding.ItemVolumeListBinding
+import com.dev.miasnikoff.bookworm.presentation._core.adapter.RecyclerItem
+import com.dev.miasnikoff.bookworm.presentation._core.adapter.diffUtilItemCallback
+import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeItem
 
 class VolumeListAdapter(
     private val itemClickListener: ItemClickListener,
@@ -28,7 +27,6 @@ class VolumeListAdapter(
         return VolumeViewHolder(binding, itemClickListener)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onBindViewHolder(holder: VolumeViewHolder, position: Int) {
         if (loadMore && (position + ITEMS_LEFT) >= itemCount) {
             loadMore = false
@@ -37,7 +35,6 @@ class VolumeListAdapter(
         (getItem(position) as? VolumeItem)?.let { holder.bind(it) }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onBindViewHolder(
         holder: VolumeViewHolder,
         position: Int,

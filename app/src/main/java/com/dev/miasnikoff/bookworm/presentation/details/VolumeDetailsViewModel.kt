@@ -3,9 +3,9 @@ package com.dev.miasnikoff.bookworm.presentation.details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dev.miasnikoff.bookworm.domain.Repository
 import com.dev.miasnikoff.bookworm.data.RepositoryImpl
 import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
+import com.dev.miasnikoff.bookworm.domain.Repository
 import com.dev.miasnikoff.bookworm.presentation.details.mapper.VolumeDetailsMapper
 import com.dev.miasnikoff.bookworm.presentation.details.model.DetailsState
 import retrofit2.Call

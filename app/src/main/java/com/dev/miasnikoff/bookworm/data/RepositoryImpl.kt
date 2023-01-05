@@ -1,8 +1,8 @@
 package com.dev.miasnikoff.bookworm.data
 
-import com.dev.miasnikoff.bookworm.domain.Repository
 import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.data.model.VolumeResponse
+import com.dev.miasnikoff.bookworm.domain.Repository
 import retrofit2.Callback
 
 class RepositoryImpl(

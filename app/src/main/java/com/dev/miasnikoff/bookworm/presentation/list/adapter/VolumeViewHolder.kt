@@ -1,14 +1,10 @@
 package com.dev.miasnikoff.bookworm.presentation.list.adapter
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.presentation._core.adapter.BaseViewHolder
-import com.dev.miasnikoff.bookworm.presentation._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.databinding.ItemVolumeListBinding
 import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeItem
 import com.dev.miasnikoff.bookworm.utils.extensions.vibrate
@@ -19,7 +15,6 @@ class VolumeViewHolder(
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     fun bind(item: VolumeItem) {
 
         binding.bookTitle.text = item.title
@@ -29,7 +24,13 @@ class VolumeViewHolder(
             .error(R.drawable.ic_broken_image_48)
             .into(binding.bookImage)
         binding.favoriteIcon.apply {
-            setImageDrawable(ContextCompat.getDrawable(context, item.favoriteIcon))
+            setImageDrawable(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    item.favoriteIcon,
+                    binding.favoriteIcon.context.theme
+                )
+            )
             setOnClickListener { itemClickListener.onFavoriteClick(item.id) }
         }
         binding.root.apply {
