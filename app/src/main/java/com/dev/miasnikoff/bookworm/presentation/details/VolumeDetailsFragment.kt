@@ -6,8 +6,8 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentVolumeDetailsBinding
+import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
 import com.dev.miasnikoff.bookworm.presentation.details.model.DetailsState
 import com.dev.miasnikoff.bookworm.presentation.details.model.Volume
 import com.dev.miasnikoff.bookworm.presentation.main.MainActivity

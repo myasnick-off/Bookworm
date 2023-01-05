@@ -6,8 +6,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentSettingsBinding
+import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
 import com.dev.miasnikoff.bookworm.presentation.main.MainActivity
 import com.dev.miasnikoff.bookworm.utils.ThemePrefsHandler
 import com.dev.miasnikoff.bookworm.utils.Themes

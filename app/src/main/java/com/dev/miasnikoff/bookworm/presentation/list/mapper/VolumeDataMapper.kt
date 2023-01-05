@@ -9,16 +9,16 @@ class VolumeDataMapper {
     fun toRecyclerItems(volumes: List<VolumeDTO>): List<RecyclerItem> =
         volumes.map { toItem(it) }
 
-    private fun toItem(volumeDTO: VolumeDTO): RecyclerItem =
+    private fun toItem(volume: VolumeDTO): RecyclerItem =
         VolumeItem(
-            id = volumeDTO.id,
-            title = volumeDTO.volumeInfo.title.orEmpty(),
-            authors = volumeDTO.volumeInfo.authors?.toString()?.trim('[', ']').orEmpty(),
-            publishedDate = volumeDTO.volumeInfo.publishedDate.orEmpty(),
-            mainCategory = volumeDTO.volumeInfo.mainCategory.orEmpty(),
-            averageRating = volumeDTO.volumeInfo.averageRating?.toFloat() ?: 0f,
-            imageLink = getSmallImage(volumeDTO.volumeInfo.imageLinks),
-            language = volumeDTO.volumeInfo.language.orEmpty()
+            id = volume.id,
+            title = volume.volumeInfo.title.orEmpty(),
+            authors = volume.volumeInfo.authors?.joinToString().orEmpty(),
+            publishedDate = volume.volumeInfo.publishedDate.orEmpty(),
+            mainCategory = volume.volumeInfo.mainCategory.orEmpty(),
+            averageRating = volume.volumeInfo.averageRating?.toFloat() ?: 0f,
+            imageLink = getSmallImage(volume.volumeInfo.imageLinks),
+            language = volume.volumeInfo.language.orEmpty()
         )
 
     private fun getSmallImage(imgLinks: ImageLinksDTO?): String? {

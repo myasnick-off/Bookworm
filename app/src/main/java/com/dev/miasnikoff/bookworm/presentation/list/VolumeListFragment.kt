@@ -8,12 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import com.dev.miasnikoff.bookworm.R
+import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
 import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
 import com.dev.miasnikoff.bookworm.presentation._core.adapter.RecyclerItem
-import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
 import com.dev.miasnikoff.bookworm.presentation.details.VolumeDetailsFragment
 import com.dev.miasnikoff.bookworm.presentation.list.adapter.VolumeListAdapter
 import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeListState
@@ -42,7 +41,7 @@ class VolumeListFragment : BaseFragment() {
             return true
         }
 
-        override fun onIconClick(itemId: String) {
+        override fun onFavoriteClick(itemId: String) {
             viewModel.setFavorite(itemId)
         }
     }
@@ -67,7 +66,6 @@ class VolumeListFragment : BaseFragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
@@ -75,7 +73,6 @@ class VolumeListFragment : BaseFragment() {
         initPresenter()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun initView() {
         binding.volumeList.adapter = volumeListAdapter
         val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
@@ -95,7 +92,9 @@ class VolumeListFragment : BaseFragment() {
             start()
         }
         binding.listFab?.setOnClickListener {
-            fabAnimSet?.reverse()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                fabAnimSet?.reverse()
+            }
             showSearchDialog()
         }
     }
@@ -144,8 +143,7 @@ class VolumeListFragment : BaseFragment() {
         binding.listLoader.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.VISIBLE
-        volumeListAdapter.submitList(volumes)
-        volumeListAdapter.loadMore = loadMore
+        volumeListAdapter.updateList(volumes, loadMore)
     }
 
     private fun showError(message: String) {

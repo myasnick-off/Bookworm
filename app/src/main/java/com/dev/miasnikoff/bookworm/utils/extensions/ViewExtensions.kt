@@ -6,7 +6,6 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.RequiresApi
 import androidx.core.content.getSystemService
 import com.google.android.material.snackbar.Snackbar
 
@@ -19,10 +18,11 @@ fun View.showSnackBar(
     Snackbar.make(this, message, length).setAction(actionText, action).show()
 }
 
-@RequiresApi(Build.VERSION_CODES.Q)
 fun View.vibrate(duration: Long) {
-    val vibrator = this.context.getSystemService<Vibrator>()
-    vibrator?.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.EFFECT_HEAVY_CLICK))
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        val vibrator = this.context.getSystemService<Vibrator>()
+        vibrator?.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.EFFECT_HEAVY_CLICK))
+    }
 }
 
 fun View.hideSoftKeyboard() {

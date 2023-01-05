@@ -13,7 +13,6 @@ import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.LeafViewBinding
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import java.lang.NumberFormatException
 
 class LeafView
 @JvmOverloads constructor(

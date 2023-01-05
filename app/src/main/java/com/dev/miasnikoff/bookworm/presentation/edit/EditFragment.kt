@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
 import com.dev.miasnikoff.bookworm.databinding.FragmentEditBinding
-import com.dev.miasnikoff.bookworm.presentation.info.InfoFragment
+import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
 import com.dev.miasnikoff.bookworm.presentation._core.model.EditField
 import com.dev.miasnikoff.bookworm.presentation._core.model.UserModel
+import com.dev.miasnikoff.bookworm.presentation.info.InfoFragment
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.util.*
 
