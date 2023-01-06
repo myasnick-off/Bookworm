@@ -11,9 +11,9 @@ import com.google.android.material.snackbar.Snackbar
 
 fun View.showSnackBar(
     message: String,
-    actionText: String,
+    actionText: String? = null,
     length: Int = Snackbar.LENGTH_INDEFINITE,
-    action: (View) -> Unit
+    action: (View) -> Unit = {}
 ) {
     Snackbar.make(this, message, length).setAction(actionText, action).show()
 }
