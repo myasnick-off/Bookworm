@@ -47,8 +47,8 @@ class LoginFragment : BaseFragment() {
         initViewModel()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         disposables.clear()
     }
 
