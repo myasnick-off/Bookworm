@@ -6,7 +6,7 @@ import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentMainBinding
 import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
 import com.dev.miasnikoff.bookworm.presentation.edit.EditFragment
-import com.dev.miasnikoff.bookworm.presentation.login.LoginFragment
+import com.dev.miasnikoff.bookworm.presentation.list.VolumeListFragment
 import com.dev.miasnikoff.bookworm.presentation.settings.SettingsFragment
 
 class MainFragment : BaseFragment() {
@@ -61,7 +61,7 @@ class MainFragment : BaseFragment() {
     }
 
     override fun initView() {
-        navigateToFragment(R.id.main_container, LoginFragment.newInstance())
+        navigateToFragment(R.id.host_container, VolumeListFragment.newInstance())
     }
 
     companion object {
