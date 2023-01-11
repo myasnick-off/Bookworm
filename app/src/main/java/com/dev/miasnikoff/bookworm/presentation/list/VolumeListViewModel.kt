@@ -5,20 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.data.RepositoryImpl
-import com.dev.miasnikoff.bookworm.data.model.VolumeResponse
 import com.dev.miasnikoff.bookworm.domain.Repository
 import com.dev.miasnikoff.bookworm.presentation._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.presentation.list.mapper.VolumeDataMapper
 import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeItem
 import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeListState
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.*
 
 class VolumeListViewModel(
     private val dataSource: Repository = RepositoryImpl(),
     private val mapper: VolumeDataMapper = VolumeDataMapper()
 ) : ViewModel() {
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        _liveData.value = VolumeListState.Failure(throwable.message ?: DEFAULT_ERROR_MESSAGE)
+    }
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + exceptionHandler)
+    private var job: Job? = null
 
     private val _liveData: MutableLiveData<VolumeListState> = MutableLiveData()
     val liveData: LiveData<VolumeListState> get() = _liveData
@@ -39,33 +42,23 @@ class VolumeListViewModel(
             if (startIndex == DEFAULT_START_INDEX) {
                 _liveData.value = VolumeListState.Loading
             }
-            dataSource.getVolumeList(
-                query = query,
-                startIndex = startIndex,
-                maxResults = DEFAULT_MAX_VALUES,
-                object : Callback<VolumeResponse> {
-                    override fun onResponse(
-                        call: Call<VolumeResponse>,
-                        response: Response<VolumeResponse>
-                    ) {
-                        val body = response.body()
-                        if (response.isSuccessful && body != null) {
-                            currentList += mapper.toRecyclerItems(body.volumes)
-                            val newList = mutableListOf<RecyclerItem>().apply { addAll(currentList) }
-                            _liveData.postValue(
-                                VolumeListState.Success(newList, newList.size < body.totalItems)
-                            )
-                        } else {
-                            _liveData.postValue(VolumeListState.Failure("Data failure!"))
-                        }
-                    }
-
-                    override fun onFailure(call: Call<VolumeResponse>, t: Throwable) {
-                        _liveData.postValue(VolumeListState.Failure(t.message ?: "Unknown error!"))
-                    }
-                })
+            job?.cancel()
+            job = scope.launch {
+                val volumeResponse = dataSource.getVolumeList(
+                    query = query,
+                    startIndex = startIndex,
+                    maxResults = DEFAULT_MAX_VALUES
+                )
+                val newList = mutableListOf<RecyclerItem>().apply {
+                    addAll(currentList + mapper.toRecyclerItems(volumeResponse.volumes))
+                }
+                currentList = newList
+                _liveData.value =
+                    VolumeListState.Success(currentList, newList.size < volumeResponse.totalItems)
+            }
         }
     }
+
 
     fun setFavorite(itemId: String) {
         val newList: MutableList<RecyclerItem> = mutableListOf()
@@ -85,8 +78,14 @@ class VolumeListViewModel(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
+    }
+
     companion object {
         private const val DEFAULT_START_INDEX = 0
         private const val DEFAULT_MAX_VALUES = 20
+        private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
     }
 }

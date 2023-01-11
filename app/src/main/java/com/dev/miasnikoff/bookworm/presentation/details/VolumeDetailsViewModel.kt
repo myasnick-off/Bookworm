@@ -4,37 +4,39 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dev.miasnikoff.bookworm.data.RepositoryImpl
-import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.domain.Repository
 import com.dev.miasnikoff.bookworm.presentation.details.mapper.VolumeDetailsMapper
 import com.dev.miasnikoff.bookworm.presentation.details.model.DetailsState
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.*
 
 class VolumeDetailsViewModel(
     private val repository: Repository = RepositoryImpl(),
     private val mapper: VolumeDetailsMapper = VolumeDetailsMapper(),
 ) : ViewModel() {
 
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        _liveData.value = DetailsState.Failure(throwable.message ?: DEFAULT_ERROR_MESSAGE)
+    }
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + exceptionHandler)
+
     private var _liveData: MutableLiveData<DetailsState> = MutableLiveData()
     val liveData: LiveData<DetailsState> get() = _liveData
 
     fun getDetails(volumeId: String) {
         _liveData.value = DetailsState.Loading
-        repository.getVolume(volumeId, object : Callback<VolumeDTO> {
-            override fun onResponse(call: Call<VolumeDTO>, response: Response<VolumeDTO>) {
-                val body = response.body()
-                if (response.isSuccessful && body != null) {
-                    _liveData.postValue(DetailsState.Success(mapper(body)))
-                } else {
-                    _liveData.postValue(DetailsState.Failure("Data failure!"))
-                }
-            }
+        scope.launch {
 
-            override fun onFailure(call: Call<VolumeDTO>, t: Throwable) {
-                _liveData.postValue(DetailsState.Failure(t.message ?: "Unknown error!"))
-            }
-        })
+            val volumeDTO = repository.getVolume(volumeId)
+            _liveData.value = DetailsState.Success(mapper(volumeDTO))
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
+    }
+
+    companion object {
+        private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
     }
 }

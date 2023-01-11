@@ -3,23 +3,22 @@ package com.dev.miasnikoff.bookworm.data
 import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.data.model.VolumeResponse
 import com.dev.miasnikoff.bookworm.domain.Repository
-import retrofit2.Callback
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RepositoryImpl(
     private val apiService: ApiService = RemoteDataSource.apiService
 ) : Repository {
 
-    override fun getVolumeList(
-        query: String,
-        startIndex: Int,
-        maxResults: Int,
-        callback: Callback<VolumeResponse>
-    ) {
-        apiService.getVolumes(query = query, startIndex = startIndex, maxResults = maxResults)
-            .enqueue(callback)
+    override suspend fun getVolumeList(query: String, startIndex: Int, maxResults: Int): VolumeResponse {
+        return withContext(Dispatchers.IO) {
+            apiService.getVolumesAsync(query = query, startIndex = startIndex, maxResults = maxResults).await()
+        }
     }
 
-    override fun getVolume(id: String, callback: Callback<VolumeDTO>) {
-        apiService.getVolume(volumeId = id).enqueue(callback)
+    override suspend fun getVolume(id: String): VolumeDTO {
+        return withContext(Dispatchers.IO) {
+            apiService.getVolumeAsync(volumeId = id).await()
+        }
     }
 }
