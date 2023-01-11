@@ -31,6 +31,11 @@ class VolumeDetailsViewModel(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
+    }
+
     companion object {
         private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
     }
