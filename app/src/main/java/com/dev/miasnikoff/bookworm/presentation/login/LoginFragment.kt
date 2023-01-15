@@ -101,14 +101,14 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun showLoading() {
-        binding.listLoader.visibility = View.VISIBLE
+        binding.loginLoader.visibility = View.VISIBLE
         binding.errorMessage.visibility = View.GONE
         binding.loginInputLayout.isEnabled = false
         binding.passwordInputLayout.isEnabled = false
     }
 
     private fun showAuthError(message: String) {
-        binding.listLoader.visibility = View.GONE
+        binding.loginLoader.visibility = View.GONE
         binding.errorMessage.visibility = View.VISIBLE
         binding.errorMessage.text = message
         binding.loginInputLayout.isEnabled = true
@@ -116,14 +116,14 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun showData(user: UserModel) {
-        binding.listLoader.visibility = View.GONE
+        binding.loginLoader.visibility = View.GONE
         binding.loginInputLayout.isEnabled = true
         binding.passwordInputLayout.isEnabled = true
-        openFragment(R.id.main_container, InfoFragment.newInstance(user), true)
+        openFragment(fragment = InfoFragment.newInstance(user))
     }
 
     private fun showError(message: String) {
-        binding.listLoader.visibility = View.GONE
+        binding.loginLoader.visibility = View.GONE
         binding.loginInputLayout.isEnabled = true
         binding.passwordInputLayout.isEnabled = true
         binding.root.showSnackBar(message = message, length = Snackbar.LENGTH_SHORT)

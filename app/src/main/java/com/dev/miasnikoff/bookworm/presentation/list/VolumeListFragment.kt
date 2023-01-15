@@ -19,6 +19,7 @@ import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeListState
 import com.dev.miasnikoff.bookworm.presentation.search.SearchClickListener
 import com.dev.miasnikoff.bookworm.presentation.search.SearchDialogFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
+import com.google.android.material.snackbar.Snackbar
 
 class VolumeListFragment : BaseFragment() {
 
@@ -32,7 +33,7 @@ class VolumeListFragment : BaseFragment() {
 
     private val itemClickListener = object : VolumeListAdapter.ItemClickListener {
         override fun onItemClick(itemId: String) {
-            openFragment(R.id.main_container, VolumeDetailsFragment.newInstance(itemId), true)
+            openFragment(fragment = VolumeDetailsFragment.newInstance(itemId))
         }
 
         override fun onItemLongClick(itemId: String): Boolean {
@@ -48,7 +49,7 @@ class VolumeListFragment : BaseFragment() {
 
     private val pageListener = object : VolumeListAdapter.PageListener {
         override fun loadNextPage() {
-            viewModel.loadNextPage(DEFAULT_QUERY)
+            viewModel.loadNextPage()
         }
     }
 
@@ -128,31 +129,32 @@ class VolumeListFragment : BaseFragment() {
     }
 
     private fun showLoading() {
-        binding.listLoader.visibility = View.VISIBLE
+        binding.listLoader?.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.GONE
     }
 
     private fun showMoreLoading() {
-        binding.listLoader.visibility = View.VISIBLE
+        binding.listLoader?.visibility = View.VISIBLE
         binding.volumeList.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
     }
 
     private fun showData(volumes: List<RecyclerItem>, loadMore: Boolean) {
-        binding.listLoader.visibility = View.GONE
+        binding.listLoader?.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.VISIBLE
         volumeListAdapter.updateList(volumes, loadMore)
     }
 
     private fun showError(message: String) {
-        binding.listLoader.visibility = View.GONE
+        binding.listLoader?.visibility = View.GONE
         binding.volumeList.visibility = View.GONE
         binding.errorImage.visibility = View.VISIBLE
         binding.root.showSnackBar(
             message = "${getString(R.string.error)} $message",
-            actionText = getString(R.string.reload)
+            actionText = getString(R.string.reload),
+            length = Snackbar.LENGTH_LONG,
         ) { getData() }
     }
 
@@ -161,7 +163,7 @@ class VolumeListFragment : BaseFragment() {
     }
 
     companion object {
-        private const val DEFAULT_QUERY = "The"
+        private const val DEFAULT_QUERY = "Fiction"
         private const val FAB_ANIMATION_DURATION = 500L
         fun newInstance(): VolumeListFragment = VolumeListFragment()
     }

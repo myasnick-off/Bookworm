@@ -17,6 +17,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        val mainFragment = supportFragmentManager.findFragmentById(R.id.main_container)
+        (mainFragment as? BackPressMonitor)?.let { backPressMonitor ->
+            if (!backPressMonitor.onBackPressed()) {
+                super.onBackPressed()
+            }
+        } ?: super.onBackPressed()
+    }
+
     private fun navigateToFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.main_container, fragment)

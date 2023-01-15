@@ -27,34 +27,36 @@ class VolumeListViewModel(
     val liveData: LiveData<VolumeListState> get() = _liveData
 
     private var currentList: MutableList<RecyclerItem> = mutableListOf()
+    private var currentQuery: String = ""
 
     fun getInitialPage(query: String) {
-        getVolumeList(query, DEFAULT_START_INDEX)
+        currentQuery = "+subject:${query}"
+        _liveData.value = VolumeListState.Loading
+        getVolumeList(DEFAULT_START_INDEX)
+        currentList.clear()
     }
 
-    fun loadNextPage(query: String) {
+    fun loadNextPage() {
         _liveData.value = VolumeListState.MoreLoading
-        getVolumeList(query, currentList.size)
+        getVolumeList(currentList.size)
     }
 
-    private fun getVolumeList(query: String, startIndex: Int) {
+    private fun getVolumeList(startIndex: Int) {
         if (liveData.value !is VolumeListState.Success) {
-            if (startIndex == DEFAULT_START_INDEX) {
-                _liveData.value = VolumeListState.Loading
-            }
             job?.cancel()
             job = scope.launch {
                 val volumeResponse = dataSource.getVolumeList(
-                    query = query,
+                    query = currentQuery,
                     startIndex = startIndex,
                     maxResults = DEFAULT_MAX_VALUES
                 )
-                val newList = mutableListOf<RecyclerItem>().apply {
-                    addAll(currentList + mapper.toRecyclerItems(volumeResponse.volumes))
-                }
-                currentList = newList
-                _liveData.value =
+                _liveData.value = volumeResponse.volumes?.let { volumesDTO ->
+                    val newList = mutableListOf<RecyclerItem>().apply {
+                        addAll(currentList + mapper.toRecyclerItems(volumesDTO))
+                    }
+                    currentList = newList
                     VolumeListState.Success(currentList, newList.size < volumeResponse.totalItems)
+                } ?: VolumeListState.Failure(EMPTY_RESULT_MESSAGE)
             }
         }
     }
@@ -87,5 +89,6 @@ class VolumeListViewModel(
         private const val DEFAULT_START_INDEX = 0
         private const val DEFAULT_MAX_VALUES = 20
         private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
+        private const val EMPTY_RESULT_MESSAGE = "Nothing found!"
     }
 }

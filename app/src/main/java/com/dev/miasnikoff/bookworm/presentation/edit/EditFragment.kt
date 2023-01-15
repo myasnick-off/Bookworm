@@ -70,7 +70,7 @@ class EditFragment : BaseFragment() {
             )
             if (hasNoErrors) {
                 viewModel.liveData.value?.let { user ->
-                    openFragment(R.id.main_container, InfoFragment.newInstance(user), true)
+                    openFragment(fragment = InfoFragment.newInstance(user))
                 }
             }
         }

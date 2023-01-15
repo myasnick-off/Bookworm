@@ -1,31 +1,29 @@
-package com.dev.miasnikoff.bookworm.presentation.details.mapper
+package com.dev.miasnikoff.bookworm.presentation.home.mapper
 
 import com.dev.miasnikoff.bookworm.data.model.ImageLinksDTO
 import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
-import com.dev.miasnikoff.bookworm.presentation.details.model.Volume
+import com.dev.miasnikoff.bookworm.presentation._core.adapter.RecyclerItem
+import com.dev.miasnikoff.bookworm.presentation.home.model.HomeBookItem
+import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeItem
 
-class VolumeDetailsMapper {
+class HomeListMapper {
+    fun toRecyclerItems(volumes: List<VolumeDTO>): List<RecyclerItem> =
+        volumes.map { toItem(it) }
 
-    operator fun invoke(volumeDTO: VolumeDTO): Volume =
-        Volume(
+    private fun toItem(volumeDTO: VolumeDTO): RecyclerItem =
+        HomeBookItem(
             id = volumeDTO.id,
             title = volumeDTO.volumeInfo.title.orEmpty(),
-            subtitle = volumeDTO.volumeInfo.subtitle.orEmpty(),
             authors = volumeDTO.volumeInfo.authors?.joinToString().orEmpty(),
             publisher = volumeDTO.volumeInfo.publisher.orEmpty(),
             publishedDate = volumeDTO.volumeInfo.publishedDate.orEmpty(),
-            categories = volumeDTO.volumeInfo.categories?.joinToString()
-                ?: volumeDTO.volumeInfo.mainCategory.orEmpty(),
             averageRating = volumeDTO.volumeInfo.averageRating?.toFloat() ?: 0f,
-            ratingsCount = volumeDTO.volumeInfo.ratingsCount ?: 0,
-            description = volumeDTO.volumeInfo.description.orEmpty(),
             imageLink = getSmallImage(volumeDTO.volumeInfo.imageLinks),
-            language = volumeDTO.volumeInfo.language.orEmpty()
         )
 
     private fun getSmallImage(imgLinks: ImageLinksDTO?): String? {
         val imgUrl = imgLinks?.let {
-            it.large ?: it.medium ?: it.small
+            it.small ?: it.thumbnail ?: it.smallThumbnail
         }
         return imgUrl?.let { formatImageUrl(it) }
     }

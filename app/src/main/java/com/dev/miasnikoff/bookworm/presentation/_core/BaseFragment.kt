@@ -4,9 +4,11 @@ import android.app.Activity
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.commit
 import androidx.viewbinding.ViewBinding
+import com.dev.miasnikoff.bookworm.R
 
-abstract class BaseFragment: Fragment() {
+abstract class BaseFragment : Fragment() {
 
     protected abstract val binding: ViewBinding
 
@@ -14,33 +16,27 @@ abstract class BaseFragment: Fragment() {
 
     protected abstract fun initView()
 
-    protected fun navigateToFragment(container: Int, fragment: Fragment, isAddToBackStack: Boolean = false) {
-        if (isAddToBackStack) {
-            parentFragmentManager.beginTransaction()
-                .replace(container, fragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit()
-        } else {
-            parentFragmentManager.beginTransaction()
-                .replace(container, fragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit()
+    protected fun navigateToFragment(
+        containerId: Int = R.id.host_container,
+        fragment: Fragment,
+        isAddToBackStack: Boolean = false
+    ) {
+        childFragmentManager.commit(allowStateLoss = true) {
+            replace(containerId, fragment)
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            if (isAddToBackStack) addToBackStack(null)
         }
     }
 
-    protected fun openFragment(container: Int, fragment: Fragment, isAddToBackStack: Boolean = false) {
-        if (isAddToBackStack) {
-            parentFragmentManager.beginTransaction()
-                .add(container, fragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit()
-        } else {
-            parentFragmentManager.beginTransaction()
-                .add(container, fragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit()
+    protected fun openFragment(
+        container: Int = R.id.main_container,
+        fragment: Fragment,
+        isAddToBackStack: Boolean = true
+    ) {
+        requireActivity().supportFragmentManager.commit(allowStateLoss = true) {
+            add(container, fragment)
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            if (isAddToBackStack) addToBackStack(null)
         }
     }
 

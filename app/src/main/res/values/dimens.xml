@@ -24,4 +24,8 @@
     <dimen name="high_280">280dp</dimen>
     <dimen name="img_height_200">200dp</dimen>
     <dimen name="img_height_500">500dp</dimen>
+    <dimen name="img_height_300">300dp</dimen>
+    <dimen name="img_height_150">150dp</dimen>
+    <dimen name="img_height_120">120dp</dimen>
+    <dimen name="img_height_250">250dp</dimen>
 </resources>
