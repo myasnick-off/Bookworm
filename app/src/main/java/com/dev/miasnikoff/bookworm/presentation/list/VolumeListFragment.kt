@@ -12,9 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
 import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
+import com.dev.miasnikoff.bookworm.presentation._core.adapter.BasePagedListAdapter
 import com.dev.miasnikoff.bookworm.presentation._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.presentation.details.VolumeDetailsFragment
-import com.dev.miasnikoff.bookworm.presentation.list.adapter.VolumeListAdapter
+import com.dev.miasnikoff.bookworm.presentation.list.adapter.BookCell
+import com.dev.miasnikoff.bookworm.presentation.list.adapter.BookListAdapter
 import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeListState
 import com.dev.miasnikoff.bookworm.presentation.search.SearchClickListener
 import com.dev.miasnikoff.bookworm.presentation.search.SearchDialogFragment
@@ -31,7 +33,7 @@ class VolumeListFragment : BaseFragment() {
         ViewModelProvider(this)[VolumeListViewModel::class.java]
     }
 
-    private val itemClickListener = object : VolumeListAdapter.ItemClickListener {
+    private val itemClickListener = object : BookCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
             openFragment(fragment = VolumeDetailsFragment.newInstance(itemId))
         }
@@ -47,14 +49,14 @@ class VolumeListFragment : BaseFragment() {
         }
     }
 
-    private val pageListener = object : VolumeListAdapter.PageListener {
+    private val pageListener = object : BasePagedListAdapter.PageListener {
         override fun loadNextPage() {
             viewModel.loadNextPage()
         }
     }
 
-    private val volumeListAdapter: VolumeListAdapter =
-        VolumeListAdapter(itemClickListener, pageListener)
+    private val bookListAdapter: BookListAdapter =
+        BookListAdapter(pageListener, itemClickListener)
 
     private var fabAnimSet: AnimatorSet? = null
 
@@ -75,7 +77,7 @@ class VolumeListFragment : BaseFragment() {
     }
 
     override fun initView() {
-        binding.volumeList.adapter = volumeListAdapter
+        binding.volumeList.adapter = bookListAdapter
         val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
             duration = FAB_ANIMATION_DURATION
             start()
@@ -144,7 +146,7 @@ class VolumeListFragment : BaseFragment() {
         binding.listLoader?.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.VISIBLE
-        volumeListAdapter.updateList(volumes, loadMore)
+        bookListAdapter.updateList(volumes, loadMore)
     }
 
     private fun showError(message: String) {

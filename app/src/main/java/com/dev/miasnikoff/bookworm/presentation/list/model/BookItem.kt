@@ -3,7 +3,7 @@ package com.dev.miasnikoff.bookworm.presentation.list.model
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.presentation._core.adapter.RecyclerItem
 
-data class VolumeItem(
+data class BookItem(
     override val id: String,
     val title: String,
     val authors: String,

@@ -41,12 +41,4 @@ class RepositoryImpl(
     override suspend fun getLastSeenVolumes(): List<VolumeDTO> {
         TODO("Not yet implemented")
     }
-
-    override suspend fun getNewestVolumes(): VolumeResponse {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getPopularFreeVolumes(): VolumeResponse {
-        TODO("Not yet implemented")
-    }
 }

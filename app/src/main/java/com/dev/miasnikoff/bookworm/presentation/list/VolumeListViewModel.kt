@@ -7,14 +7,14 @@ import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.data.RepositoryImpl
 import com.dev.miasnikoff.bookworm.domain.Repository
 import com.dev.miasnikoff.bookworm.presentation._core.adapter.RecyclerItem
-import com.dev.miasnikoff.bookworm.presentation.list.mapper.VolumeDataMapper
-import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeItem
+import com.dev.miasnikoff.bookworm.presentation.list.mapper.BookUiDataMapper
+import com.dev.miasnikoff.bookworm.presentation.list.model.BookItem
 import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeListState
 import kotlinx.coroutines.*
 
 class VolumeListViewModel(
     private val dataSource: Repository = RepositoryImpl(),
-    private val mapper: VolumeDataMapper = VolumeDataMapper()
+    private val mapper: BookUiDataMapper = BookUiDataMapper()
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -52,7 +52,7 @@ class VolumeListViewModel(
                 )
                 _liveData.value = volumeResponse.volumes?.let { volumesDTO ->
                     val newList = mutableListOf<RecyclerItem>().apply {
-                        addAll(currentList + mapper.toRecyclerItems(volumesDTO))
+                        addAll(currentList + mapper.toItemList(volumesDTO))
                     }
                     currentList = newList
                     VolumeListState.Success(currentList, newList.size < volumeResponse.totalItems)
@@ -68,12 +68,12 @@ class VolumeListViewModel(
         currentState?.let { state ->
             newList.addAll(state.data)
             val index = newList.indexOfFirst { it.id == itemId }
-            val volumeItem = (newList.firstOrNull { it.id == itemId } as? VolumeItem)
-            if (index > -1 && volumeItem != null) {
-                newList[index] = if (volumeItem.isFavorite)
-                    volumeItem.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24)
+            val bookItem = (newList.firstOrNull { it.id == itemId } as? BookItem)
+            if (index > -1 && bookItem != null) {
+                newList[index] = if (bookItem.isFavorite)
+                    bookItem.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24)
                 else
-                    volumeItem.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24)
+                    bookItem.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24)
             }
             currentList = newList
             _liveData.value = state.copy(data = currentList)

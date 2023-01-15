@@ -1,28 +1,19 @@
 package com.dev.miasnikoff.bookworm.presentation.home
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentHomeBinding
-import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
 import com.dev.miasnikoff.bookworm.presentation._core.BaseFragment
-import com.dev.miasnikoff.bookworm.presentation._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.presentation.details.VolumeDetailsFragment
 import com.dev.miasnikoff.bookworm.presentation.home.adapter.HomeBooksAdapter
+import com.dev.miasnikoff.bookworm.presentation.home.model.HomeBookItem
 import com.dev.miasnikoff.bookworm.presentation.home.model.HomeData
 import com.dev.miasnikoff.bookworm.presentation.home.model.HomeState
-import com.dev.miasnikoff.bookworm.presentation.list.adapter.VolumeListAdapter
-import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeListState
-import com.dev.miasnikoff.bookworm.presentation.search.SearchClickListener
-import com.dev.miasnikoff.bookworm.presentation.search.SearchDialogFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 
@@ -102,18 +93,20 @@ class HomeFragment : BaseFragment() {
         ) { viewModel.getHomeData() }
     }
 
-    private fun bindData(data: HomeData) = with(binding) {
-        bookOfDay.bookTitle.text = data.bookOfDay.title
-        bookOfDay.bookAuthors.text = data.bookOfDay.authors
-        bookOfDay.publisher.text = data.bookOfDay.publisher
-        bookOfDay.publishedDate.text = data.bookOfDay.publishedDate
-        bookOfDay.ratingBar.rating = data.bookOfDay.averageRating
-        Glide.with(bookOfDay.bookImage.context)
-            .load(data.bookOfDay.imageLink)
-            .error(R.drawable.ic_broken_image_48)
-            .into(bookOfDay.bookImage)
-        bookOfDay.root.setOnClickListener {
-            openFragment(fragment = VolumeDetailsFragment.newInstance(data.bookOfDay.id))
+    private fun bindData(data: HomeData) {
+        (data.bookOfDay as? HomeBookItem)?.let { bookOfDay ->
+            binding.bookOfDay.bookTitle.text = bookOfDay.title
+            binding.bookOfDay.bookAuthors.text = bookOfDay.authors
+            binding.bookOfDay.publisher.text = bookOfDay.publisher
+            binding.bookOfDay.publishedDate.text = bookOfDay.publishedDate
+            binding.bookOfDay.ratingBar.rating = bookOfDay.averageRating
+            Glide.with(binding.bookOfDay.bookImage.context)
+                .load(bookOfDay.imageLink)
+                .error(R.drawable.ic_broken_image_48)
+                .into(binding.bookOfDay.bookImage)
+            binding.bookOfDay.root.setOnClickListener {
+                openFragment(fragment = VolumeDetailsFragment.newInstance(data.bookOfDay.id))
+            }
         }
         lastSeenAdapter.submitList(data.lastSeen)
         newestAdapter.submitList(data.newest)

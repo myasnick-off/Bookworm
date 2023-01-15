@@ -13,7 +13,7 @@ class HomeDataInteractor(private val repository: Repository = RepositoryImpl()) 
 
     suspend fun getBookOfDay(): VolumeDTO? {
         for (i: Int in 0..5) {
-            val query = "${('А'..'я').random()}${(GenreData.values()).random().query}}"
+            val query = "${('А'..'я').random()}${(GenreData.values()).random()}}"
             val response = repository.getVolumeList(
                 query = query,
                 maxResults = ENLARGED_MAX_VALUES,
@@ -50,7 +50,7 @@ class HomeDataInteractor(private val repository: Repository = RepositoryImpl()) 
         for (i: Int in 0..5) {
             val response = repository.getVolumeList(
                 query = "+${QueryFields.IN_TITLE.type}",
-                filter = Filter.FULL.type,
+                filter = Filter.FREE_BOOKS.type,
                 orderBy = OrderBy.NEWEST.type
             )
             response.volumes?.let { VolumeDTO ->

@@ -17,8 +17,6 @@ interface Repository {
 
     suspend fun getVolume(id: String): VolumeDTO
     suspend fun getLastSeenVolumes(): List<VolumeDTO>
-    suspend fun getNewestVolumes(): VolumeResponse
-    suspend fun getPopularFreeVolumes(): VolumeResponse
 
     companion object {
         private const val DEFAULT_START_INDEX = 0

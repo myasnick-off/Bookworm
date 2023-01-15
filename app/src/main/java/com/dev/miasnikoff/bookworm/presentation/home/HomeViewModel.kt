@@ -3,23 +3,18 @@ package com.dev.miasnikoff.bookworm.presentation.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dev.miasnikoff.bookworm.data.RepositoryImpl
+import com.dev.miasnikoff.bookworm.data.model.ImageSize
 import com.dev.miasnikoff.bookworm.domain.HomeDataInteractor
-import com.dev.miasnikoff.bookworm.domain.Repository
-import com.dev.miasnikoff.bookworm.presentation.details.mapper.VolumeDetailsMapper
 import com.dev.miasnikoff.bookworm.presentation.home.mapper.HomeBookMapper
-import com.dev.miasnikoff.bookworm.presentation.home.mapper.HomeListMapper
+import com.dev.miasnikoff.bookworm.presentation.home.mapper.HomeBookUiMapper
 import com.dev.miasnikoff.bookworm.presentation.home.model.Genre
 import com.dev.miasnikoff.bookworm.presentation.home.model.HomeData
 import com.dev.miasnikoff.bookworm.presentation.home.model.HomeState
-import com.dev.miasnikoff.bookworm.presentation.list.VolumeListViewModel
-import com.dev.miasnikoff.bookworm.presentation.list.mapper.VolumeDataMapper
 import kotlinx.coroutines.*
 
 class HomeViewModel(
     private val interactor: HomeDataInteractor = HomeDataInteractor(),
-    private val homeListMapper: HomeListMapper = HomeListMapper(),
-    private val homeBookMapper: HomeBookMapper = HomeBookMapper()
+    private val homeBookUiMapper: HomeBookUiMapper = HomeBookUiMapper(),
 ): ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -44,11 +39,11 @@ class HomeViewModel(
             val popFreeList = interactor.getPopularFreeList()
             if (bookOfDay != null) {
                 _liveData.value = HomeState.Success(HomeData(
-                    bookOfDay = homeBookMapper(bookOfDay),
+                    bookOfDay = homeBookUiMapper.toItem(bookOfDay, ImageSize.M),
                     popularGenres = Genre.createList(),
                     lastSeen= listOf(),
-                    newest = homeListMapper.toRecyclerItems(newestList),
-                    popularFree = homeListMapper.toRecyclerItems(popFreeList)
+                    newest = homeBookUiMapper.toItemList(newestList),
+                    popularFree = homeBookUiMapper.toItemList(popFreeList)
                 ))
             } else _liveData.value = HomeState.Failure(EMPTY_RESULT_MESSAGE)
         }

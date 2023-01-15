@@ -16,7 +16,7 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="4"
         tools:itemCount="8"
-        tools:listitem="@layout/item_volume_list" />
+        tools:listitem="@layout/item_book_list" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/error_image"

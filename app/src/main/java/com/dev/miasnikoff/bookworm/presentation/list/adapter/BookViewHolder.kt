@@ -5,17 +5,17 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.databinding.ItemVolumeListBinding
-import com.dev.miasnikoff.bookworm.presentation.list.model.VolumeItem
+import com.dev.miasnikoff.bookworm.databinding.ItemBookListBinding
+import com.dev.miasnikoff.bookworm.presentation.list.model.BookItem
 import com.dev.miasnikoff.bookworm.utils.extensions.vibrate
 
-class VolumeViewHolder(
-    private val binding: ItemVolumeListBinding,
-    private val itemClickListener: VolumeListAdapter.ItemClickListener
+class BookViewHolder(
+    private val binding: ItemBookListBinding,
+    private val itemClickListener: BookCell.ItemClickListener
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: VolumeItem) {
+    fun bind(item: BookItem) {
 
         binding.bookTitle.text = item.title
         binding.bookAuthors.text = item.authors
