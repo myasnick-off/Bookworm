@@ -24,11 +24,11 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/margin_12"
                 android:layout_marginEnd="@dimen/margin_36"
-                android:textColor="?attr/colorControlNormal"
-                android:textColorHint="?attr/colorControlNormal"
                 android:background="@null"
                 android:hint="@string/quick_search"
-                android:selectAllOnFocus="true" />
+                android:selectAllOnFocus="true"
+                android:textColor="?attr/colorControlNormal"
+                android:textColorHint="?attr/colorControlNormal" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/search_button"
@@ -45,110 +45,16 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/home_layout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/home_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include
-                android:id="@+id/book_of_day"
-                layout="@layout/item_book_of_day"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_8" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/popular_genres_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/margin_8"
-                android:layout_marginTop="@dimen/margin_24"
-                android:text="@string/popular_genres"
-                android:textSize="@dimen/text_m"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/genre_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:paddingHorizontal="@dimen/margin_4"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="4"
-                tools:listitem="@layout/item_genre_list" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/last_books_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24"
-                android:paddingHorizontal="@dimen/margin_8"
-                android:text="@string/last_viewed"
-                android:textSize="@dimen/text_m"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/last_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:paddingHorizontal="@dimen/margin_4"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="4"
-                tools:listitem="@layout/item_book_lite_list" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/newest_books_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24"
-                android:paddingHorizontal="@dimen/margin_8"
-                android:textSize="@dimen/text_m"
-                android:text="@string/newest"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/newest_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:paddingHorizontal="@dimen/margin_4"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_book_lite_list" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/popular_free_books_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24"
-                android:paddingHorizontal="@dimen/margin_8"
-                android:textSize="@dimen/text_m"
-                android:text="@string/free_books"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/popular_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:orientation="horizontal"
-                android:paddingHorizontal="@dimen/margin_4"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_book_lite_list" />
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/margin_4"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_carousel_with_title_list" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/error_image"

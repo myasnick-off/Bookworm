@@ -1,7 +1,7 @@
 package com.dev.miasnikoff.bookworm.data
 
 import com.dev.miasnikoff.bookworm.domain.AuthRepository
-import com.dev.miasnikoff.bookworm.presentation._core.model.UserModel
+import com.dev.miasnikoff.bookworm.ui._core.model.UserModel
 import io.reactivex.Maybe
 
 class AuthRepositoryImpl(private val authService: AuthService = AuthService()) : AuthRepository {
