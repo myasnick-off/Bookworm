@@ -78,7 +78,6 @@ class SettingsFragment : BaseFragment() {
                 }
                 if (theme != themePrefs.appTheme) {
                     themePrefs.save(theme)
-                    parentFragmentManager.popBackStack()
                     AppCompatDelegate.setDefaultNightMode(theme.id)
                 }
             }

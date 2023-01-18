@@ -11,8 +11,8 @@ import com.dev.miasnikoff.bookworm.domain.model.OrderBy
 import com.dev.miasnikoff.bookworm.domain.model.QueryFields
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
-import com.dev.miasnikoff.bookworm.ui.list.mapper.BookUiDataMapper
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
+import com.dev.miasnikoff.bookworm.ui.list.mapper.BookUiDataMapper
 import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
 import kotlinx.coroutines.*
 

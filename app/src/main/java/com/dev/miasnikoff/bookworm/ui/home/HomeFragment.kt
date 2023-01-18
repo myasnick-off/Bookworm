@@ -26,7 +26,7 @@ class HomeFragment : BaseFragment() {
         get() = _binding
 
     private val viewModel: HomeViewModel by lazy {
-        ViewModelProvider(this)[HomeViewModel::class.java]
+        ViewModelProvider(requireActivity())[HomeViewModel::class.java]
     }
     private val itemClickListener = object : BookOfDayCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
@@ -72,6 +72,7 @@ class HomeFragment : BaseFragment() {
         binding.searchButton.setOnClickListener {
             binding.searchEditText.text?.let { phrase ->
                 hideSoftKeyboard()
+                binding.searchEditText.text = null
                 openFragment(fragment = BookListFragment.newInstance(query = phrase.toString()))
             }
         }

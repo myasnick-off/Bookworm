@@ -34,42 +34,18 @@ class MainFragment : BaseFragment(), BackPressMonitor {
             initView()
         }
         initMenu()
-    }
-
-    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        menu.clear()
-        inflater.inflate(R.menu.menu_main, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_settings -> openFragment(
-                R.id.main_container,
-                SettingsFragment.newInstance(),
-                true
-            )
-            R.id.menu_profile -> openFragment(R.id.main_container, EditFragment.newInstance(), true)
-        }
-        return super.onOptionsItemSelected(item)
-    }*/
-
-    override fun initMenu() {
-        super.initMenu()
-        /*(requireActivity() as MainActivity).apply {
-            setSupportActionBar(binding.mainToolbar)
-            title = getString(R.string.app_name)
-            supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        }
-        setHasOptionsMenu(true)*/
+        initBottomNavigation()
     }
 
     override fun initView() {
         navigateToFragment(fragment = HomeFragment.newInstance())
+    }
+
+    private fun initBottomNavigation() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.action_home -> {
-                    navigateToFragment(fragment = HomeFragment.newInstance())
+                    childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     true
                 }
                 R.id.action_search -> {

@@ -5,7 +5,6 @@ import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.domain.model.Filter
 import com.dev.miasnikoff.bookworm.domain.model.OrderBy
 import com.dev.miasnikoff.bookworm.domain.model.QueryFields
-import com.dev.miasnikoff.bookworm.ui.home.adapter.genre.GenreData
 
 class HomeDataInteractor(private val repository: Repository = RepositoryImpl()) {
 
