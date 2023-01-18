@@ -2,7 +2,7 @@ package com.dev.miasnikoff.bookworm
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.dev.miasnikoff.bookworm.utils.ThemePrefsHandler
+import com.dev.miasnikoff.bookworm.utils.SettingsPrefsHelper
 
 class App : Application() {
 
@@ -12,7 +12,7 @@ class App : Application() {
     }
 
     private fun loadTheme() {
-        val themePrefs = ThemePrefsHandler(this)
+        val themePrefs = SettingsPrefsHelper(this)
         AppCompatDelegate.setDefaultNightMode(themePrefs.appTheme.id)
     }
 }
