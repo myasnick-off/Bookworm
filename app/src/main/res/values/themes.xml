@@ -27,7 +27,7 @@
     </style>
 
     <style name="BookwormButton" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/button_shape</item>
+        <item name="android:background">@drawable/shape_button</item>
         <item name="android:textColor">?attr/textFillColor</item>
         <item name="android:textSize">@dimen/text_l</item>
         <item name="android:textAllCaps">false</item>

@@ -12,10 +12,10 @@ interface ApiService {
     @GET("/books/v1/volumes")
     fun getVolumesAsync(
         @Query("q") query: String,
-        @Query("filter") filter: String? = null,
-        @Query("langRestrict") langCode: String? = null,
-        @Query("printType") printType: String? = null,
-        @Query("orderBy") orderBy: String? = null,
+        @Query("filter") filter: String?,
+        @Query("langRestrict") langCode: String = "ru",
+        @Query("printType") printType: String?,
+        @Query("orderBy") orderBy: String?,
         @Query("startIndex") startIndex: Int,
         @Query("maxResults") maxResults: Int,
         @Query("key") apiKey: String = RemoteDataSource.API_KEY

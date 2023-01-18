@@ -1,6 +1,6 @@
 package com.dev.miasnikoff.bookworm.data
 
-import com.dev.miasnikoff.bookworm.presentation._core.model.UserModel
+import com.dev.miasnikoff.bookworm.ui._core.model.UserModel
 import io.reactivex.Maybe
 import java.io.IOException
 import java.text.SimpleDateFormat

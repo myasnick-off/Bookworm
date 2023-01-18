@@ -42,4 +42,21 @@
     <string name="password_helper">Пароль по умолчанию: password</string>
     <string name="to_login">Войти</string>
     <string name="required_field">Поле обязательное для заполнения</string>
+    <string name="home">Главная</string>
+    <string name="search">Поиск</string>
+    <string name="profile">Профиль</string>
+    <string name="popular_genres">Популярные жанры</string>
+    <string name="last_viewed">Недавно просмотренные</string>
+    <string name="newest">Новинки</string>
+    <string name="free_books">Бесплатные книги</string>
+    <string name="quick_search">Быстрый поиск…</string>
+    <string name="favorite">Избранное</string>
+    <string name="science">Наука</string>
+    <string name="romance">Роман</string>
+    <string name="fiction">Фантаситка</string>
+    <string name="education">Образование</string>
+    <string name="humor">Юмор</string>
+    <string name="poetry">Поэзия</string>
+    <string name="design">Дизайн</string>
+    <string name="book_of_day">Книга дня</string>
 </resources>

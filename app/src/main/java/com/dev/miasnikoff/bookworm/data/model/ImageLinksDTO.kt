@@ -10,3 +10,12 @@ data class ImageLinksDTO(
     @SerializedName("large") val large: String?,
     @SerializedName("extraLarge") val extraLarge: String?
 )
+
+enum class ImageSize {
+    XXS,
+    XS,
+    S,
+    M,
+    L,
+    XL;
+}

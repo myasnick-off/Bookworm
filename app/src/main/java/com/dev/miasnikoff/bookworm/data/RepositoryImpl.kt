@@ -10,9 +10,23 @@ class RepositoryImpl(
     private val apiService: ApiService = RemoteDataSource.apiService
 ) : Repository {
 
-    override suspend fun getVolumeList(query: String, startIndex: Int, maxResults: Int): VolumeResponse {
+    override suspend fun getVolumeList(
+        query: String,
+        filter: String?,
+        printType: String?,
+        orderBy: String?,
+        startIndex: Int,
+        maxResults: Int
+    ): VolumeResponse {
         return withContext(Dispatchers.IO) {
-            apiService.getVolumesAsync(query = query, startIndex = startIndex, maxResults = maxResults).await()
+            apiService.getVolumesAsync(
+                query = query,
+                filter = filter,
+                printType = printType,
+                orderBy = orderBy,
+                startIndex = startIndex,
+                maxResults = maxResults
+            ).await()
         }
     }
 
@@ -20,5 +34,9 @@ class RepositoryImpl(
         return withContext(Dispatchers.IO) {
             apiService.getVolumeAsync(volumeId = id).await()
         }
+    }
+
+    override suspend fun getLastSeenVolumes(): List<VolumeDTO> {
+        TODO("Not yet implemented")
     }
 }
