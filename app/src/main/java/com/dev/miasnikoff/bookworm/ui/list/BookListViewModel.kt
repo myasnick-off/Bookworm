@@ -12,14 +12,12 @@ import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
 import com.dev.miasnikoff.bookworm.ui.list.mapper.DtoToUiMapper
-import com.dev.miasnikoff.bookworm.ui.list.mapper.EntityToUiMapper
 import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
 import kotlinx.coroutines.*
 
 class BookListViewModel(
     private val interactor: ListInteractor = ListInteractor(),
     private val dtoToUiMapper: DtoToUiMapper = DtoToUiMapper(),
-    private val entityToUiMapper: EntityToUiMapper = EntityToUiMapper()
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -46,12 +44,6 @@ class BookListViewModel(
 
     fun getInitialPage(category: Category) {
         when (category) {
-            Category.LAST_VIEWED -> {
-                getAllHistory()
-            }
-            Category.FAVORITE -> {
-                getAllFavorite()
-            }
             Category.NEWEST -> {
                 orderBy = OrderBy.NEWEST.type
                 getInitialPage(query = QueryFields.IN_TITLE.type)
@@ -62,34 +54,6 @@ class BookListViewModel(
                 getInitialPage(query = QueryFields.IN_TITLE.type)
             }
             else -> {}
-        }
-    }
-
-    private fun getAllHistory() {
-        currentList.clear()
-        _liveData.value = PagedListState.Loading
-        job?.cancel()
-        job = scope.launch {
-            currentList.addAll(entityToUiMapper.toItemList(interactor.getHistory()))
-            _liveData.value = if (currentList.isEmpty()) {
-                PagedListState.Failure(EMPTY_RESULT_MESSAGE)
-            } else {
-                PagedListState.Success(currentList, false)
-            }
-        }
-    }
-
-    private fun getAllFavorite() {
-        currentList.clear()
-        _liveData.value = PagedListState.Loading
-        job?.cancel()
-        job = scope.launch {
-            currentList.addAll(entityToUiMapper.toItemList(interactor.getFavorite()))
-            _liveData.value = if (currentList.isEmpty()) {
-                PagedListState.Failure(EMPTY_RESULT_MESSAGE)
-            } else {
-                PagedListState.Success(currentList, false)
-            }
         }
     }
 
@@ -152,20 +116,6 @@ class BookListViewModel(
     override fun onCleared() {
         super.onCleared()
         scope.cancel()
-    }
-
-    fun removeHistory() {
-        scope.launch {
-            interactor.removeAllHistory()
-            getAllHistory()
-        }
-    }
-
-    fun removeFavorites() {
-        scope.launch {
-            interactor.removeAllFavorite()
-            getAllFavorite()
-        }
     }
 
     companion object {

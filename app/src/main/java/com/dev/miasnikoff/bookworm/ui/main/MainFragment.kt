@@ -11,6 +11,7 @@ import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui.home.HomeFragment
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.BookListFragment
+import com.dev.miasnikoff.bookworm.ui.list.LocalListFragment
 import com.dev.miasnikoff.bookworm.ui.login.LoginFragment
 import com.dev.miasnikoff.bookworm.ui.settings.SettingsFragment
 
@@ -55,7 +56,7 @@ class MainFragment : BaseFragment(), BackPressMonitor {
                 }
                 R.id.action_favorite -> {
                     navigateToFragment(
-                        fragment = BookListFragment.newInstance(category = Category.FAVORITE),
+                        fragment = LocalListFragment.newInstance(category = Category.FAVORITE),
                         isAddToBackStack = true
                     )
                     true

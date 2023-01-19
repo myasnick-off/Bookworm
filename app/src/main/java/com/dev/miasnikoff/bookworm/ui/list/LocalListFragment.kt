@@ -1,8 +1,5 @@
 package com.dev.miasnikoff.bookworm.ui.list
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -22,22 +19,19 @@ import com.dev.miasnikoff.bookworm.ui.list.adapter.BookCell
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookListAdapter
 import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
 import com.dev.miasnikoff.bookworm.ui.main.MainActivity
-import com.dev.miasnikoff.bookworm.ui.search.SearchClickListener
-import com.dev.miasnikoff.bookworm.ui.search.SearchDialogFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 
-class BookListFragment : BaseFragment(), MenuProvider {
+class LocalListFragment : BaseFragment(), MenuProvider {
 
     private lateinit var _binding: FragmentListBinding
     override val binding: FragmentListBinding
         get() = _binding
 
-    private val viewModel: BookListViewModel by lazy {
-        ViewModelProvider(this)[BookListViewModel::class.java]
+    private val viewModel: LocalListViewModel by lazy {
+        ViewModelProvider(this)[LocalListViewModel::class.java]
     }
 
-    private val query: String? by lazy { arguments?.getString(ARG_QUERY, null) }
     private val category: Category? by lazy { arguments?.getParcelable(ARG_CATEGORY) }
 
     private val itemClickListener = object : BookCell.ItemClickListener {
@@ -57,15 +51,10 @@ class BookListFragment : BaseFragment(), MenuProvider {
     }
 
     private val pageListener = object : BasePagedListAdapter.PageListener {
-        override fun loadNextPage() {
-            viewModel.loadNextPage()
-        }
+        override fun loadNextPage() {}
     }
 
-    private val bookListAdapter: BookListAdapter =
-        BookListAdapter(pageListener, itemClickListener)
-
-    private var fabAnimSet: AnimatorSet? = null
+    private val bookListAdapter: BookListAdapter = BookListAdapter(pageListener, itemClickListener)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,10 +72,21 @@ class BookListFragment : BaseFragment(), MenuProvider {
         initPresenter()
     }
 
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_list_local, menu)
+    }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when(menuItem.itemId) {
+            R.id.menu_remove_all -> {
+                if (category == Category.LAST_VIEWED) {
+                    showAlertDialog(R.string.remove_history_warning) { viewModel.removeHistory() }
+                }
+                if (category == Category.FAVORITE) {
+                    showAlertDialog(R.string.remove_favorites_warning) { viewModel.removeFavorites() }
+                }
+                true
+            }
             android.R.id.home -> {
                 requireActivity().onBackPressed()
                 true
@@ -95,31 +95,9 @@ class BookListFragment : BaseFragment(), MenuProvider {
         }
     }
 
-
     override fun initView() {
         binding.volumeList.adapter = bookListAdapter
-        val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
-        val animScaleY = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_Y, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
-        val animAlpha = ObjectAnimator.ofFloat(binding.listFab, View.ALPHA, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
-        fabAnimSet = AnimatorSet().apply {
-            playTogether(animScaleX, animScaleY, animAlpha)
-            start()
-        }
-        binding.listFab?.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                fabAnimSet?.reverse()
-            }
-            showSearchDialog()
-        }
+        binding.listFab?.visibility = View.GONE
     }
 
     override fun initMenu() {
@@ -129,20 +107,6 @@ class BookListFragment : BaseFragment(), MenuProvider {
         }
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private fun showSearchDialog() {
-        SearchDialogFragment.newInstance().apply {
-            setOnSearchClickListener(object : SearchClickListener {
-                override fun onSearchClick(phrase: String) {
-                    viewModel.getInitialPage(query = phrase)
-                }
-
-                override fun onDialogDismiss() {
-                    fabAnimSet?.start()
-                }
-            })
-        }.show(parentFragmentManager, null)
     }
 
     private fun initPresenter() {
@@ -190,19 +154,15 @@ class BookListFragment : BaseFragment(), MenuProvider {
     }
 
     private fun getData() {
-        query?.let { viewModel.getInitialPage(query = it) }
         category?.let { viewModel.getInitialPage(category = it) }
-
     }
 
     companion object {
-        private const val FAB_ANIMATION_DURATION = 500L
-        private const val ARG_QUERY = "arg_query"
         private const val ARG_CATEGORY = "arg_category"
 
-        fun newInstance(query: String? = null, category: Category? = null): BookListFragment =
-            BookListFragment().apply {
-                arguments = bundleOf(ARG_QUERY to query, ARG_CATEGORY to category)
+        fun newInstance(category: Category): LocalListFragment =
+            LocalListFragment().apply {
+                arguments = bundleOf(ARG_CATEGORY to category)
             }
     }
 }
