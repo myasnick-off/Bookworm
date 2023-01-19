@@ -71,4 +71,12 @@ class ListInteractor(
     suspend fun getFavorite(): List<BookEntity> {
         return localRepository.getAllFavorite()
     }
+
+    suspend fun removeAllHistory() {
+        localRepository.removeAllHistory()
+    }
+
+    suspend fun removeAllFavorite() {
+        localRepository.removeAllFavorite()
+    }
 }

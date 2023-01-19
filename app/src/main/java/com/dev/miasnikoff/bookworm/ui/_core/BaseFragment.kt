@@ -2,6 +2,7 @@ package com.dev.miasnikoff.bookworm.ui._core
 
 import android.app.Activity
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
@@ -47,5 +48,19 @@ abstract class BaseFragment : Fragment() {
                 requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    protected fun showAlertDialog(
+        titleRes: Int,
+        positiveButtonRes: Int = R.string.yes,
+        negativeButtonRes: Int = R.string.no,
+        action: () -> Unit
+    ) {
+        AlertDialog.Builder(binding.root.context)
+            .setTitle(titleRes)
+            .setPositiveButton(positiveButtonRes) { _, _ -> action() }
+            .setNegativeButton(negativeButtonRes) { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
     }
 }

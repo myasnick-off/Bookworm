@@ -154,6 +154,20 @@ class BookListViewModel(
         scope.cancel()
     }
 
+    fun removeHistory() {
+        scope.launch {
+            interactor.removeAllHistory()
+            getAllHistory()
+        }
+    }
+
+    fun removeFavorites() {
+        scope.launch {
+            interactor.removeAllFavorite()
+            getAllFavorite()
+        }
+    }
+
     companion object {
         private const val DEFAULT_START_INDEX = 0
         private const val DEFAULT_MAX_VALUES = 20

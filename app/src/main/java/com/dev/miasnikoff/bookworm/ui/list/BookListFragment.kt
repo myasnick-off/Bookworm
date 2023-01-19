@@ -4,11 +4,12 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
@@ -20,12 +21,13 @@ import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookCell
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookListAdapter
 import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
+import com.dev.miasnikoff.bookworm.ui.main.MainActivity
 import com.dev.miasnikoff.bookworm.ui.search.SearchClickListener
 import com.dev.miasnikoff.bookworm.ui.search.SearchDialogFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 
-class BookListFragment : BaseFragment() {
+class BookListFragment : BaseFragment(), MenuProvider {
 
     private lateinit var _binding: FragmentListBinding
     override val binding: FragmentListBinding
@@ -77,8 +79,35 @@ class BookListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        initMenu()
         initPresenter()
     }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        if (category == Category.FAVORITE || category == Category.LAST_VIEWED) {
+            menuInflater.inflate(R.menu.menu_list, menu)
+        }
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when(menuItem.itemId) {
+            R.id.menu_remove_all -> {
+                if (category == Category.LAST_VIEWED) {
+                    showAlertDialog(R.string.remove_history_warning) { viewModel.removeHistory() }
+                }
+                if (category == Category.FAVORITE) {
+                    showAlertDialog(R.string.remove_favorites_warning) { viewModel.removeFavorites() }
+                }
+                true
+            }
+            android.R.id.home -> {
+                requireActivity().onBackPressed()
+                true
+            }
+            else -> false
+        }
+    }
+
 
     override fun initView() {
         binding.volumeList.adapter = bookListAdapter
@@ -104,6 +133,15 @@ class BookListFragment : BaseFragment() {
             }
             showSearchDialog()
         }
+    }
+
+    override fun initMenu() {
+        (requireActivity() as MainActivity).apply {
+            setSupportActionBar(binding.listToolbar)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun showSearchDialog() {

@@ -42,11 +42,25 @@ class LocalRepositoryImpl(private val bookDao: BookDao = App.appInstance.databas
     }
 
     override suspend fun removeAllHistory(): Boolean {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO) {
+            try {
+                bookDao.deleteAllHistory()
+                true
+            } catch (e: IOException) {
+                false
+            }
+        }
     }
 
     override suspend fun removeAllFavorite(): Boolean {
-        TODO("Not yet implemented")
+        return withContext(Dispatchers.IO) {
+            try {
+                bookDao.deleteAllFavorite()
+                true
+            } catch (e: IOException) {
+                false
+            }
+        }
     }
 
     override suspend fun getBook(bookId: String): BookEntity? {

@@ -59,4 +59,9 @@
     <string name="poetry">Поэзия</string>
     <string name="design">Дизайн</string>
     <string name="book_of_day">Книга дня</string>
+    <string name="remove_all">Удалить все</string>
+    <string name="remove_history_warning">Очистить историю просмотров?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="remove_favorites_warning">Очистить избранное?</string>
 </resources>
