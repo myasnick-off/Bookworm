@@ -3,15 +3,12 @@ package com.dev.miasnikoff.bookworm.ui.details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dev.miasnikoff.bookworm.data.RepositoryImpl
-import com.dev.miasnikoff.bookworm.domain.Repository
-import com.dev.miasnikoff.bookworm.ui.details.mapper.VolumeDetailsMapper
+import com.dev.miasnikoff.bookworm.domain.DetailsInteractor
 import com.dev.miasnikoff.bookworm.ui.details.model.DetailsState
 import kotlinx.coroutines.*
 
 class VolumeDetailsViewModel(
-    private val repository: Repository = RepositoryImpl(),
-    private val mapper: VolumeDetailsMapper = VolumeDetailsMapper(),
+    private val interactor: DetailsInteractor = DetailsInteractor(),
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -22,12 +19,10 @@ class VolumeDetailsViewModel(
     private var _liveData: MutableLiveData<DetailsState> = MutableLiveData()
     val liveData: LiveData<DetailsState> get() = _liveData
 
-    fun getDetails(volumeId: String) {
+    fun getDetails(bookId: String) {
         _liveData.value = DetailsState.Loading
         scope.launch {
-
-            val volumeDTO = repository.getVolume(volumeId)
-            _liveData.value = DetailsState.Success(mapper(volumeDTO))
+            _liveData.value = DetailsState.Success(interactor.getDetails(bookId))
         }
     }
 

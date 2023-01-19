@@ -35,8 +35,4 @@ class RepositoryImpl(
             apiService.getVolumeAsync(volumeId = id).await()
         }
     }
-
-    override suspend fun getLastSeenVolumes(): List<VolumeDTO> {
-        TODO("Not yet implemented")
-    }
 }

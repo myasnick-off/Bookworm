@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentVolumeDetailsBinding
+import com.dev.miasnikoff.bookworm.domain.model.BookDetails
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
-import com.dev.miasnikoff.bookworm.ui.details.model.BookDetails
 import com.dev.miasnikoff.bookworm.ui.details.model.DetailsState
 import com.dev.miasnikoff.bookworm.ui.main.MainActivity
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
@@ -117,7 +117,7 @@ class VolumeDetailsFragment : BaseFragment() {
         language.text = bookDetails.language
         this.bookDetails.text = bookDetails.description
         Glide.with(root.context)
-            .load(bookDetails.imageLink)
+            .load(bookDetails.imageLinkSmall)
             .error(R.drawable.ic_broken_image_48)
             .into(bookImage)
     }

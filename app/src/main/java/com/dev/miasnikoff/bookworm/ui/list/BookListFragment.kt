@@ -131,7 +131,6 @@ class BookListFragment : BaseFragment() {
             is PagedListState.MoreLoading -> showMoreLoading()
             is PagedListState.Failure -> showError(state.message)
             is PagedListState.Success -> showData(state.data, state.loadMore)
-            is PagedListState.FullData -> showData(state.data, false)
         }
     }
 

@@ -1,12 +1,17 @@
 package com.dev.miasnikoff.bookworm.domain
 
 import com.dev.miasnikoff.bookworm.data.RepositoryImpl
+import com.dev.miasnikoff.bookworm.data.local.LocalRepositoryImpl
+import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
 import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.domain.model.Filter
 import com.dev.miasnikoff.bookworm.domain.model.OrderBy
 import com.dev.miasnikoff.bookworm.domain.model.QueryFields
 
-class HomeDataInteractor(private val repository: Repository = RepositoryImpl()) {
+class HomeDataInteractor(
+    private val repository: Repository = RepositoryImpl(),
+    private val localRepository: LocalRepository = LocalRepositoryImpl()
+) {
 
     suspend fun getBookOfDay(): VolumeDTO? {
         for (i: Int in 0..5) {
@@ -55,6 +60,10 @@ class HomeDataInteractor(private val repository: Repository = RepositoryImpl()) 
             }
         }
         return listOf()
+    }
+
+    suspend fun getHistory(): List<BookEntity> {
+        return localRepository.getAllHistory()
     }
 
     companion object {
