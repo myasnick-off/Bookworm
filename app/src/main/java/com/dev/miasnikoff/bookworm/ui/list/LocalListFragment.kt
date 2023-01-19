@@ -39,10 +39,8 @@ class LocalListFragment : BaseFragment(), MenuProvider {
             openFragment(fragment = VolumeDetailsFragment.newInstance(itemId))
         }
 
-        override fun onItemLongClick(itemId: String): Boolean {
-            Toast.makeText(context, "Made long click on item with id #$itemId", Toast.LENGTH_SHORT)
-                .show()
-            return true
+        override fun onItemLongClick(itemId: String) {
+            viewModel.removeFromLocal(itemId)
         }
 
         override fun onFavoriteClick(itemId: String) {

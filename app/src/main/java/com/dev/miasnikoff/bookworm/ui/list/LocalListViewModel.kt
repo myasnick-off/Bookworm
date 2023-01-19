@@ -109,6 +109,23 @@ class LocalListViewModel(
         scope.cancel()
     }
 
+    fun removeFromLocal(itemId: String) {
+        _liveData.value = PagedListState.MoreLoading
+        scope.launch {
+            val index = currentList.indexOfFirst { it.id == itemId }
+            val bookItem = (currentList.firstOrNull { it.id == itemId } as? BookItem)
+            if (index > -1 && bookItem != null) {
+                if (currentCategory == Category.FAVORITE) {
+                    interactor.removeFromFavorite(bookItem)
+                } else {
+                    interactor.removeFromHistory(bookItem)
+                }
+            }
+            getBookList()
+        }
+
+    }
+
     companion object {
         private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
         private const val EMPTY_RESULT_MESSAGE = "Nothing found!"

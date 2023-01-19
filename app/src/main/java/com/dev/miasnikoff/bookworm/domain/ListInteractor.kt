@@ -54,6 +54,14 @@ class ListInteractor(
         localRepository.saveBook(favoriteEntity)
     }
 
+    suspend fun removeFromHistory(bookItem: BookItem) {
+        if (bookItem.isFavorite) {
+            localRepository.saveBook(mapper.toFavorite(bookItem).copy(inHistory = false))
+        } else {
+            localRepository.removeBook(bookItem.id)
+        }
+    }
+
     suspend fun removeFromFavorite(bookItem: BookItem) {
         val historyList = localRepository.getAllHistory()
         val index = historyList.indexOfFirst { it.id == bookItem.id }

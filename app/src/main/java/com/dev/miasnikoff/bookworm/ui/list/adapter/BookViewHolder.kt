@@ -1,5 +1,7 @@
 package com.dev.miasnikoff.bookworm.ui.list.adapter
 
+import android.view.View
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -36,7 +38,8 @@ class BookViewHolder(
             setOnClickListener { itemClickListener.onItemClick(item.id) }
             setOnLongClickListener {
                 vibrate(VIBRATE_DURATION)
-                itemClickListener.onItemLongClick(item.id)
+                showPopUpMenu(itemView) { itemClickListener.onItemLongClick(item.id) }
+                true
             }
         }
     }
@@ -44,6 +47,26 @@ class BookViewHolder(
     fun updateFavorite(iconRes: Int) {
         binding.favoriteIcon
             .setImageDrawable(ContextCompat.getDrawable(binding.favoriteIcon.context, iconRes))
+    }
+
+    private fun showPopUpMenu(
+        anchor: View,
+        menuRes: Int = R.menu.menu_popup,
+        action: () -> Unit
+    ) {
+        PopupMenu(binding.root.context, anchor).apply {
+            menuInflater.inflate(menuRes, menu)
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.menu_remove -> {
+                        action()
+                        true
+                    }
+                    else -> false
+                }
+            }
+            show()
+        }
     }
 
     companion object {

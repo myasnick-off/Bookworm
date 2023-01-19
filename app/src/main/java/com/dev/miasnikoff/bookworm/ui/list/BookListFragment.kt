@@ -45,10 +45,9 @@ class BookListFragment : BaseFragment(), MenuProvider {
             openFragment(fragment = VolumeDetailsFragment.newInstance(itemId))
         }
 
-        override fun onItemLongClick(itemId: String): Boolean {
+        override fun onItemLongClick(itemId: String) {
             Toast.makeText(context, "Made long click on item with id #$itemId", Toast.LENGTH_SHORT)
                 .show()
-            return true
         }
 
         override fun onFavoriteClick(itemId: String) {
