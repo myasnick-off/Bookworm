@@ -1,7 +1,9 @@
 package com.dev.miasnikoff.bookworm.data
 
-import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
-import com.dev.miasnikoff.bookworm.data.model.VolumeResponse
+import com.dev.miasnikoff.bookworm.data.remote.ApiService
+import com.dev.miasnikoff.bookworm.data.remote.RemoteDataSource
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.bookworm.domain.Repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

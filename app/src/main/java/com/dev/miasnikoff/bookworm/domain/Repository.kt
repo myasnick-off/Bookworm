@@ -1,7 +1,7 @@
 package com.dev.miasnikoff.bookworm.domain
 
-import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
-import com.dev.miasnikoff.bookworm.data.model.VolumeResponse
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.bookworm.domain.model.OrderBy
 import com.dev.miasnikoff.bookworm.domain.model.PrintType
 

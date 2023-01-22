@@ -3,8 +3,8 @@ package com.dev.miasnikoff.bookworm.domain
 import com.dev.miasnikoff.bookworm.data.RepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.LocalRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
-import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
-import com.dev.miasnikoff.bookworm.data.model.VolumeResponse
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.bookworm.domain.mapper.BookEntityDataMapper
 import com.dev.miasnikoff.bookworm.domain.model.PrintType
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem

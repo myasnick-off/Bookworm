@@ -3,7 +3,7 @@ package com.dev.miasnikoff.bookworm.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dev.miasnikoff.bookworm.data.model.ImageSize
+import com.dev.miasnikoff.bookworm.data.remote.model.ImageSize
 import com.dev.miasnikoff.bookworm.domain.HomeDataInteractor
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.CarouselWithTitleItem

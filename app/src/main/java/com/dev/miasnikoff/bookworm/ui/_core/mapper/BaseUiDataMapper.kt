@@ -1,7 +1,7 @@
 package com.dev.miasnikoff.bookworm.ui._core.mapper
 
-import com.dev.miasnikoff.bookworm.data.model.ImageLinksDTO
-import com.dev.miasnikoff.bookworm.data.model.ImageSize
+import com.dev.miasnikoff.bookworm.data.remote.model.ImageLinksDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.ImageSize
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 
 abstract class BaseUiDataMapper<T> {

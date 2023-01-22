@@ -1,9 +1,9 @@
 package com.dev.miasnikoff.bookworm.ui.details.mapper
 
 import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
-import com.dev.miasnikoff.bookworm.data.model.ImageLinksDTO
-import com.dev.miasnikoff.bookworm.data.model.ImageSize
-import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.ImageLinksDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.ImageSize
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.domain.model.BookDetails
 
 class VolumeDetailsMapper {

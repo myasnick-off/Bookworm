@@ -1,7 +1,7 @@
-package com.dev.miasnikoff.bookworm.data
+package com.dev.miasnikoff.bookworm.data.remote
 
-import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
-import com.dev.miasnikoff.bookworm.data.model.VolumeResponse
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -17,13 +17,11 @@ interface ApiService {
         @Query("printType") printType: String?,
         @Query("orderBy") orderBy: String?,
         @Query("startIndex") startIndex: Int,
-        @Query("maxResults") maxResults: Int,
-        @Query("key") apiKey: String = RemoteDataSource.API_KEY
+        @Query("maxResults") maxResults: Int
     ): Deferred<VolumeResponse>
 
     @GET("/books/v1/volumes/{volumeId}")
     fun getVolumeAsync(
-        @Path("volumeId") volumeId: String,
-        @Query("key") apiKey: String = RemoteDataSource.API_KEY
+        @Path("volumeId") volumeId: String
     ): Deferred<VolumeDTO>
 }

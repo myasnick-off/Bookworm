@@ -3,7 +3,7 @@ package com.dev.miasnikoff.bookworm.domain
 import com.dev.miasnikoff.bookworm.data.RepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.LocalRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
-import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.domain.model.Filter
 import com.dev.miasnikoff.bookworm.domain.model.OrderBy
 import com.dev.miasnikoff.bookworm.domain.model.QueryFields

@@ -2,7 +2,7 @@ package com.dev.miasnikoff.bookworm.ui.list.mapper
 
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
-import com.dev.miasnikoff.bookworm.data.model.ImageSize
+import com.dev.miasnikoff.bookworm.data.remote.model.ImageSize
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui._core.mapper.BaseUiDataMapper
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
