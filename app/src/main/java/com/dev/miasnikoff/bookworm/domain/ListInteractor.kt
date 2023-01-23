@@ -3,10 +3,12 @@ package com.dev.miasnikoff.bookworm.domain
 import com.dev.miasnikoff.bookworm.data.RepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.LocalRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
+import com.dev.miasnikoff.bookworm.data.remote.model.ApiResponse
 import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.bookworm.domain.mapper.BookEntityDataMapper
 import com.dev.miasnikoff.bookworm.domain.model.PrintType
+import com.dev.miasnikoff.bookworm.domain.model.Result
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
 
 class ListInteractor(
@@ -22,8 +24,8 @@ class ListInteractor(
         orderBy: String?,
         startIndex: Int,
         maxResults: Int
-    ): VolumeResponse {
-        var response = remoteRepository.getVolumeList(
+    ): Result<VolumeResponse> {
+        val response = remoteRepository.getVolumeList(
             query = query,
             filter = filter,
             printType = printType,
@@ -33,17 +35,21 @@ class ListInteractor(
         )
         val favoriteList = localRepository.getAllFavorite()
         val resultList = mutableListOf<VolumeDTO>()
-        response.volumes?.let { books ->
-            resultList.addAll(books)
-            favoriteList.forEach { favorite ->
-                val index = books.indexOfFirst { it.id == favorite.id }
-                if (index > -1) {
-                    resultList[index] = resultList[index].copy(isFavorite = true)
+        return when (response) {
+            is ApiResponse.Success -> {
+                response.data.volumes?.let { books ->
+                    resultList.addAll(books)
+                    favoriteList.forEach { favorite ->
+                        val index = books.indexOfFirst { it.id == favorite.id }
+                        if (index > -1) {
+                            resultList[index] = resultList[index].copy(isFavorite = true)
+                        }
+                    }
                 }
+                Result.Success(data = response.data.copy(volumes = resultList))
             }
-            response = response.copy(volumes = resultList)
+            is ApiResponse.Failure -> { Result.Error(response.message) }
         }
-        return response
     }
 
     suspend fun saveInFavorite(bookItem: BookItem) {

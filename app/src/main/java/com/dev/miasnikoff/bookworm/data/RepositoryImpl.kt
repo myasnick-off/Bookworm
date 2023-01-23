@@ -2,6 +2,7 @@ package com.dev.miasnikoff.bookworm.data
 
 import com.dev.miasnikoff.bookworm.data.remote.ApiService
 import com.dev.miasnikoff.bookworm.data.remote.RemoteDataSource
+import com.dev.miasnikoff.bookworm.data.remote.model.ApiResponse
 import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.bookworm.domain.Repository
@@ -19,22 +20,22 @@ class RepositoryImpl(
         orderBy: String?,
         startIndex: Int,
         maxResults: Int
-    ): VolumeResponse {
+    ): ApiResponse<VolumeResponse> {
         return withContext(Dispatchers.IO) {
-            apiService.getVolumesAsync(
+            apiService.getVolumes(
                 query = query,
                 filter = filter,
                 printType = printType,
                 orderBy = orderBy,
                 startIndex = startIndex,
                 maxResults = maxResults
-            ).await()
+            )
         }
     }
 
-    override suspend fun getVolume(id: String): VolumeDTO {
+    override suspend fun getVolume(id: String): ApiResponse<VolumeDTO> {
         return withContext(Dispatchers.IO) {
-            apiService.getVolumeAsync(volumeId = id).await()
+            apiService.getVolume(volumeId = id)
         }
     }
 }

@@ -3,27 +3,23 @@ package com.dev.miasnikoff.bookworm.ui.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.domain.ListInteractor
-import com.dev.miasnikoff.bookworm.domain.model.Filter
-import com.dev.miasnikoff.bookworm.domain.model.OrderBy
-import com.dev.miasnikoff.bookworm.domain.model.QueryFields
+import com.dev.miasnikoff.bookworm.domain.model.*
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
 import com.dev.miasnikoff.bookworm.ui.list.mapper.DtoToUiMapper
 import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class BookListViewModel(
     private val interactor: ListInteractor = ListInteractor(),
     private val dtoToUiMapper: DtoToUiMapper = DtoToUiMapper(),
 ) : ViewModel() {
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        _liveData.value = PagedListState.Failure(throwable.message ?: DEFAULT_ERROR_MESSAGE)
-    }
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + exceptionHandler)
     private var job: Job? = null
 
     private val _liveData: MutableLiveData<PagedListState> = MutableLiveData()
@@ -65,32 +61,38 @@ class BookListViewModel(
     private fun getVolumeList() {
         if (liveData.value !is PagedListState.Success) {
             job?.cancel()
-            job = scope.launch {
-                val volumeResponse = interactor.getBooksList(
+            job = viewModelScope.launch {
+                interactor.getBooksList(
                     query = currentQuery,
                     filter = filter,
                     orderBy = orderBy,
                     startIndex = startIndex,
                     maxResults = DEFAULT_MAX_VALUES
                 )
-                _liveData.value = volumeResponse.volumes?.let { volumesDTO ->
-                    startIndex += DEFAULT_MAX_VALUES
-                    val newList = mutableListOf<RecyclerItem>().apply {
-                        addAll((currentList + dtoToUiMapper.toItemList(volumesDTO)).distinctBy { it.id })
+                    .onSuccess { volumeResponse ->
+                        _liveData.value = volumeResponse.volumes?.let { volumesDTO ->
+                            startIndex += DEFAULT_MAX_VALUES
+                            val newList = mutableListOf<RecyclerItem>().apply {
+                                addAll((currentList + dtoToUiMapper.toItemList(volumesDTO)).distinctBy { it.id })
+                            }
+                            currentList = newList
+                            PagedListState.Success(currentList, newList.size < volumeResponse.totalItems)
+                        } ?: if (currentList.isEmpty()) {
+                            PagedListState.Failure(EMPTY_RESULT_MESSAGE)
+                        } else {
+                            PagedListState.Success(currentList, false)
+                        }
                     }
-                    currentList = newList
-                    PagedListState.Success(currentList, newList.size < volumeResponse.totalItems)
-                } ?: if (currentList.isEmpty()) {
-                    PagedListState.Failure(EMPTY_RESULT_MESSAGE)
-                } else {
-                    PagedListState.Success(currentList, false)
-                }
+                    .onFailure { message ->
+                        _liveData.value = PagedListState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
+                    }
+
             }
         }
     }
 
     fun setFavorite(itemId: String) {
-        scope.launch {
+        viewModelScope.launch {
             val newList: MutableList<RecyclerItem> = mutableListOf()
             val currentState = liveData.value as? PagedListState.Success
             currentState?.let { state ->
@@ -111,11 +113,6 @@ class BookListViewModel(
                 _liveData.value = state.copy(data = currentList)
             }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        scope.cancel()
     }
 
     companion object {

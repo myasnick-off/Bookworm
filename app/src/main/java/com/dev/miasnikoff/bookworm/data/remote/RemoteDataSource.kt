@@ -15,14 +15,14 @@ object RemoteDataSource {
     val apiService: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(json.asConverterFactory(contentType))
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .addCallAdapterFactory(ApiResponseCallAdapterFactory())
             .client(client)
             .build()
             .create(ApiService::class.java)
     }
 
-    private val contentType = "application/json".toMediaType()
     private val json = Json { ignoreUnknownKeys = true }
 
     private val client: OkHttpClient by lazy {
