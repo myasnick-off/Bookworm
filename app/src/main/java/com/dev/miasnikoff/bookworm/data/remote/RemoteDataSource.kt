@@ -28,15 +28,16 @@ object RemoteDataSource {
     private val client: OkHttpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(AuthorizationInterceptor())
+            .addInterceptor(ApiKeyInterceptor())
             .connectTimeout(CONNECT_TIMEOUT_VALUE, TimeUnit.SECONDS)
             .readTimeout(READ_TIMEOUT_VALUE, TimeUnit.SECONDS)
             .build()
     }
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
-        else HttpLoggingInterceptor.Level.NONE
+        level =
+            if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+            else HttpLoggingInterceptor.Level.NONE
     }
 
     private const val CONNECT_TIMEOUT_VALUE = 10L
