@@ -9,10 +9,11 @@ import com.dev.miasnikoff.bookworm.domain.model.Filter
 import com.dev.miasnikoff.bookworm.domain.model.OrderBy
 import com.dev.miasnikoff.bookworm.domain.model.QueryFields
 import com.dev.miasnikoff.bookworm.domain.model.Result
+import javax.inject.Inject
 
-class HomeDataInteractor(
-    private val remoteRepository: RemoteRepository = RemoteRepositoryImpl(),
-    private val localRepository: LocalRepository = LocalRepositoryImpl()
+class HomeDataInteractor @Inject constructor(
+    private val remoteRepository: RemoteRepository,
+    private val localRepository: LocalRepository
 ) {
 
     suspend fun getBookOfDay(): Result<VolumeDTO?> {

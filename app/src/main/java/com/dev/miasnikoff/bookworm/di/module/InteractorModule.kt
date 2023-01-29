@@ -12,8 +12,8 @@ import dagger.Provides
 @Module
 class InteractorModule {
 
-    @Provides
+    /*@Provides
     fun provideDetailsInteractor(remoteRepository: RemoteRepository,localRepository: LocalRepository,mapper: VolumeDetailsMapper): DetailsInteractor {
         return DetailsInteractor(remoteRepository, localRepository, mapper)
-    }
+    }*/
 }

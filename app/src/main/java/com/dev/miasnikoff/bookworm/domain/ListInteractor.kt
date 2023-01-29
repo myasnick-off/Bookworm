@@ -10,11 +10,12 @@ import com.dev.miasnikoff.bookworm.domain.mapper.BookEntityDataMapper
 import com.dev.miasnikoff.bookworm.domain.model.PrintType
 import com.dev.miasnikoff.bookworm.domain.model.Result
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
+import javax.inject.Inject
 
-class ListInteractor(
-    private val remoteRepository: RemoteRepository = RemoteRepositoryImpl(),
-    private val localRepository: LocalRepository = LocalRepositoryImpl(),
-    private val mapper: BookEntityDataMapper = BookEntityDataMapper(),
+class ListInteractor @Inject constructor(
+    private val remoteRepository: RemoteRepository,
+    private val localRepository: LocalRepository,
+    private val mapper: BookEntityDataMapper,
 ) {
 
     suspend fun getBooksList(

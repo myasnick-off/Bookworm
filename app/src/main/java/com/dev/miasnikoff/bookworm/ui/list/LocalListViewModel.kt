@@ -12,8 +12,8 @@ import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
 import kotlinx.coroutines.*
 
 class LocalListViewModel(
-    private val interactor: ListInteractor = ListInteractor(),
-    private val entityToUiMapper: EntityToUiMapper = EntityToUiMapper()
+    private val interactor: ListInteractor,
+    private val entityToUiMapper: EntityToUiMapper
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->

@@ -10,7 +10,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class LoginViewModel(private val authRepository: AuthRepository = AuthRepositoryImpl()) :
+class LoginViewModel(private val authRepository: AuthRepository) :
     ViewModel() {
 
     private var _liveData: MutableLiveData<AuthState> = MutableLiveData()

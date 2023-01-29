@@ -16,8 +16,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class BookListViewModel(
-    private val interactor: ListInteractor = ListInteractor(),
-    private val dtoToUiMapper: DtoToUiMapper = DtoToUiMapper(),
+    private val interactor: ListInteractor,
+    private val dtoToUiMapper: DtoToUiMapper,
 ) : ViewModel() {
 
     private var job: Job? = null

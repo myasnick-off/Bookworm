@@ -11,7 +11,7 @@ import com.dev.miasnikoff.bookworm.ui.details.model.DetailsState
 import kotlinx.coroutines.launch
 
 class VolumeDetailsViewModel(
-    private val interactor: DetailsInteractor = DetailsInteractor(),
+    private val interactor: DetailsInteractor
 ) : ViewModel() {
 
     private var _liveData: MutableLiveData<DetailsState> = MutableLiveData()

@@ -19,9 +19,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val interactor: HomeDataInteractor = HomeDataInteractor(),
-    private val homeDtoToUiMapper: HomeDtoToUiMapper = HomeDtoToUiMapper(),
-    private val homeEntityToUiMapper: HomeEntityToUiMapper = HomeEntityToUiMapper(),
+    private val interactor: HomeDataInteractor,
+    private val homeDtoToUiMapper: HomeDtoToUiMapper,
+    private val homeEntityToUiMapper: HomeEntityToUiMapper,
 ): ViewModel() {
 
     private var job: Job? = null
