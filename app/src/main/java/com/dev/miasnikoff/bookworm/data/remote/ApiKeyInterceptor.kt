@@ -16,6 +16,6 @@ class ApiKeyInterceptor : Interceptor {
 
     companion object {
         private const val KEY_HEADER = "key"
-        private const val KEY_VALUE = "AIzaSyBaAqPeUdUOHol2ryiTkz4fEktX1LrFeSg"
+        private const val KEY_VALUE = "AIzaSyABHDpcdAC9YEQKpIIlCxW4xDthwUms1G4"
     }
 }
