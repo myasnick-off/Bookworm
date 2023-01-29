@@ -6,7 +6,7 @@ import com.dev.miasnikoff.bookworm.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.bookworm.domain.model.OrderBy
 import com.dev.miasnikoff.bookworm.domain.model.PrintType
 
-interface Repository {
+interface RemoteRepository {
     suspend fun getVolumeList(
         query: String,
         filter: String? = null,

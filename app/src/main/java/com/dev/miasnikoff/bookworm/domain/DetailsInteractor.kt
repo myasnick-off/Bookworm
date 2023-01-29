@@ -1,6 +1,6 @@
 package com.dev.miasnikoff.bookworm.domain
 
-import com.dev.miasnikoff.bookworm.data.RepositoryImpl
+import com.dev.miasnikoff.bookworm.data.RemoteRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.LocalRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.remote.model.ApiResponse
 import com.dev.miasnikoff.bookworm.domain.model.BookDetails
@@ -8,9 +8,9 @@ import com.dev.miasnikoff.bookworm.domain.model.Result
 import com.dev.miasnikoff.bookworm.ui.details.mapper.VolumeDetailsMapper
 
 class DetailsInteractor(
-    private val remoteRepository: Repository = RepositoryImpl(),
-    private val localRepository: LocalRepository = LocalRepositoryImpl(),
-    private val mapper: VolumeDetailsMapper = VolumeDetailsMapper(),
+    private val remoteRepository: RemoteRepository,
+    private val localRepository: LocalRepository,
+    private val mapper: VolumeDetailsMapper,
 ) {
     suspend fun getDetails(bookId: String): Result<BookDetails> {
         val detailsEntity = localRepository.getBook(bookId)

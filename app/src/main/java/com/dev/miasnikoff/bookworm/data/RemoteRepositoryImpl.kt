@@ -5,13 +5,11 @@ import com.dev.miasnikoff.bookworm.data.remote.RemoteDataSource
 import com.dev.miasnikoff.bookworm.data.remote.model.ApiResponse
 import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.data.remote.model.VolumeResponse
-import com.dev.miasnikoff.bookworm.domain.Repository
+import com.dev.miasnikoff.bookworm.domain.RemoteRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RepositoryImpl(
-    private val apiService: ApiService = RemoteDataSource.apiService
-) : Repository {
+class RemoteRepositoryImpl(private val apiService: ApiService) : RemoteRepository {
 
     override suspend fun getVolumeList(
         query: String,

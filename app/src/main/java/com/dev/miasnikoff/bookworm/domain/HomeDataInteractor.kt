@@ -1,6 +1,6 @@
 package com.dev.miasnikoff.bookworm.domain
 
-import com.dev.miasnikoff.bookworm.data.RepositoryImpl
+import com.dev.miasnikoff.bookworm.data.RemoteRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.LocalRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
 import com.dev.miasnikoff.bookworm.data.remote.model.ApiResponse
@@ -11,14 +11,14 @@ import com.dev.miasnikoff.bookworm.domain.model.QueryFields
 import com.dev.miasnikoff.bookworm.domain.model.Result
 
 class HomeDataInteractor(
-    private val repository: Repository = RepositoryImpl(),
+    private val remoteRepository: RemoteRepository = RemoteRepositoryImpl(),
     private val localRepository: LocalRepository = LocalRepositoryImpl()
 ) {
 
     suspend fun getBookOfDay(): Result<VolumeDTO?> {
         for (i: Int in 0..5) {
             val query = "${('А'..'я').random()}+${QueryFields.IN_TITLE.type}${('А'..'я').random()}}"
-            val response = repository.getVolumeList(
+            val response = remoteRepository.getVolumeList(
                 query = query,
                 maxResults = ENLARGED_MAX_VALUES,
                 orderBy = (OrderBy.values()).random().type,
@@ -29,7 +29,7 @@ class HomeDataInteractor(
                     val volume =
                         response.data.volumes?.firstOrNull { volume -> volume.volumeInfo.imageLinks != null }
                     volume?.let {
-                        return when (val detailsResponse = repository.getVolume(it.id)) {
+                        return when (val detailsResponse = remoteRepository.getVolume(it.id)) {
                             is ApiResponse.Success -> Result.Success(data = detailsResponse.data)
                             is ApiResponse.Failure -> Result.Error(detailsResponse.message)
                         }
@@ -43,7 +43,7 @@ class HomeDataInteractor(
 
     suspend fun getNewestList(): Result<List<VolumeDTO>> {
         for (i: Int in 0..5) {
-            val response = repository.getVolumeList(
+            val response = remoteRepository.getVolumeList(
                 query = "+${QueryFields.IN_TITLE.type}",
                 orderBy = OrderBy.NEWEST.type,
                 startIndex = i
@@ -62,7 +62,7 @@ class HomeDataInteractor(
 
     suspend fun getPopularFreeList(): Result<List<VolumeDTO>> {
         for (i: Int in 0..5) {
-            val response = repository.getVolumeList(
+            val response = remoteRepository.getVolumeList(
                 query = "+${QueryFields.IN_TITLE.type}",
                 filter = Filter.FREE_BOOKS.type,
                 orderBy = OrderBy.NEWEST.type

@@ -8,8 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
-class LocalRepositoryImpl(private val bookDao: BookDao = App.appInstance.database.bookDao()) :
-    LocalRepository {
+class LocalRepositoryImpl(private val bookDao: BookDao) : LocalRepository {
 
     override suspend fun getAll(): List<BookEntity> {
         return withContext(Dispatchers.IO) {

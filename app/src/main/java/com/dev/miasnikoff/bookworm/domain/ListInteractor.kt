@@ -1,6 +1,6 @@
 package com.dev.miasnikoff.bookworm.domain
 
-import com.dev.miasnikoff.bookworm.data.RepositoryImpl
+import com.dev.miasnikoff.bookworm.data.RemoteRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.LocalRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
 import com.dev.miasnikoff.bookworm.data.remote.model.ApiResponse
@@ -12,7 +12,7 @@ import com.dev.miasnikoff.bookworm.domain.model.Result
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
 
 class ListInteractor(
-    private val remoteRepository: Repository = RepositoryImpl(),
+    private val remoteRepository: RemoteRepository = RemoteRepositoryImpl(),
     private val localRepository: LocalRepository = LocalRepositoryImpl(),
     private val mapper: BookEntityDataMapper = BookEntityDataMapper(),
 ) {
