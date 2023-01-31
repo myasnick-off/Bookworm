@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VolumeInfoDTO(
-    @SerialName("title") val title: String? = null,
+    @SerialName("title") val title: String,
     @SerialName("subtitle") val subtitle: String? = null,
     @SerialName("authors") val authors: List<String>? = null,
     @SerialName("publisher") val publisher: String? = null,

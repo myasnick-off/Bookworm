@@ -16,7 +16,6 @@ object RemoteDataSource {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addCallAdapterFactory(ApiResponseCallAdapterFactory())
             .client(client)
             .build()
