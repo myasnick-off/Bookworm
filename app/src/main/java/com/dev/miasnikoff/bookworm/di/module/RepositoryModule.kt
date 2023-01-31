@@ -1,32 +1,27 @@
 package com.dev.miasnikoff.bookworm.di.module
 
 import com.dev.miasnikoff.bookworm.data.AuthRepositoryImpl
-import com.dev.miasnikoff.bookworm.data.AuthService
 import com.dev.miasnikoff.bookworm.data.RemoteRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.LocalRepositoryImpl
-import com.dev.miasnikoff.bookworm.data.local.dao.BookDao
-import com.dev.miasnikoff.bookworm.data.remote.ApiService
 import com.dev.miasnikoff.bookworm.domain.AuthRepository
 import com.dev.miasnikoff.bookworm.domain.LocalRepository
 import com.dev.miasnikoff.bookworm.domain.RemoteRepository
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
+import javax.inject.Singleton
 
 @Module
-class RepositoryModule {
+interface RepositoryModule {
 
-    @Provides
-    fun provideRemoteRepository(apiService: ApiService): RemoteRepository {
-        return RemoteRepositoryImpl(apiService)
-    }
+    @Binds
+    @Singleton
+    fun bindRemoteRepository(impl: RemoteRepositoryImpl): RemoteRepository
 
-    @Provides
-    fun provideAuthRepository(authService: AuthService): AuthRepository {
-        return AuthRepositoryImpl(authService)
-    }
+    @Binds
+    @Singleton
+    fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
 
-    @Provides
-    fun provideLocalRepository(bookDao: BookDao): LocalRepository {
-        return LocalRepositoryImpl(bookDao)
-    }
+    @Binds
+    @Singleton
+    fun bindLocalRepository(impl: LocalRepositoryImpl): LocalRepository
 }

@@ -6,8 +6,9 @@ import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui._core.mapper.BaseUiDataMapper
 import com.dev.miasnikoff.bookworm.ui.home.adapter.bookofday.BookOfDayItem
 import com.dev.miasnikoff.bookworm.ui.home.adapter.litebook.LiteBookItem
+import javax.inject.Inject
 
-class HomeEntityToUiMapper: BaseUiDataMapper<BookEntity>() {
+class HomeEntityToUiMapper @Inject constructor(): BaseUiDataMapper<BookEntity>() {
 
     override fun toItem(item: BookEntity, imageSize: ImageSize): RecyclerItem =
         LiteBookItem(

@@ -1,14 +1,14 @@
 package com.dev.miasnikoff.bookworm.data.local
 
-import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.data.local.dao.BookDao
 import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
 import com.dev.miasnikoff.bookworm.domain.LocalRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import javax.inject.Inject
 
-class LocalRepositoryImpl(private val bookDao: BookDao) : LocalRepository {
+class LocalRepositoryImpl @Inject constructor(private val bookDao: BookDao) : LocalRepository {
 
     override suspend fun getAll(): List<BookEntity> {
         return withContext(Dispatchers.IO) {

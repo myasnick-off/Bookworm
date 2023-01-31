@@ -2,8 +2,9 @@ package com.dev.miasnikoff.bookworm.domain.mapper
 
 import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
+import javax.inject.Inject
 
-class BookEntityDataMapper {
+class BookEntityDataMapper @Inject constructor() {
 
     fun toFavorite(item: BookItem):BookEntity =
         toEntity(item, true)

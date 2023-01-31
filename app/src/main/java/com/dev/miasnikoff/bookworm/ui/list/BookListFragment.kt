@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.dev.miasnikoff.bookworm.R
@@ -26,6 +27,7 @@ import com.dev.miasnikoff.bookworm.ui.search.SearchClickListener
 import com.dev.miasnikoff.bookworm.ui.search.SearchDialogFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class BookListFragment : BaseFragment(), MenuProvider {
 
@@ -33,9 +35,10 @@ class BookListFragment : BaseFragment(), MenuProvider {
     override val binding: FragmentListBinding
         get() = _binding
 
-    private val viewModel: BookListViewModel by lazy {
-        ViewModelProvider(this)[BookListViewModel::class.java]
-    }
+    @Inject
+    lateinit var viewModelFactory: BookListViewModelProviderFactory
+
+    private val viewModel: BookListViewModel by viewModels { viewModelFactory }
 
     private val query: String? by lazy { arguments?.getString(ARG_QUERY, null) }
     private val category: Category? by lazy { arguments?.getParcelable(ARG_CATEGORY) }

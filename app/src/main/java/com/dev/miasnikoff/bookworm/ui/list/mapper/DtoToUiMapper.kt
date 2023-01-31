@@ -6,8 +6,9 @@ import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui._core.mapper.BaseUiDataMapper
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
+import javax.inject.Inject
 
-class DtoToUiMapper : BaseUiDataMapper<VolumeDTO>() {
+class DtoToUiMapper @Inject constructor() : BaseUiDataMapper<VolumeDTO>() {
 
     override fun toItem(item: VolumeDTO, imageSize: ImageSize): RecyclerItem =
         BookItem(

@@ -5,8 +5,9 @@ import com.dev.miasnikoff.bookworm.data.remote.model.ImageLinksDTO
 import com.dev.miasnikoff.bookworm.data.remote.model.ImageSize
 import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.domain.model.BookDetails
+import javax.inject.Inject
 
-class VolumeDetailsMapper {
+class VolumeDetailsMapper @Inject constructor() {
 
     fun fromDto(dto: VolumeDTO): BookDetails =
         BookDetails(

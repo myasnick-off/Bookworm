@@ -4,7 +4,6 @@ import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dev.miasnikoff.bookworm.data.AuthRepositoryImpl
 import com.dev.miasnikoff.bookworm.domain.AuthRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

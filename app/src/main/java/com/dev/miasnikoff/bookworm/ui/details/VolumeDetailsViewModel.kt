@@ -9,6 +9,7 @@ import com.dev.miasnikoff.bookworm.domain.model.onFailure
 import com.dev.miasnikoff.bookworm.domain.model.onSuccess
 import com.dev.miasnikoff.bookworm.ui.details.model.DetailsState
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class VolumeDetailsViewModel(
     private val interactor: DetailsInteractor
@@ -29,4 +30,10 @@ class VolumeDetailsViewModel(
     companion object {
         private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
     }
+}
+
+class VolumeDetailsViewModelProviderFactory @Inject constructor(
+
+) {
+
 }
