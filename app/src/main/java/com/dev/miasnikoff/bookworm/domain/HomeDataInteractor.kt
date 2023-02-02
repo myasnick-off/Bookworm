@@ -3,17 +3,19 @@ package com.dev.miasnikoff.bookworm.domain
 import com.dev.miasnikoff.bookworm.data.RepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.LocalRepositoryImpl
 import com.dev.miasnikoff.bookworm.data.local.model.BookEntity
-import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.ApiResponse
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.domain.model.Filter
 import com.dev.miasnikoff.bookworm.domain.model.OrderBy
 import com.dev.miasnikoff.bookworm.domain.model.QueryFields
+import com.dev.miasnikoff.bookworm.domain.model.Result
 
 class HomeDataInteractor(
     private val repository: Repository = RepositoryImpl(),
     private val localRepository: LocalRepository = LocalRepositoryImpl()
 ) {
 
-    suspend fun getBookOfDay(): VolumeDTO? {
+    suspend fun getBookOfDay(): Result<VolumeDTO?> {
         for (i: Int in 0..5) {
             val query = "${('А'..'я').random()}+${QueryFields.IN_TITLE.type}${('А'..'я').random()}}"
             val response = repository.getVolumeList(
@@ -22,48 +24,67 @@ class HomeDataInteractor(
                 orderBy = (OrderBy.values()).random().type,
                 startIndex = (1..5).random()
             )
-            try {
-                val volume = response.volumes?.first { volume ->
-                    //volume.volumeInfo.averageRating?.let { it > 4.0 } ?: false &&
-                    volume.volumeInfo.imageLinks != null
+            when (response) {
+                is ApiResponse.Success -> {
+                    val volume =
+                        response.data.volumes?.firstOrNull { volume -> volume.volumeInfo.imageLinks != null }
+                    volume?.let {
+                        return when (val detailsResponse = repository.getVolume(it.id)) {
+                            is ApiResponse.Success -> Result.Success(data = detailsResponse.data)
+                            is ApiResponse.Failure -> Result.Error(detailsResponse.message)
+                        }
+                    }
                 }
-                volume?.let { return repository.getVolume(it.id) }
-            } catch (e: Throwable) {
+                is ApiResponse.Failure -> return Result.Error(response.message)
             }
         }
-        return null
+        return Result.Success(data = null)
     }
 
-    suspend fun getNewestList(): List<VolumeDTO> {
+    suspend fun getNewestList(): Result<List<VolumeDTO>> {
         for (i: Int in 0..5) {
             val response = repository.getVolumeList(
                 query = "+${QueryFields.IN_TITLE.type}",
                 orderBy = OrderBy.NEWEST.type,
                 startIndex = i
             )
-            response.volumes?.let { VolumeDTO ->
-                return VolumeDTO.filter { it.volumeInfo.imageLinks != null }.distinctBy { it.id }
+            when (response) {
+                is ApiResponse.Success -> {
+                    response.data.volumes?.let { volumeList ->
+                        return Result.Success(data = handleResult(volumeList))
+                    }
+                }
+                is ApiResponse.Failure -> return Result.Error(response.message)
             }
         }
-        return listOf()
+        return Result.Success(data = listOf())
     }
 
-    suspend fun getPopularFreeList(): List<VolumeDTO> {
+    suspend fun getPopularFreeList(): Result<List<VolumeDTO>> {
         for (i: Int in 0..5) {
             val response = repository.getVolumeList(
                 query = "+${QueryFields.IN_TITLE.type}",
                 filter = Filter.FREE_BOOKS.type,
                 orderBy = OrderBy.NEWEST.type
             )
-            response.volumes?.let { VolumeDTO ->
-                return VolumeDTO.filter { it.volumeInfo.imageLinks != null }.distinctBy { it.id }
+            when (response) {
+                is ApiResponse.Success -> {
+                    response.data.volumes?.let { volumeList ->
+                        return Result.Success(data = handleResult(volumeList))
+                    }
+                }
+                is ApiResponse.Failure -> return Result.Error(response.message)
             }
         }
-        return listOf()
+        return Result.Success(data = listOf())
     }
 
     suspend fun getHistory(): List<BookEntity> {
         return localRepository.getAllHistory()
+    }
+
+    private fun handleResult(volumeList: List<VolumeDTO>): List<VolumeDTO> {
+        return volumeList.filter { it.volumeInfo.imageLinks != null }.distinctBy { it.id }
     }
 
     companion object {

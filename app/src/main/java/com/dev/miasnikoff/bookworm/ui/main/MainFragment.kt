@@ -10,7 +10,6 @@ import com.dev.miasnikoff.bookworm.databinding.FragmentMainBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui.home.HomeFragment
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
-import com.dev.miasnikoff.bookworm.ui.list.BookListFragment
 import com.dev.miasnikoff.bookworm.ui.list.LocalListFragment
 import com.dev.miasnikoff.bookworm.ui.login.LoginFragment
 import com.dev.miasnikoff.bookworm.ui.settings.SettingsFragment

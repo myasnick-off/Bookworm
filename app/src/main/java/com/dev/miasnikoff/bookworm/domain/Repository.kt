@@ -1,7 +1,8 @@
 package com.dev.miasnikoff.bookworm.domain
 
-import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
-import com.dev.miasnikoff.bookworm.data.model.VolumeResponse
+import com.dev.miasnikoff.bookworm.data.remote.model.ApiResponse
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.bookworm.domain.model.OrderBy
 import com.dev.miasnikoff.bookworm.domain.model.PrintType
 
@@ -13,9 +14,9 @@ interface Repository {
         orderBy: String? = OrderBy.RELEVANCE.type,
         startIndex: Int = DEFAULT_START_INDEX,
         maxResults: Int = DEFAULT_MAX_VALUES
-    ): VolumeResponse
+    ): ApiResponse<VolumeResponse>
 
-    suspend fun getVolume(id: String): VolumeDTO
+    suspend fun getVolume(id: String): ApiResponse<VolumeDTO>
 
     companion object {
         private const val DEFAULT_START_INDEX = 0

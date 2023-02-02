@@ -3,8 +3,11 @@ package com.dev.miasnikoff.bookworm.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dev.miasnikoff.bookworm.data.model.ImageSize
+import androidx.lifecycle.viewModelScope
+import com.dev.miasnikoff.bookworm.data.remote.model.ImageSize
 import com.dev.miasnikoff.bookworm.domain.HomeDataInteractor
+import com.dev.miasnikoff.bookworm.domain.model.onFailure
+import com.dev.miasnikoff.bookworm.domain.model.onSuccess
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.CarouselWithTitleItem
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
@@ -12,7 +15,8 @@ import com.dev.miasnikoff.bookworm.ui.home.mapper.HomeDtoToUiMapper
 import com.dev.miasnikoff.bookworm.ui.home.mapper.HomeEntityToUiMapper
 import com.dev.miasnikoff.bookworm.ui.home.model.HomeState
 import com.dev.miasnikoff.bookworm.utils.extensions.addNotNull
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val interactor: HomeDataInteractor = HomeDataInteractor(),
@@ -20,11 +24,6 @@ class HomeViewModel(
     private val homeEntityToUiMapper: HomeEntityToUiMapper = HomeEntityToUiMapper(),
 ): ViewModel() {
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        _liveData.value = HomeState.Failure(throwable.message ?: DEFAULT_ERROR_MESSAGE)
-    }
-
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + exceptionHandler)
     private var job: Job? = null
 
     private val _liveData: MutableLiveData<HomeState> = MutableLiveData()
@@ -36,21 +35,54 @@ class HomeViewModel(
 
     fun getHomeData() {
         _liveData.value = HomeState.Loading
-        job = scope.launch {
-            val bookOfDay = interactor.getBookOfDay()
-            val historyList = interactor.getHistory()
-            val newestList = interactor.getNewestList()
-            val popFreeList = interactor.getPopularFreeList()
+        job = viewModelScope.launch {
             val homeList = mutableListOf<RecyclerItem>()
-            homeList.addNotNull(homeDtoToUiMapper.toSingleItem(bookOfDay, ImageSize.M))
+            interactor.getBookOfDay()
+                .onSuccess { bookDto ->
+                    homeList.addNotNull(homeDtoToUiMapper.toSingleItem(bookDto, ImageSize.M))
+                }
+                .onFailure(::postError)
+
             homeList.add(CarouselWithTitleItem.createGenreCarousel())
-            homeList.addNotNull(CarouselWithTitleItem.createCarouselOfCategory(category = Category.LAST_VIEWED, items = homeEntityToUiMapper.toItemList(historyList)))
-            homeList.addNotNull(CarouselWithTitleItem.createCarouselOfCategory(category = Category.NEWEST, items = homeDtoToUiMapper.toItemList(newestList)))
-            homeList.addNotNull(CarouselWithTitleItem.createCarouselOfCategory(category = Category.FREE, items = homeDtoToUiMapper.toItemList(popFreeList)))
+
+            val historyList = homeEntityToUiMapper.toItemList(interactor.getHistory())
+            homeList.addNotNull(
+                CarouselWithTitleItem.createCarouselOfCategory(
+                    category = Category.LAST_VIEWED,
+                    items = historyList
+                )
+            )
+
+            interactor.getNewestList()
+                .onSuccess { newestList ->
+                    homeList.addNotNull(
+                        CarouselWithTitleItem.createCarouselOfCategory(
+                            category = Category.NEWEST,
+                            items = homeDtoToUiMapper.toItemList(newestList)
+                        )
+                    )
+                }
+                .onFailure(::postError)
+
+            interactor.getPopularFreeList()
+                .onSuccess { popFreeList ->
+                    homeList.addNotNull(
+                        CarouselWithTitleItem.createCarouselOfCategory(
+                            category = Category.FREE,
+                            items = homeDtoToUiMapper.toItemList(popFreeList)
+                        )
+                    )
+                }
+                .onFailure(::postError)
+
             if (homeList.size > 1) {
                 _liveData.value = HomeState.Success(homeList)
             } else _liveData.value = HomeState.Failure(EMPTY_RESULT_MESSAGE)
         }
+    }
+
+    private fun postError(message: String?) {
+        _liveData.value = HomeState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
     }
 
     companion object {

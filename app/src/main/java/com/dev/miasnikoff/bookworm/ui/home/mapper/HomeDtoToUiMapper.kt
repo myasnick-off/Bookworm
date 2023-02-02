@@ -1,7 +1,7 @@
 package com.dev.miasnikoff.bookworm.ui.home.mapper
 
-import com.dev.miasnikoff.bookworm.data.model.ImageSize
-import com.dev.miasnikoff.bookworm.data.model.VolumeDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.ImageSize
+import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui._core.mapper.BaseUiDataMapper
 import com.dev.miasnikoff.bookworm.ui.home.adapter.bookofday.BookOfDayItem

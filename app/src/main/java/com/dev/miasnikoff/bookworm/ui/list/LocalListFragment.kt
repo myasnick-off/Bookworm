@@ -2,7 +2,6 @@ package com.dev.miasnikoff.bookworm.ui.list
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
