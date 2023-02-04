@@ -1,18 +1,20 @@
 package com.dev.miasnikoff.bookworm.ui.list
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
+import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui._core.adapter.BasePagedListAdapter
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
-import com.dev.miasnikoff.bookworm.ui.details.VolumeDetailsFragment
+import com.dev.miasnikoff.bookworm.ui.details.BookDetailsFragment
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookCell
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookListAdapter
@@ -20,6 +22,7 @@ import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
 import com.dev.miasnikoff.bookworm.ui.main.MainActivity
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class LocalListFragment : BaseFragment(), MenuProvider {
 
@@ -27,15 +30,17 @@ class LocalListFragment : BaseFragment(), MenuProvider {
     override val binding: FragmentListBinding
         get() = _binding
 
-    private val viewModel: LocalListViewModel by lazy {
-        ViewModelProvider(this)[LocalListViewModel::class.java]
-    }
-
     private val category: Category? by lazy { arguments?.getParcelable(ARG_CATEGORY) }
+
+    @Inject
+    lateinit var viewModelFactory: LocalListViewModelAssistedFactory
+    private val viewModel: LocalListViewModel by viewModels {
+        viewModelFactory.create(checkNotNull(category))
+    }
 
     private val itemClickListener = object : BookCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
-            openFragment(fragment = VolumeDetailsFragment.newInstance(itemId))
+            openFragment(fragment = BookDetailsFragment.newInstance(itemId))
         }
 
         override fun onItemLongClick(itemId: String) {
@@ -52,6 +57,11 @@ class LocalListFragment : BaseFragment(), MenuProvider {
     }
 
     private val bookListAdapter: BookListAdapter = BookListAdapter(pageListener, itemClickListener)
+
+    override fun onAttach(context: Context) {
+        App.appInstance.appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -108,7 +118,6 @@ class LocalListFragment : BaseFragment(), MenuProvider {
 
     private fun initPresenter() {
         viewModel.liveData.observe(viewLifecycleOwner, ::renderState)
-        getData()
     }
 
     private fun renderState(state: PagedListState) {
@@ -151,7 +160,7 @@ class LocalListFragment : BaseFragment(), MenuProvider {
     }
 
     private fun getData() {
-        category?.let { viewModel.getInitialPage(category = it) }
+        viewModel.getInitialPage()
     }
 
     companion object {

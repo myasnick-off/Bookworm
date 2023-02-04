@@ -8,8 +8,9 @@ import com.dev.miasnikoff.bookworm.domain.AuthRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class LoginViewModel(private val authRepository: AuthRepository) :
+class LoginViewModel @Inject constructor(private val authRepository: AuthRepository) :
     ViewModel() {
 
     private var _liveData: MutableLiveData<AuthState> = MutableLiveData()

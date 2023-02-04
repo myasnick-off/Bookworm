@@ -1,14 +1,17 @@
 package com.dev.miasnikoff.bookworm.ui.login
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentLoginBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
+import com.dev.miasnikoff.bookworm.ui._core.ViewModelFactory
 import com.dev.miasnikoff.bookworm.ui._core.model.UserModel
 import com.dev.miasnikoff.bookworm.ui.info.InfoFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
@@ -18,6 +21,7 @@ import com.jakewharton.rxbinding3.view.focusChanges
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
 class LoginFragment : BaseFragment() {
 
@@ -27,8 +31,14 @@ class LoginFragment : BaseFragment() {
 
     private var disposables = CompositeDisposable()
 
-    private val viewModel: LoginViewModel by lazy {
-        ViewModelProvider(this)[LoginViewModel::class.java]
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel: LoginViewModel by viewModels { viewModelFactory }
+
+    override fun onAttach(context: Context) {
+        App.appInstance.appComponent.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateView(

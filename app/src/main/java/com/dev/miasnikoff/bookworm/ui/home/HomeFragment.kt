@@ -1,15 +1,18 @@
 package com.dev.miasnikoff.bookworm.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentHomeBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
+import com.dev.miasnikoff.bookworm.ui._core.ViewModelFactory
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
-import com.dev.miasnikoff.bookworm.ui.details.VolumeDetailsFragment
+import com.dev.miasnikoff.bookworm.ui.details.BookDetailsFragment
 import com.dev.miasnikoff.bookworm.ui.home.adapter.HomeListAdapter
 import com.dev.miasnikoff.bookworm.ui.home.adapter.bookofday.BookOfDayCell
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.CarouselWithTitleCell
@@ -19,6 +22,7 @@ import com.dev.miasnikoff.bookworm.ui.list.BookListFragment
 import com.dev.miasnikoff.bookworm.ui.list.LocalListFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class HomeFragment : BaseFragment() {
 
@@ -26,12 +30,13 @@ class HomeFragment : BaseFragment() {
     override val binding: FragmentHomeBinding
         get() = _binding
 
-    private val viewModel: HomeViewModel by lazy {
-        ViewModelProvider(requireActivity())[HomeViewModel::class.java]
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: HomeViewModel by viewModels { viewModelFactory }
+
     private val itemClickListener = object : BookOfDayCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
-            openFragment(fragment = VolumeDetailsFragment.newInstance(itemId))
+            openFragment(fragment = BookDetailsFragment.newInstance(itemId))
         }
     }
     private val carouselClickListener = object : CarouselWithTitleCell.ItemClickListener {
@@ -49,11 +54,16 @@ class HomeFragment : BaseFragment() {
         }
 
         override fun onBookClick(bookId: String) {
-            openFragment(fragment = VolumeDetailsFragment.newInstance(bookId))
+            openFragment(fragment = BookDetailsFragment.newInstance(bookId))
         }
 
     }
     private val homeListAdapter: HomeListAdapter = HomeListAdapter(itemClickListener, carouselClickListener)
+
+    override fun onAttach(context: Context) {
+        App.appInstance.appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

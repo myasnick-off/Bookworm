@@ -3,17 +3,22 @@ package com.dev.miasnikoff.bookworm.ui.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.dev.miasnikoff.bookworm.domain.ListInteractor
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
 import com.dev.miasnikoff.bookworm.ui.list.mapper.EntityToUiMapper
 import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
 
-class LocalListViewModel(
+class LocalListViewModel @AssistedInject constructor(
     private val interactor: ListInteractor,
-    private val entityToUiMapper: EntityToUiMapper
+    private val entityToUiMapper: EntityToUiMapper,
+    @Assisted private val category: Category
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
@@ -26,17 +31,19 @@ class LocalListViewModel(
     val liveData: LiveData<PagedListState> get() = _liveData
 
     private var currentList: MutableList<RecyclerItem> = mutableListOf()
-    private var currentCategory: Category = Category.LAST_VIEWED
 
-    fun getInitialPage(category: Category) {
-        currentCategory = category
+    init {
+        getInitialPage()
+    }
+
+    fun getInitialPage() {
         _liveData.value = PagedListState.Loading
         currentList.clear()
         getBookList()
     }
 
     private fun getBookList() {
-        when (currentCategory) {
+        when (category) {
             Category.LAST_VIEWED -> getAllHistory()
             Category.FAVORITE -> getAllFavorite()
             else -> {}
@@ -115,7 +122,7 @@ class LocalListViewModel(
             val index = currentList.indexOfFirst { it.id == itemId }
             val bookItem = (currentList.firstOrNull { it.id == itemId } as? BookItem)
             if (index > -1 && bookItem != null) {
-                if (currentCategory == Category.FAVORITE) {
+                if (category == Category.FAVORITE) {
                     interactor.removeFromFavorite(bookItem)
                 } else {
                     interactor.removeFromHistory(bookItem)
@@ -130,4 +137,21 @@ class LocalListViewModel(
         private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
         private const val EMPTY_RESULT_MESSAGE = "Nothing found!"
     }
+}
+
+@Suppress("UNCHECKED_CAST")
+class LocalListViewModelFactory @AssistedInject constructor(
+    private val interactor: ListInteractor,
+    private val entityToUiMapper: EntityToUiMapper,
+    @Assisted private val category: Category
+): ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        assert(modelClass == LocalListViewModel::class.java)
+        return LocalListViewModel(interactor, entityToUiMapper, category) as T
+    }
+}
+
+@AssistedFactory
+interface LocalListViewModelAssistedFactory {
+    fun create(@Assisted category: Category): LocalListViewModelFactory
 }

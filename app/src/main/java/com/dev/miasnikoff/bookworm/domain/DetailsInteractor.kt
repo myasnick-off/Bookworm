@@ -3,13 +3,13 @@ package com.dev.miasnikoff.bookworm.domain
 import com.dev.miasnikoff.bookworm.data.remote.model.ApiResponse
 import com.dev.miasnikoff.bookworm.domain.model.BookDetails
 import com.dev.miasnikoff.bookworm.domain.model.Result
-import com.dev.miasnikoff.bookworm.ui.details.mapper.VolumeDetailsMapper
+import com.dev.miasnikoff.bookworm.ui.details.mapper.BookDetailsMapper
 import javax.inject.Inject
 
 class DetailsInteractor @Inject constructor(
     private val remoteRepository: RemoteRepository,
     private val localRepository: LocalRepository,
-    private val mapper: VolumeDetailsMapper,
+    private val mapper: BookDetailsMapper,
 ) {
     suspend fun getDetails(bookId: String): Result<BookDetails> {
         val detailsEntity = localRepository.getBook(bookId)

@@ -7,7 +7,7 @@ import com.dev.miasnikoff.bookworm.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.bookworm.domain.model.BookDetails
 import javax.inject.Inject
 
-class VolumeDetailsMapper @Inject constructor() {
+class BookDetailsMapper @Inject constructor() {
 
     fun fromDto(dto: VolumeDTO): BookDetails =
         BookDetails(

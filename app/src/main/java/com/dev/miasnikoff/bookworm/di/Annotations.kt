@@ -1,21 +1,14 @@
 package com.dev.miasnikoff.bookworm.di
 
+import androidx.lifecycle.ViewModel
+import dagger.MapKey
 import javax.inject.Qualifier
+import kotlin.reflect.KClass
 
 @Qualifier
 annotation class BaseUrl
 
-@Qualifier
-annotation class ApiKeyIntercept
-
-@Qualifier
-annotation class LoggingIntercept
-
-@Qualifier
-annotation class JsonConverter
-
-@Qualifier
-annotation class ApiResponseAdapter
-
-@Qualifier
-annotation class CoroutineAdapter
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+@MapKey
+annotation class ViewModelKey(val value: KClass<out ViewModel>)

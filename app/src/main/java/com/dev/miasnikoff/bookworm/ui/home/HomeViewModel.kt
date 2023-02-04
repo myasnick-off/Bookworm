@@ -17,8 +17,9 @@ import com.dev.miasnikoff.bookworm.ui.home.model.HomeState
 import com.dev.miasnikoff.bookworm.utils.extensions.addNotNull
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(
+class HomeViewModel @Inject constructor(
     private val interactor: HomeDataInteractor,
     private val homeDtoToUiMapper: HomeDtoToUiMapper,
     private val homeEntityToUiMapper: HomeEntityToUiMapper,

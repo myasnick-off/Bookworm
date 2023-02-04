@@ -1,24 +1,28 @@
 package com.dev.miasnikoff.bookworm.ui.details
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.dev.miasnikoff.bookworm.domain.DetailsInteractor
 import com.dev.miasnikoff.bookworm.domain.model.onFailure
 import com.dev.miasnikoff.bookworm.domain.model.onSuccess
 import com.dev.miasnikoff.bookworm.ui.details.model.DetailsState
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class VolumeDetailsViewModel(
-    private val interactor: DetailsInteractor
+class BookDetailsViewModel @AssistedInject constructor(
+    private val interactor: DetailsInteractor,
+    private val bookId: String
 ) : ViewModel() {
 
     private var _liveData: MutableLiveData<DetailsState> = MutableLiveData()
     val liveData: LiveData<DetailsState> get() = _liveData
 
-    fun getDetails(bookId: String) {
+    init {
+        getDetails()
+    }
+
+    fun getDetails() {
         _liveData.value = DetailsState.Loading
         viewModelScope.launch {
             interactor.getDetails(bookId)
@@ -32,8 +36,18 @@ class VolumeDetailsViewModel(
     }
 }
 
-class VolumeDetailsViewModelProviderFactory @Inject constructor(
+@Suppress("UNCHECKED_CAST")
+class BookDetailsViewModelFactory @AssistedInject constructor(
+    private val interactor: DetailsInteractor,
+    @Assisted private val bookId: String
+): ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        assert(modelClass == BookDetailsViewModel::class.java)
+        return BookDetailsViewModel(interactor, bookId) as T
+    }
+}
 
-) {
-
+@AssistedFactory
+interface BookDetailsViewModelAssistedFactory {
+    fun create(@Assisted bookId: String): BookDetailsViewModelFactory
 }

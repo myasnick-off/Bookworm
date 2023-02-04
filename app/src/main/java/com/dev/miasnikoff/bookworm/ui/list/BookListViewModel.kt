@@ -1,6 +1,9 @@
 package com.dev.miasnikoff.bookworm.ui.list
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.domain.ListInteractor
 import com.dev.miasnikoff.bookworm.domain.model.*
@@ -13,7 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class BookListViewModel(
+class BookListViewModel @Inject constructor(
     private val interactor: ListInteractor,
     private val dtoToUiMapper: DtoToUiMapper,
 ) : ViewModel() {
@@ -118,16 +121,5 @@ class BookListViewModel(
         private const val DEFAULT_MAX_VALUES = 20
         private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
         private const val EMPTY_RESULT_MESSAGE = "Nothing found!"
-    }
-}
-
-@Suppress("UNCHECKED_CAST")
-class BookListViewModelProviderFactory @Inject constructor(
-    private val interactor: ListInteractor,
-    private val dtoToUiMapper: DtoToUiMapper,
-): ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        assert(modelClass == BookListViewModel::class.java)
-        return BookListViewModel(interactor, dtoToUiMapper) as T
     }
 }

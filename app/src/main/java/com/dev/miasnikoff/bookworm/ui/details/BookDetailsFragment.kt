@@ -1,10 +1,12 @@
 package com.dev.miasnikoff.bookworm.ui.details
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentVolumeDetailsBinding
 import com.dev.miasnikoff.bookworm.domain.model.BookDetails
@@ -12,19 +14,25 @@ import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui.details.model.DetailsState
 import com.dev.miasnikoff.bookworm.ui.main.MainActivity
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
+import javax.inject.Inject
 
-class VolumeDetailsFragment : BaseFragment() {
+class BookDetailsFragment : BaseFragment() {
 
     private lateinit var _binding: FragmentVolumeDetailsBinding
     override val binding: FragmentVolumeDetailsBinding
         get() = _binding
 
-    private val viewModel: VolumeDetailsViewModel by lazy {
-        ViewModelProvider(this)[VolumeDetailsViewModel::class.java]
+    private val bookId: String by lazy {
+        arguments?.getString(ARG_VOLUME_ID) ?: throw IllegalStateException()
     }
 
-    private val volumeId: String by lazy {
-        arguments?.getString(ARG_VOLUME_ID) ?: throw IllegalStateException()
+    @Inject
+    lateinit var viewModelFactory: BookDetailsViewModelAssistedFactory
+    private val viewModel: BookDetailsViewModel by viewModels { viewModelFactory.create(bookId) }
+
+    override fun onAttach(context: Context) {
+        App.appInstance.appComponent.inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateView(
@@ -71,7 +79,6 @@ class VolumeDetailsFragment : BaseFragment() {
 
     private fun initViewModel() {
         viewModel.liveData.observe(viewLifecycleOwner, ::renderData)
-        viewModel.getDetails(volumeId)
     }
 
     private fun renderData(state: DetailsState) {
@@ -102,7 +109,7 @@ class VolumeDetailsFragment : BaseFragment() {
         binding.root.showSnackBar(
             message = "${getString(R.string.error)} $message",
             actionText = getString(R.string.reload)
-        ) { viewModel.getDetails(volumeId) }
+        ) { viewModel.getDetails() }
     }
 
     private fun bindData(bookDetails: BookDetails) = with(binding) {
@@ -125,8 +132,8 @@ class VolumeDetailsFragment : BaseFragment() {
     companion object {
         private const val ARG_VOLUME_ID = "arg_volume_id"
 
-        fun newInstance(volumeId: String): VolumeDetailsFragment =
-            VolumeDetailsFragment().apply {
+        fun newInstance(volumeId: String): BookDetailsFragment =
+            BookDetailsFragment().apply {
                 arguments = bundleOf(ARG_VOLUME_ID to volumeId)
             }
     }

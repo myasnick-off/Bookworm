@@ -2,6 +2,7 @@ package com.dev.miasnikoff.bookworm.ui.list
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.*
@@ -11,13 +12,14 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
+import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
+import com.dev.miasnikoff.bookworm.ui._core.ViewModelFactory
 import com.dev.miasnikoff.bookworm.ui._core.adapter.BasePagedListAdapter
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
-import com.dev.miasnikoff.bookworm.ui.details.VolumeDetailsFragment
+import com.dev.miasnikoff.bookworm.ui.details.BookDetailsFragment
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookCell
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookListAdapter
@@ -36,7 +38,7 @@ class BookListFragment : BaseFragment(), MenuProvider {
         get() = _binding
 
     @Inject
-    lateinit var viewModelFactory: BookListViewModelProviderFactory
+    lateinit var viewModelFactory: ViewModelFactory
 
     private val viewModel: BookListViewModel by viewModels { viewModelFactory }
 
@@ -45,7 +47,7 @@ class BookListFragment : BaseFragment(), MenuProvider {
 
     private val itemClickListener = object : BookCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
-            openFragment(fragment = VolumeDetailsFragment.newInstance(itemId))
+            openFragment(fragment = BookDetailsFragment.newInstance(itemId))
         }
 
         override fun onItemLongClick(itemId: String) {
@@ -68,6 +70,11 @@ class BookListFragment : BaseFragment(), MenuProvider {
         BookListAdapter(pageListener, itemClickListener)
 
     private var fabAnimSet: AnimatorSet? = null
+
+    override fun onAttach(context: Context) {
+        App.appInstance.appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

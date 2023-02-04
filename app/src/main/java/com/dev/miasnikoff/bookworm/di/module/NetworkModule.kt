@@ -5,11 +5,13 @@ import com.dev.miasnikoff.bookworm.data.AuthService
 import com.dev.miasnikoff.bookworm.data.remote.ApiKeyInterceptor
 import com.dev.miasnikoff.bookworm.data.remote.ApiResponseCallAdapterFactory
 import com.dev.miasnikoff.bookworm.data.remote.ApiService
-import com.dev.miasnikoff.bookworm.di.*
+import com.dev.miasnikoff.bookworm.di.BaseUrl
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.IntoSet
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
@@ -19,11 +21,10 @@ import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class NetworkModule {
+class NetworkProvideModule {
 
     @Provides
     @Singleton
@@ -42,17 +43,15 @@ class NetworkModule {
     fun retrofit(
         @BaseUrl baseUrl: String,
         okHttpClient: OkHttpClient,
-        @JsonConverter jsonConverterFactory: Converter.Factory,
-        @CoroutineAdapter coroutineCallAdapterFactory: CallAdapter.Factory,
-        @ApiResponseAdapter apiResponseCallAdapterFactory: CallAdapter.Factory
+        converterFactories: Set<@JvmSuppressWildcards Converter.Factory>,
+        callAdapterFactories: Set<@JvmSuppressWildcards CallAdapter.Factory>
     ): Retrofit {
-        return Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(jsonConverterFactory)
-            .addCallAdapterFactory(coroutineCallAdapterFactory)
-            .addCallAdapterFactory(apiResponseCallAdapterFactory)
             .client(okHttpClient)
-            .build()
+        converterFactories.forEach(retrofit::addConverterFactory)
+        callAdapterFactories.forEach(retrofit::addCallAdapterFactory)
+        return retrofit.build()
     }
 
     @Provides
@@ -63,21 +62,14 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    @CoroutineAdapter
+    @IntoSet
     fun coroutineCallAdapterFactory(): CallAdapter.Factory {
         return CoroutineCallAdapterFactory()
     }
 
     @Provides
     @Singleton
-    @ApiResponseAdapter
-    fun apiResponseCallAdapterFactory(): CallAdapter.Factory {
-        return ApiResponseCallAdapterFactory()
-    }
-
-    @Provides
-    @Singleton
-    @JsonConverter
+    @IntoSet
     fun jsonConverterFactory(): Converter.Factory {
         val json = Json { ignoreUnknownKeys = true }
         return json.asConverterFactory("application/json".toMediaType())
@@ -85,21 +77,17 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun okHttpClient(
-        @LoggingIntercept loggingInterceptor: Interceptor,
-        @ApiKeyIntercept apiKeyInterceptor: Interceptor
-    ): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .addInterceptor(apiKeyInterceptor)
+    fun okHttpClient(interceptors: Set<@JvmSuppressWildcards Interceptor>): OkHttpClient {
+        val builder = OkHttpClient.Builder()
             .connectTimeout(CONNECT_TIMEOUT_VALUE, TimeUnit.SECONDS)
             .readTimeout(READ_TIMEOUT_VALUE, TimeUnit.SECONDS)
-            .build()
+        interceptors.forEach(builder::addInterceptor)
+        return builder.build()
     }
 
     @Provides
     @Singleton
-    @LoggingIntercept
+    @IntoSet
     fun loggingInterceptor(): Interceptor {
         return HttpLoggingInterceptor().apply {
             level =
@@ -108,15 +96,22 @@ class NetworkModule {
         }
     }
 
-    @Provides
-    @Singleton
-    @ApiKeyIntercept
-    fun apiKeyInterceptor(): Interceptor {
-        return ApiKeyInterceptor()
-    }
-
     companion object {
         private const val CONNECT_TIMEOUT_VALUE = 10L
         private const val READ_TIMEOUT_VALUE = 10L
     }
+}
+
+@Module
+interface NetworkBindsModule {
+
+    @Binds
+    @Singleton
+    @IntoSet
+    fun apiResponseCallAdapterFactory(factory: ApiResponseCallAdapterFactory): CallAdapter.Factory
+
+    @Binds
+    @Singleton
+    @IntoSet
+    fun apiKeyInterceptor(apiKeyInterceptor: ApiKeyInterceptor): Interceptor
 }

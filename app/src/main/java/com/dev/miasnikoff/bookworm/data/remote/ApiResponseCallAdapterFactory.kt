@@ -6,8 +6,9 @@ import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import javax.inject.Inject
 
-class ApiResponseCallAdapterFactory : CallAdapter.Factory() {
+class ApiResponseCallAdapterFactory @Inject constructor() : CallAdapter.Factory() {
 
     override fun get(
         returnType: Type,
