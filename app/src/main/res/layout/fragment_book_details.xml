@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    tools:context=".ui.details.BookDetailsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/details_appbar"

@@ -4,9 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import com.dev.miasnikoff.bookworm.R
@@ -16,29 +14,18 @@ import com.dev.miasnikoff.bookworm.ui._core.model.UserModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class InfoFragment : BaseFragment() {
+class InfoFragment : BaseFragment(R.layout.fragment_info) {
 
-    private lateinit var _binding: FragmentInfoBinding
-    override val binding: FragmentInfoBinding
-        get() = _binding
+    override lateinit var binding: FragmentInfoBinding
 
     private val user: UserModel
         get() = arguments?.getParcelable(ARG_USER_DATA) ?: throw IllegalStateException("No data!")
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentInfoBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentInfoBinding.bind(view)
         initView()
         initMenu()
     }

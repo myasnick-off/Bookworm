@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:background="?attr/textFillColor"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    tools:context=".ui.list.BookListFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/list_appbar"

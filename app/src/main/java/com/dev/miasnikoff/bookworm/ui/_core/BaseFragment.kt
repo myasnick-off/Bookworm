@@ -9,7 +9,7 @@ import androidx.fragment.app.commit
 import androidx.viewbinding.ViewBinding
 import com.dev.miasnikoff.bookworm.R
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment(layoutRes: Int) : Fragment(layoutRes) {
 
     protected abstract val binding: ViewBinding
 

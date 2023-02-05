@@ -2,13 +2,16 @@ package com.dev.miasnikoff.bookworm.ui.details
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.databinding.FragmentVolumeDetailsBinding
+import com.dev.miasnikoff.bookworm.databinding.FragmentBookDetailsBinding
 import com.dev.miasnikoff.bookworm.domain.model.BookDetails
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui.details.model.DetailsState
@@ -16,11 +19,9 @@ import com.dev.miasnikoff.bookworm.ui.main.MainActivity
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import javax.inject.Inject
 
-class BookDetailsFragment : BaseFragment() {
+class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
 
-    private lateinit var _binding: FragmentVolumeDetailsBinding
-    override val binding: FragmentVolumeDetailsBinding
-        get() = _binding
+    override lateinit var binding: FragmentBookDetailsBinding
 
     private val bookId: String by lazy {
         arguments?.getString(ARG_VOLUME_ID) ?: throw IllegalStateException()
@@ -33,15 +34,6 @@ class BookDetailsFragment : BaseFragment() {
     override fun onAttach(context: Context) {
         App.appInstance.appComponent.inject(this)
         super.onAttach(context)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentVolumeDetailsBinding.inflate(inflater, container, false)
-        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -58,6 +50,7 @@ class BookDetailsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentBookDetailsBinding.bind(view)
         initView()
         initMenu()
         initViewModel()

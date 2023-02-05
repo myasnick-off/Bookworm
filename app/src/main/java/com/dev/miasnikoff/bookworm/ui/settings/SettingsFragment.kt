@@ -1,7 +1,10 @@
 package com.dev.miasnikoff.bookworm.ui.settings
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
@@ -12,23 +15,13 @@ import com.dev.miasnikoff.bookworm.ui.main.MainActivity
 import com.dev.miasnikoff.bookworm.utils.SettingsPrefsHelper
 import com.dev.miasnikoff.bookworm.utils.Themes
 
-class SettingsFragment : BaseFragment() {
+class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
-    private lateinit var _binding: FragmentSettingsBinding
-    override val binding: FragmentSettingsBinding
-        get() = _binding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSettingsBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+    override lateinit var binding: FragmentSettingsBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentSettingsBinding.bind(view)
         initMenu()
     }
 

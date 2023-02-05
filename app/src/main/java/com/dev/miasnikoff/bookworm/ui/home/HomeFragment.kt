@@ -2,9 +2,7 @@ package com.dev.miasnikoff.bookworm.ui.home
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
@@ -24,11 +22,9 @@ import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
-class HomeFragment : BaseFragment() {
+class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
-    private lateinit var _binding: FragmentHomeBinding
-    override val binding: FragmentHomeBinding
-        get() = _binding
+    override lateinit var binding: FragmentHomeBinding
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -65,17 +61,9 @@ class HomeFragment : BaseFragment() {
         super.onAttach(context)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentHomeBinding.bind(view)
         initView()
         initMenu()
         initViewModel()

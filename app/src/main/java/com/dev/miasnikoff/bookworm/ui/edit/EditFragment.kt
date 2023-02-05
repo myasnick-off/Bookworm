@@ -1,9 +1,7 @@
 package com.dev.miasnikoff.bookworm.ui.edit
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.dev.miasnikoff.bookworm.R
@@ -15,27 +13,17 @@ import com.dev.miasnikoff.bookworm.ui.info.InfoFragment
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.util.*
 
-class EditFragment : BaseFragment() {
+class EditFragment : BaseFragment(R.layout.fragment_edit) {
 
-    private lateinit var _binding: FragmentEditBinding
-    override val binding: FragmentEditBinding
-        get() = _binding
+    override lateinit var binding: FragmentEditBinding
 
     private val viewModel: EditViewModel by lazy {
         ViewModelProvider(this)[EditViewModel::class.java]
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentEditBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentEditBinding.bind(view)
         initView()
         initMenu()
         initViewModel()

@@ -2,9 +2,7 @@ package com.dev.miasnikoff.bookworm.ui.login
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.viewModels
 import com.dev.miasnikoff.bookworm.App
@@ -23,11 +21,9 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class LoginFragment : BaseFragment() {
+class LoginFragment : BaseFragment(R.layout.fragment_login) {
 
-    private lateinit var _binding: FragmentLoginBinding
-    override val binding: FragmentLoginBinding
-        get() = _binding
+    override lateinit var binding: FragmentLoginBinding
 
     private var disposables = CompositeDisposable()
 
@@ -41,17 +37,9 @@ class LoginFragment : BaseFragment() {
         super.onAttach(context)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentLoginBinding.bind(view)
         initView()
         initMenu()
         initViewModel()

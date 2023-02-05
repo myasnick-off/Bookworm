@@ -3,29 +3,20 @@ package com.dev.miasnikoff.bookworm.ui.search
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentDialogSearchBinding
 import com.dev.miasnikoff.bookworm.utils.extensions.hideSoftKeyboard
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class SearchDialogFragment : BottomSheetDialogFragment() {
+class SearchDialogFragment : BottomSheetDialogFragment(R.layout.fragment_dialog_search) {
 
-    private lateinit var _binding: FragmentDialogSearchBinding
-    private val binding get() = _binding
+    private lateinit var binding: FragmentDialogSearchBinding
+
     private var searchClickListener: SearchClickListener? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentDialogSearchBinding.inflate(inflater, null, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding = FragmentDialogSearchBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
         initView()
     }

@@ -2,7 +2,10 @@ package com.dev.miasnikoff.bookworm.ui.list
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -10,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.databinding.FragmentListBinding
+import com.dev.miasnikoff.bookworm.databinding.FragmentListLocalBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui._core.adapter.BasePagedListAdapter
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
@@ -24,11 +27,9 @@ import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
-class LocalListFragment : BaseFragment(), MenuProvider {
+class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvider {
 
-    private lateinit var _binding: FragmentListBinding
-    override val binding: FragmentListBinding
-        get() = _binding
+    override lateinit var binding: FragmentListLocalBinding
 
     private val category: Category? by lazy { arguments?.getParcelable(ARG_CATEGORY) }
 
@@ -63,17 +64,9 @@ class LocalListFragment : BaseFragment(), MenuProvider {
         super.onAttach(context)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentListBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentListLocalBinding.bind(view)
         initView()
         initMenu()
         initPresenter()
@@ -104,7 +97,7 @@ class LocalListFragment : BaseFragment(), MenuProvider {
 
     override fun initView() {
         binding.volumeList.adapter = bookListAdapter
-        binding.listFab?.visibility = View.GONE
+        binding.listFab.visibility = View.GONE
     }
 
     override fun initMenu() {
@@ -130,26 +123,26 @@ class LocalListFragment : BaseFragment(), MenuProvider {
     }
 
     private fun showLoading() {
-        binding.listLoader?.visibility = View.VISIBLE
+        binding.listLoader.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.GONE
     }
 
     private fun showMoreLoading() {
-        binding.listLoader?.visibility = View.VISIBLE
+        binding.listLoader.visibility = View.VISIBLE
         binding.volumeList.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
     }
 
     private fun showData(volumes: List<RecyclerItem>, loadMore: Boolean) {
-        binding.listLoader?.visibility = View.GONE
+        binding.listLoader.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.VISIBLE
         bookListAdapter.updateList(volumes, loadMore)
     }
 
     private fun showError(message: String) {
-        binding.listLoader?.visibility = View.GONE
+        binding.listLoader.visibility = View.GONE
         binding.volumeList.visibility = View.GONE
         binding.errorImage.visibility = View.VISIBLE
         binding.root.showSnackBar(

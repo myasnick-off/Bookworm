@@ -5,7 +5,10 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
@@ -31,11 +34,9 @@ import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
-class BookListFragment : BaseFragment(), MenuProvider {
+class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
 
-    private lateinit var _binding: FragmentListBinding
-    override val binding: FragmentListBinding
-        get() = _binding
+    override lateinit var binding: FragmentListBinding
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -76,17 +77,9 @@ class BookListFragment : BaseFragment(), MenuProvider {
         super.onAttach(context)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentListBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentListBinding.bind(view)
         initView()
         initMenu()
         initPresenter()
@@ -123,7 +116,7 @@ class BookListFragment : BaseFragment(), MenuProvider {
             playTogether(animScaleX, animScaleY, animAlpha)
             start()
         }
-        binding.listFab?.setOnClickListener {
+        binding.listFab.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 fabAnimSet?.reverse()
             }
@@ -169,26 +162,26 @@ class BookListFragment : BaseFragment(), MenuProvider {
     }
 
     private fun showLoading() {
-        binding.listLoader?.visibility = View.VISIBLE
+        binding.listLoader.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.GONE
     }
 
     private fun showMoreLoading() {
-        binding.listLoader?.visibility = View.VISIBLE
+        binding.listLoader.visibility = View.VISIBLE
         binding.volumeList.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
     }
 
     private fun showData(volumes: List<RecyclerItem>, loadMore: Boolean) {
-        binding.listLoader?.visibility = View.GONE
+        binding.listLoader.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.VISIBLE
         bookListAdapter.updateList(volumes, loadMore)
     }
 
     private fun showError(message: String) {
-        binding.listLoader?.visibility = View.GONE
+        binding.listLoader.visibility = View.GONE
         binding.volumeList.visibility = View.GONE
         binding.errorImage.visibility = View.VISIBLE
         binding.root.showSnackBar(

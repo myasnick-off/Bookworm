@@ -8,7 +8,7 @@
     android:background="?attr/textFillColor"
     android:clickable="true"
     android:focusable="true"
-    tools:context=".ui.list.BookListFragment">
+    tools:context=".ui.list.LocalListFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/list_appbar"
@@ -39,8 +39,8 @@
         android:padding="@dimen/padding_8"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:spanCount="4"
-        tools:itemCount="8"
+        app:spanCount="2"
+        tools:itemCount="6"
         tools:listitem="@layout/item_book_list" />
 
     <androidx.appcompat.widget.AppCompatImageView

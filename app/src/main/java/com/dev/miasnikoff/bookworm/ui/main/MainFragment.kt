@@ -1,9 +1,7 @@
 package com.dev.miasnikoff.bookworm.ui.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentMainBinding
@@ -14,23 +12,13 @@ import com.dev.miasnikoff.bookworm.ui.list.LocalListFragment
 import com.dev.miasnikoff.bookworm.ui.login.LoginFragment
 import com.dev.miasnikoff.bookworm.ui.settings.SettingsFragment
 
-class MainFragment : BaseFragment(), BackPressMonitor {
+class MainFragment : BaseFragment(R.layout.fragment_main), BackPressMonitor {
 
-    private lateinit var _binding: FragmentMainBinding
-    override val binding: FragmentMainBinding
-        get() = _binding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentMainBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+    override lateinit var binding: FragmentMainBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentMainBinding.bind(view)
         if (savedInstanceState == null) {
             initView()
         }
