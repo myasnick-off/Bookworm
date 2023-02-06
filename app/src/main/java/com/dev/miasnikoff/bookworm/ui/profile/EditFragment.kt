@@ -1,29 +1,46 @@
-package com.dev.miasnikoff.bookworm.ui.edit
+package com.dev.miasnikoff.bookworm.ui.profile
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentEditBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
+import com.dev.miasnikoff.bookworm.ui._core.ViewModelFactory
 import com.dev.miasnikoff.bookworm.ui._core.model.EditField
 import com.dev.miasnikoff.bookworm.ui._core.model.UserModel
-import com.dev.miasnikoff.bookworm.ui.info.InfoFragment
+import com.dev.miasnikoff.bookworm.utils.UserPrefsHelper
 import com.google.android.material.datepicker.MaterialDatePicker
+import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 class EditFragment : BaseFragment(R.layout.fragment_edit) {
 
     override lateinit var binding: FragmentEditBinding
+    private lateinit var userPrefsHelper: UserPrefsHelper
 
-    private val viewModel: EditViewModel by lazy {
-        ViewModelProvider(this)[EditViewModel::class.java]
+    private val args: EditFragmentArgs by navArgs()
+    private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: EditViewModel by viewModels { viewModelFactory }
+
+    override fun onAttach(context: Context) {
+        App.appInstance.appComponent.inject(this)
+        super.onAttach(context)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentEditBinding.bind(view)
+        userPrefsHelper = UserPrefsHelper(requireContext())
         initView()
         initMenu()
         initViewModel()
@@ -31,15 +48,19 @@ class EditFragment : BaseFragment(R.layout.fragment_edit) {
 
     override fun initView() = with(binding) {
         root.setOnClickListener { hideSoftKeyboard() }
+        nameEditText.setText(args.user.name)
         nameEditText.doOnTextChanged { _, _, _, _ ->
             nameInputLayout.isErrorEnabled = false
         }
+        berthEditText.setText(args.user.berthDate?.let { dateFormat.format(it) } ?: "")
         berthEditText.doOnTextChanged { _, _, _, _ ->
             berthInputLayout.isErrorEnabled = false
         }
+        addressEditText.setText(args.user.address)
         addressEditText.doOnTextChanged { _, _, _, _ ->
             addressInputLayout.isErrorEnabled = false
         }
+        emailEditText.setText(args.user.email)
         emailEditText.doOnTextChanged { _, _, _, _ ->
             emailInputLayout.isErrorEnabled = false
         }
@@ -58,7 +79,8 @@ class EditFragment : BaseFragment(R.layout.fragment_edit) {
             )
             if (hasNoErrors) {
                 viewModel.liveData.value?.let { user ->
-                    openFragment(fragment = InfoFragment.newInstance(user))
+                    userPrefsHelper.saveUser(user)
+                    findNavController().popBackStack()
                 }
             }
         }
@@ -98,9 +120,5 @@ class EditFragment : BaseFragment(R.layout.fragment_edit) {
 
     private fun setBerthDate(date: Long) {
         binding.berthEditText.setText(viewModel.dateFormat.format(Date(date)))
-    }
-
-    companion object {
-        fun newInstance(): EditFragment = EditFragment()
     }
 }

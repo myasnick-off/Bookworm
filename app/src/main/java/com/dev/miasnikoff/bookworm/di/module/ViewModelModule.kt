@@ -7,6 +7,7 @@ import com.dev.miasnikoff.bookworm.ui._core.ViewModelFactory
 import com.dev.miasnikoff.bookworm.ui.home.HomeViewModel
 import com.dev.miasnikoff.bookworm.ui.list.BookListViewModel
 import com.dev.miasnikoff.bookworm.ui.login.LoginViewModel
+import com.dev.miasnikoff.bookworm.ui.profile.EditViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -34,4 +35,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(LoginViewModel::class)
     fun bindLoginViewModel(viewModel: LoginViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EditViewModel::class)
+    fun bindEditViewModel(viewModel: EditViewModel): ViewModel
 }

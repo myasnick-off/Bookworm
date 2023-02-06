@@ -7,6 +7,7 @@ import com.dev.miasnikoff.bookworm.ui.home.HomeFragment
 import com.dev.miasnikoff.bookworm.ui.list.BookListFragment
 import com.dev.miasnikoff.bookworm.ui.list.LocalListFragment
 import com.dev.miasnikoff.bookworm.ui.login.LoginFragment
+import com.dev.miasnikoff.bookworm.ui.profile.EditFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -33,4 +34,5 @@ interface AppComponent {
     fun inject(localListFragment: LocalListFragment)
     fun inject(detailsFragment: BookDetailsFragment)
     fun inject(loginFragment: LoginFragment)
+    fun inject(editFragment: EditFragment)
 }

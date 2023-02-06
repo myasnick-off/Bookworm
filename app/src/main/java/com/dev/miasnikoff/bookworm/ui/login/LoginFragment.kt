@@ -11,7 +11,6 @@ import com.dev.miasnikoff.bookworm.databinding.FragmentLoginBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui._core.ViewModelFactory
 import com.dev.miasnikoff.bookworm.ui._core.model.UserModel
-import com.dev.miasnikoff.bookworm.ui.info.InfoFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
@@ -117,7 +116,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         binding.loginLoader.visibility = View.GONE
         binding.loginInputLayout.isEnabled = true
         binding.passwordInputLayout.isEnabled = true
-        openFragment(fragment = InfoFragment.newInstance(user))
+        // todo: navigate to profile
     }
 
     private fun showError(message: String) {
@@ -125,9 +124,5 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         binding.loginInputLayout.isEnabled = true
         binding.passwordInputLayout.isEnabled = true
         binding.root.showSnackBar(message = message, length = Snackbar.LENGTH_SHORT)
-    }
-
-    companion object {
-        fun newInstance(): LoginFragment = LoginFragment()
     }
 }

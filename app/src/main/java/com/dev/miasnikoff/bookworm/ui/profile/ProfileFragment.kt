@@ -1,4 +1,4 @@
-package com.dev.miasnikoff.bookworm.ui.info
+package com.dev.miasnikoff.bookworm.ui.profile
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -6,31 +6,30 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.databinding.FragmentInfoBinding
+import com.dev.miasnikoff.bookworm.databinding.FragmentProfileBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui._core.model.UserModel
+import com.dev.miasnikoff.bookworm.utils.UserPrefsHelper
 import java.text.SimpleDateFormat
 import java.util.*
 
-class InfoFragment : BaseFragment(R.layout.fragment_info) {
+class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
-    override lateinit var binding: FragmentInfoBinding
+    override lateinit var binding: FragmentProfileBinding
 
-    private val user: UserModel = UserModel(
-        name = "Dmitriy",
-        berthDate = Date(),
-        address = "Moscow",
-        email = "email@mail.com"
-    )
-        //get() = arguments?.getParcelable(ARG_USER_DATA) ?: throw IllegalStateException("No data!")
+    private lateinit var userPrefsHelper: UserPrefsHelper
+
+    private lateinit var user: UserModel
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentInfoBinding.bind(view)
+        binding = FragmentProfileBinding.bind(view)
+        userPrefsHelper = UserPrefsHelper(requireContext())
+        user = userPrefsHelper.user
         initView()
         initMenu()
     }
@@ -40,10 +39,12 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
         berthText.text = user.berthDate?.let { dateFormat.format(it) }
         addressText.text = user.address
         emailText.text = user.email
-        sendButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
-            sendData()
-        }
+        editButton.setOnClickListener { navigateToEdit() }
+    }
+
+    private fun navigateToEdit() {
+        val direction = ProfileFragmentDirections.actionProfileFragmentToEditFragment(user)
+        findNavController().navigate(direction)
     }
 
     private fun sendData() {
@@ -60,12 +61,7 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
     }
 
     companion object {
-        private const val ARG_USER_DATA = "arg_user_data"
         private const val LOG_TAG = "InfoFragment"
         private const val ERROR_MESSAGE = "Failed to send e-mail!"
-
-        fun newInstance(user: UserModel): InfoFragment = InfoFragment().apply {
-            arguments = bundleOf(ARG_USER_DATA to user)
-        }
     }
 }

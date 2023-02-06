@@ -9,22 +9,5 @@
         android:id="@+id/mainFragment"
         android:name="com.dev.miasnikoff.bookworm.ui.main.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
-        <action
-            android:id="@+id/action_mainFragment_to_editFragment"
-            app:destination="@id/editFragment" />
-        <action
-            android:id="@+id/action_mainFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/editFragment"
-        android:name="com.dev.miasnikoff.bookworm.ui.edit.EditFragment"
-        android:label="fragment_edit"
-        tools:layout="@layout/fragment_edit" />
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.dev.miasnikoff.bookworm.ui.login.LoginFragment"
-        android:label="LoginFragment"
-        tools:layout="@layout/fragment_login"/>
+        tools:layout="@layout/fragment_main" />
 </navigation>

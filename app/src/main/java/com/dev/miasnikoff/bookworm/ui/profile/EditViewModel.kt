@@ -1,4 +1,4 @@
-package com.dev.miasnikoff.bookworm.ui.edit
+package com.dev.miasnikoff.bookworm.ui.profile
 
 import android.text.Editable
 import androidx.lifecycle.LiveData
@@ -9,8 +9,9 @@ import com.dev.miasnikoff.bookworm.ui._core.model.UserModel
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class EditViewModel : ViewModel() {
+class EditViewModel @Inject constructor() : ViewModel() {
 
     private var _liveData: MutableLiveData<UserModel> = MutableLiveData(UserModel())
     val liveData: LiveData<UserModel> get() = _liveData

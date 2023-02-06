@@ -65,4 +65,5 @@
     <string name="no">Нет</string>
     <string name="remove_favorites_warning">Очистить избранное?</string>
     <string name="remove">Удалить</string>
+    <string name="edit">Редактировать</string>
 </resources>

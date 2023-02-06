@@ -158,7 +158,7 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvid
 
     private fun navigateToDetails(bookId: String) {
         val direction =
-            LocalListFragmentDirections.actionFavoriteListFragmentToBookDetailsFragment(bookId)
+            LocalListFragmentDirections.actionLocalListFragmentToBookDetailsFragment(bookId)
         findNavController().navigate(direction)
     }
 }
