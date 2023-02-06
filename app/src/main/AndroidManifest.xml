@@ -28,8 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.dev.miasnikoff.bookworm.ui.main.MainActivity"
-            android:exported="true">
+            android:name="com.dev.miasnikoff.bookworm.ui.main.MainActivity">
         </activity>
     </application>
 

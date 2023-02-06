@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.20'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -87,6 +88,6 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.42'
 
     // Navigation Component
-    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
-    implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 }

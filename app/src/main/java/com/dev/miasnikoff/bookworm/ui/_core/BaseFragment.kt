@@ -18,7 +18,7 @@ abstract class BaseFragment(layoutRes: Int) : Fragment(layoutRes) {
     protected abstract fun initView()
 
     protected fun navigateToFragment(
-        containerId: Int = R.id.host_container,
+        containerId: Int = R.id.tabs_container,
         fragment: Fragment,
         isAddToBackStack: Boolean = false
     ) {

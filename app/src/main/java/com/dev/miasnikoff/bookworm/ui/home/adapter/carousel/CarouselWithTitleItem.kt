@@ -36,5 +36,6 @@ enum class Category(val titleRes: Int) : Parcelable {
     LAST_VIEWED(titleRes = R.string.last_viewed),
     NEWEST(titleRes = R.string.newest),
     FREE(titleRes = R.string.free_books),
-    FAVORITE(titleRes = R.string.favorite);
+    FAVORITE(titleRes = R.string.favorite),
+    NONE(titleRes = -1);
 }

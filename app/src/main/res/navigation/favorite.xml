@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favorite"
+    app:startDestination="@id/FavoriteListFragment">
+    <fragment
+        android:id="@+id/FavoriteListFragment"
+        android:name="com.dev.miasnikoff.bookworm.ui.list.LocalListFragment"
+        android:label="fragment_list_local"
+        tools:layout="@layout/fragment_list_local">
+        <action
+            android:id="@+id/action_favoriteListFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
+        <argument
+            android:name="categoryName"
+            android:defaultValue="FAVORITE"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookDetailsFragment"
+        android:name="com.dev.miasnikoff.bookworm.ui.details.BookDetailsFragment"
+        android:label="fragment_book_details"
+        tools:layout="@layout/fragment_book_details">
+        <argument
+            android:name="bookId"
+            app:argType="string" />
+    </fragment>
+</navigation>

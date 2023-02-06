@@ -4,20 +4,18 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentHomeBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui._core.ViewModelFactory
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
-import com.dev.miasnikoff.bookworm.ui.details.BookDetailsFragment
 import com.dev.miasnikoff.bookworm.ui.home.adapter.HomeListAdapter
 import com.dev.miasnikoff.bookworm.ui.home.adapter.bookofday.BookOfDayCell
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.CarouselWithTitleCell
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.home.model.HomeState
-import com.dev.miasnikoff.bookworm.ui.list.BookListFragment
-import com.dev.miasnikoff.bookworm.ui.list.LocalListFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
@@ -32,29 +30,28 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private val itemClickListener = object : BookOfDayCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
-            openFragment(fragment = BookDetailsFragment.newInstance(itemId))
+            navigateToDetails(itemId)
         }
     }
     private val carouselClickListener = object : CarouselWithTitleCell.ItemClickListener {
         override fun onTitleClick(category: Category) {
             when (category) {
-                Category.LAST_VIEWED, Category.FAVORITE ->
-                    openFragment(fragment = LocalListFragment.newInstance(category = category))
-                Category.POP_GENRES -> {}
-                else -> openFragment(fragment = BookListFragment.newInstance(category = category))
+                Category.LAST_VIEWED, Category.FAVORITE -> navigateToLocalList(category.name)
+                Category.POP_GENRES -> { /*todo: create genres fragment*/ }
+                else -> navigateToBookList(category = category)
             }
         }
 
         override fun onGenreClick(query: String) {
-            openFragment(fragment = BookListFragment.newInstance(query = query))
+            navigateToBookList(query = query)
         }
 
         override fun onBookClick(bookId: String) {
-            openFragment(fragment = BookDetailsFragment.newInstance(bookId))
+            navigateToDetails(bookId)
         }
-
     }
-    private val homeListAdapter: HomeListAdapter = HomeListAdapter(itemClickListener, carouselClickListener)
+    private val homeListAdapter: HomeListAdapter =
+        HomeListAdapter(itemClickListener, carouselClickListener)
 
     override fun onAttach(context: Context) {
         App.appInstance.appComponent.inject(this)
@@ -71,11 +68,15 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     override fun initView() {
         binding.homeList.adapter = homeListAdapter
+
+    }
+
+    override fun initMenu() {
         binding.searchButton.setOnClickListener {
             binding.searchEditText.text?.let { phrase ->
                 hideSoftKeyboard()
                 binding.searchEditText.text = null
-                openFragment(fragment = BookListFragment.newInstance(query = phrase.toString()))
+                navigateToBookList(query = phrase.toString())
             }
         }
     }
@@ -116,7 +117,21 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         ) { viewModel.getHomeData() }
     }
 
-    companion object {
-        fun newInstance(): HomeFragment = HomeFragment()
+    private fun navigateToDetails(bookId: String) {
+        val direction = HomeFragmentDirections.actionHomeFragmentToBookDetailsFragment(bookId)
+        findNavController().navigate(direction)
+    }
+
+    private fun navigateToLocalList(categoryName: String) {
+        val direction = HomeFragmentDirections.actionHomeFragmentToLocalListFragment(categoryName)
+        findNavController().navigate(direction)
+    }
+
+    private fun navigateToBookList(query: String? = null, category: Category = Category.NONE) {
+        val direction = HomeFragmentDirections.actionHomeFragmentToBookListFragment(
+            query = query,
+            category = category
+        )
+        findNavController().navigate(direction)
     }
 }

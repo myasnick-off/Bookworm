@@ -6,8 +6,9 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
@@ -23,13 +24,11 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
 
     override lateinit var binding: FragmentBookDetailsBinding
 
-    private val bookId: String by lazy {
-        arguments?.getString(ARG_VOLUME_ID) ?: throw IllegalStateException()
-    }
+    private val args: BookDetailsFragmentArgs by navArgs()
 
     @Inject
     lateinit var viewModelFactory: BookDetailsViewModelAssistedFactory
-    private val viewModel: BookDetailsViewModel by viewModels { viewModelFactory.create(bookId) }
+    private val viewModel: BookDetailsViewModel by viewModels { viewModelFactory.create(args.bookId) }
 
     override fun onAttach(context: Context) {
         App.appInstance.appComponent.inject(this)
@@ -43,7 +42,7 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            android.R.id.home -> requireActivity().onBackPressed()
+            android.R.id.home -> findNavController().popBackStack()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -120,14 +119,5 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
             .load(bookDetails.imageLinkSmall)
             .error(R.drawable.ic_broken_image_48)
             .into(bookImage)
-    }
-
-    companion object {
-        private const val ARG_VOLUME_ID = "arg_volume_id"
-
-        fun newInstance(volumeId: String): BookDetailsFragment =
-            BookDetailsFragment().apply {
-                arguments = bundleOf(ARG_VOLUME_ID to volumeId)
-            }
     }
 }

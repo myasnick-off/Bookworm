@@ -18,8 +18,13 @@ class InfoFragment : BaseFragment(R.layout.fragment_info) {
 
     override lateinit var binding: FragmentInfoBinding
 
-    private val user: UserModel
-        get() = arguments?.getParcelable(ARG_USER_DATA) ?: throw IllegalStateException("No data!")
+    private val user: UserModel = UserModel(
+        name = "Dmitriy",
+        berthDate = Date(),
+        address = "Moscow",
+        email = "email@mail.com"
+    )
+        //get() = arguments?.getParcelable(ARG_USER_DATA) ?: throw IllegalStateException("No data!")
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 

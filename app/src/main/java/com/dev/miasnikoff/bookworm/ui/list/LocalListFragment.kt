@@ -6,18 +6,18 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentListLocalBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui._core.adapter.BasePagedListAdapter
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
-import com.dev.miasnikoff.bookworm.ui.details.BookDetailsFragment
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookCell
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookListAdapter
@@ -31,17 +31,17 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvid
 
     override lateinit var binding: FragmentListLocalBinding
 
-    private val category: Category? by lazy { arguments?.getParcelable(ARG_CATEGORY) }
+    private val args: LocalListFragmentArgs by navArgs()
 
     @Inject
     lateinit var viewModelFactory: LocalListViewModelAssistedFactory
     private val viewModel: LocalListViewModel by viewModels {
-        viewModelFactory.create(checkNotNull(category))
+        viewModelFactory.create(Category.valueOf(args.categoryName))
     }
 
     private val itemClickListener = object : BookCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
-            openFragment(fragment = BookDetailsFragment.newInstance(itemId))
+            navigateToDetails(itemId)
         }
 
         override fun onItemLongClick(itemId: String) {
@@ -77,18 +77,18 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvid
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when(menuItem.itemId) {
+        return when (menuItem.itemId) {
             R.id.menu_remove_all -> {
-                if (category == Category.LAST_VIEWED) {
+                if (args.categoryName == Category.LAST_VIEWED.name) {
                     showAlertDialog(R.string.remove_history_warning) { viewModel.removeHistory() }
                 }
-                if (category == Category.FAVORITE) {
+                if (args.categoryName == Category.FAVORITE.name) {
                     showAlertDialog(R.string.remove_favorites_warning) { viewModel.removeFavorites() }
                 }
                 true
             }
             android.R.id.home -> {
-                requireActivity().onBackPressed()
+                findNavController().popBackStack()
                 true
             }
             else -> false
@@ -156,12 +156,9 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvid
         viewModel.getInitialPage()
     }
 
-    companion object {
-        private const val ARG_CATEGORY = "arg_category"
-
-        fun newInstance(category: Category): LocalListFragment =
-            LocalListFragment().apply {
-                arguments = bundleOf(ARG_CATEGORY to category)
-            }
+    private fun navigateToDetails(bookId: String) {
+        val direction =
+            LocalListFragmentDirections.actionFavoriteListFragmentToBookDetailsFragment(bookId)
+        findNavController().navigate(direction)
     }
 }
