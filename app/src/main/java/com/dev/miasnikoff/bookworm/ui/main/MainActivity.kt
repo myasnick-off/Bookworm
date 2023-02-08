@@ -1,62 +1,42 @@
 package com.dev.miasnikoff.bookworm.ui.main
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
+import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.ActivityMainBinding
+import com.dev.miasnikoff.bookworm.di.GlobalNavHolder
+import com.dev.miasnikoff.bookworm.utils.navigation.navholder.NavigatorHolder
+import com.dev.miasnikoff.bookworm.utils.navigation.router.GlobalRouter
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    private var navController: NavController? = null
+    @Inject
+    @GlobalNavHolder
+    lateinit var navigatorHolder: NavigatorHolder<NavController>
 
-    private val fragmentListener = object : FragmentManager.FragmentLifecycleCallbacks() {
-        override fun onFragmentViewCreated(
-            fm: FragmentManager,
-            f: Fragment,
-            v: View,
-            savedInstanceState: Bundle?
-        ) {
-            super.onFragmentViewCreated(fm, f, v, savedInstanceState)
-            if (f is MainFragment || f is NavHostFragment) return
-            val newNavController = f.findNavController()
-            if (navController != newNavController) {
-                navController = newNavController
-            }
-        }
-    }
+    @Inject
+    lateinit var globalRouter: GlobalRouter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        App.appInstance.appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(ActivityMainBinding.inflate(layoutInflater).root)
 
-        navController = getRootNavController()
-        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, true)
+        globalRouter.setNewFlow(getTabsDestination())
     }
 
-    override fun onDestroy() {
-        supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentListener)
-        navController = null
-        super.onDestroy()
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        navigatorHolder.bind(getRootNavController())
     }
 
-    override fun onBackPressed() {
-        if (isStartDestination(navController?.currentDestination)) {
-            super.onBackPressed()
-        } else {
-            navController?.popBackStack()
-        }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return (navController?.navigateUp() ?: false) || super.onSupportNavigateUp()
+    override fun onPause() {
+        navigatorHolder.unbind()
+        super.onPause()
     }
 
     private fun getRootNavController(): NavController {
@@ -65,10 +45,9 @@ class MainActivity : AppCompatActivity() {
         return navHost.navController
     }
 
-    private fun isStartDestination(destination: NavDestination?): Boolean {
-        if (destination == null) return false
-        val graph = destination.parent ?: return false
-        val startDestinations = setOf(R.id.mainFragment, graph.startDestinationId)
-        return startDestinations.contains(destination.id)
+    private fun getTabsDestination() = R.id.tabsFragment
+
+    private fun getLoginDestination() {
+        //todo: login destination id
     }
 }

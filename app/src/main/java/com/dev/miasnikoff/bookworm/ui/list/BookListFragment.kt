@@ -10,11 +10,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
@@ -87,15 +87,17 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return when(menuItem.itemId) {
             android.R.id.home -> {
-                findNavController().popBackStack()
+                viewModel.back()
                 true
             }
             else -> false
         }
     }
 
-
     override fun initView() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.back()
+        }
         binding.volumeList.adapter = bookListAdapter
         val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
             duration = FAB_ANIMATION_DURATION
@@ -197,7 +199,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
     private fun navigateToDetails(bookId: String) {
         val direction =
             BookListFragmentDirections.actionBookListFragmentToBookDetailsFragment(bookId)
-        findNavController().navigate(direction)
+        viewModel.navigate(direction)
     }
 
     companion object {

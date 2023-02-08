@@ -6,11 +6,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.addCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
@@ -88,7 +88,7 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvid
                 true
             }
             android.R.id.home -> {
-                findNavController().popBackStack()
+                viewModel.back()
                 true
             }
             else -> false
@@ -96,6 +96,9 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvid
     }
 
     override fun initView() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.back()
+        }
         binding.volumeList.adapter = bookListAdapter
         binding.listFab.visibility = View.GONE
     }
@@ -159,6 +162,6 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvid
     private fun navigateToDetails(bookId: String) {
         val direction =
             LocalListFragmentDirections.actionLocalListFragmentToBookDetailsFragment(bookId)
-        findNavController().navigate(direction)
+        viewModel.navigate(direction)
     }
 }

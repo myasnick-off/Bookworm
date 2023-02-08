@@ -1,29 +1,40 @@
 package com.dev.miasnikoff.bookworm.ui.profile
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.viewModels
+import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentProfileBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
+import com.dev.miasnikoff.bookworm.ui._core.ViewModelFactory
 import com.dev.miasnikoff.bookworm.ui._core.model.UserModel
 import com.dev.miasnikoff.bookworm.utils.UserPrefsHelper
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     override lateinit var binding: FragmentProfileBinding
-
     private lateinit var userPrefsHelper: UserPrefsHelper
-
     private lateinit var user: UserModel
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private val viewModel: ProfileViewModel by viewModels { viewModelFactory }
+
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+
+    override fun onAttach(context: Context) {
+        App.appInstance.appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,7 +55,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private fun navigateToEdit() {
         val direction = ProfileFragmentDirections.actionProfileFragmentToEditFragment(user)
-        findNavController().navigate(direction)
+        viewModel.navigate(direction)
     }
 
     private fun sendData() {

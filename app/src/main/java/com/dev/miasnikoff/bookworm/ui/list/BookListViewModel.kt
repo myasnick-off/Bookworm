@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavDirections
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.domain.ListInteractor
 import com.dev.miasnikoff.bookworm.domain.model.*
@@ -12,6 +13,7 @@ import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
 import com.dev.miasnikoff.bookworm.ui.list.mapper.DtoToUiMapper
 import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
+import com.dev.miasnikoff.bookworm.utils.navigation.router.FlowRouter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class BookListViewModel @Inject constructor(
     private val interactor: ListInteractor,
     private val dtoToUiMapper: DtoToUiMapper,
+    private val router: FlowRouter
 ) : ViewModel() {
 
     private var job: Job? = null
@@ -114,6 +117,14 @@ class BookListViewModel @Inject constructor(
                 _liveData.value = state.copy(data = currentList)
             }
         }
+    }
+
+    fun navigate(direction: NavDirections) {
+        router.navigateTo(direction)
+    }
+
+    fun back() {
+        router.back()
     }
 
     companion object {

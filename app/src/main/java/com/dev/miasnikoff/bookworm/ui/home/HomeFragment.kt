@@ -68,7 +68,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     override fun initView() {
         binding.homeList.adapter = homeListAdapter
-
     }
 
     override fun initMenu() {
@@ -119,12 +118,13 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private fun navigateToDetails(bookId: String) {
         val direction = HomeFragmentDirections.actionHomeFragmentToBookDetailsFragment(bookId)
-        findNavController().navigate(direction)
+        val controller = findNavController()
+        controller.navigate(direction)
     }
 
     private fun navigateToLocalList(categoryName: String) {
         val direction = HomeFragmentDirections.actionHomeFragmentToLocalListFragment(categoryName)
-        findNavController().navigate(direction)
+        viewModel.navigate(direction)
     }
 
     private fun navigateToBookList(query: String? = null, category: Category = Category.NONE) {
@@ -132,6 +132,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             query = query,
             category = category
         )
-        findNavController().navigate(direction)
+        viewModel.navigate(direction)
     }
 }

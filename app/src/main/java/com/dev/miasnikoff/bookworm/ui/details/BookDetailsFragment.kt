@@ -6,8 +6,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.addCallback
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.bookworm.App
@@ -20,7 +23,7 @@ import com.dev.miasnikoff.bookworm.ui.main.MainActivity
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import javax.inject.Inject
 
-class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
+class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuProvider {
 
     override lateinit var binding: FragmentBookDetailsBinding
 
@@ -35,18 +38,6 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
         super.onAttach(context)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        menu.clear()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            android.R.id.home -> findNavController().popBackStack()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentBookDetailsBinding.bind(view)
@@ -56,7 +47,9 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
     }
 
     override fun initView() {
-       // nothing to do
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.back()
+        }
     }
 
     override fun initMenu() {
@@ -66,7 +59,20 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
             title = getString(R.string.about_volume)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
-        setHasOptionsMenu(true)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when(menuItem.itemId) {
+            android.R.id.home -> {
+                viewModel.back()
+                true
+            }
+            else -> false
+        }
     }
 
     private fun initViewModel() {

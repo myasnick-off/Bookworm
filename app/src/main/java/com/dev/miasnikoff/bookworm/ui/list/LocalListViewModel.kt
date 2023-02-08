@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavDirections
 import com.dev.miasnikoff.bookworm.domain.ListInteractor
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
 import com.dev.miasnikoff.bookworm.ui.list.mapper.EntityToUiMapper
 import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
+import com.dev.miasnikoff.bookworm.utils.navigation.router.FlowRouter
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -18,6 +20,7 @@ import kotlinx.coroutines.*
 class LocalListViewModel @AssistedInject constructor(
     private val interactor: ListInteractor,
     private val entityToUiMapper: EntityToUiMapper,
+    private val router: FlowRouter,
     @Assisted private val category: Category
 ) : ViewModel() {
 
@@ -130,7 +133,14 @@ class LocalListViewModel @AssistedInject constructor(
             }
             getBookList()
         }
+    }
 
+    fun navigate(direction: NavDirections) {
+        router.navigateTo(direction)
+    }
+
+    fun back() {
+        router.back()
     }
 
     companion object {
@@ -143,11 +153,12 @@ class LocalListViewModel @AssistedInject constructor(
 class LocalListViewModelFactory @AssistedInject constructor(
     private val interactor: ListInteractor,
     private val entityToUiMapper: EntityToUiMapper,
+    private val router: FlowRouter,
     @Assisted private val category: Category
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         assert(modelClass == LocalListViewModel::class.java)
-        return LocalListViewModel(interactor, entityToUiMapper, category) as T
+        return LocalListViewModel(interactor, entityToUiMapper, router, category) as T
     }
 }
 

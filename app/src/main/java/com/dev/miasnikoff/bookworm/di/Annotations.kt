@@ -12,3 +12,9 @@ annotation class BaseUrl
 @Retention(AnnotationRetention.RUNTIME)
 @MapKey
 annotation class ViewModelKey(val value: KClass<out ViewModel>)
+
+@Qualifier
+annotation class GlobalNavHolder
+
+@Qualifier
+annotation class FlowNavHolder

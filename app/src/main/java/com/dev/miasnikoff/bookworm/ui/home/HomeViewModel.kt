@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavDirections
 import com.dev.miasnikoff.bookworm.data.remote.model.ImageSize
 import com.dev.miasnikoff.bookworm.domain.HomeDataInteractor
 import com.dev.miasnikoff.bookworm.domain.model.onFailure
@@ -15,6 +16,7 @@ import com.dev.miasnikoff.bookworm.ui.home.mapper.HomeDtoToUiMapper
 import com.dev.miasnikoff.bookworm.ui.home.mapper.HomeEntityToUiMapper
 import com.dev.miasnikoff.bookworm.ui.home.model.HomeState
 import com.dev.miasnikoff.bookworm.utils.extensions.addNotNull
+import com.dev.miasnikoff.bookworm.utils.navigation.router.FlowRouter
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,6 +25,7 @@ class HomeViewModel @Inject constructor(
     private val interactor: HomeDataInteractor,
     private val homeDtoToUiMapper: HomeDtoToUiMapper,
     private val homeEntityToUiMapper: HomeEntityToUiMapper,
+    private val router: FlowRouter
 ): ViewModel() {
 
     private var job: Job? = null
@@ -80,6 +83,10 @@ class HomeViewModel @Inject constructor(
                 _liveData.value = HomeState.Success(homeList)
             } else _liveData.value = HomeState.Failure(EMPTY_RESULT_MESSAGE)
         }
+    }
+
+    fun navigate(direction: NavDirections) {
+        router.navigateTo(direction)
     }
 
     private fun postError(message: String?) {

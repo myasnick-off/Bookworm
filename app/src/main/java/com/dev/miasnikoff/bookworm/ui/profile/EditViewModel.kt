@@ -6,12 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dev.miasnikoff.bookworm.ui._core.model.EditField
 import com.dev.miasnikoff.bookworm.ui._core.model.UserModel
+import com.dev.miasnikoff.bookworm.utils.navigation.router.FlowRouter
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class EditViewModel @Inject constructor() : ViewModel() {
+class EditViewModel @Inject constructor(
+    private val router: FlowRouter
+) : ViewModel() {
 
     private var _liveData: MutableLiveData<UserModel> = MutableLiveData(UserModel())
     val liveData: LiveData<UserModel> get() = _liveData
@@ -84,5 +87,9 @@ class EditViewModel @Inject constructor() : ViewModel() {
             errorFields.removeAll { it == EditField.EMAIL_FIELD }
             user.copy(email = email.toString(), errorFields = errorFields)
         }
+    }
+
+    fun back() {
+        router.back()
     }
 }

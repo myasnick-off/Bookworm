@@ -3,9 +3,9 @@ package com.dev.miasnikoff.bookworm.ui.profile
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.activity.addCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.bookworm.App
 import com.dev.miasnikoff.bookworm.R
@@ -44,6 +44,9 @@ class EditFragment : BaseFragment(R.layout.fragment_edit) {
         initView()
         initMenu()
         initViewModel()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.back()
+        }
     }
 
     override fun initView() = with(binding) {
@@ -80,7 +83,7 @@ class EditFragment : BaseFragment(R.layout.fragment_edit) {
             if (hasNoErrors) {
                 viewModel.liveData.value?.let { user ->
                     userPrefsHelper.saveUser(user)
-                    findNavController().popBackStack()
+                    viewModel.back()
                 }
             }
         }
