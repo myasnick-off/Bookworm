@@ -14,3 +14,12 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Bookworm"
 include ':app'
+include ':core'
+include ':core-di'
+include ':core-navigation'
+include ':core-ui'
+include ':feature-tabs'
+include ':feature-tabs-api'
+include ':feature-auth'
+include ':feature-auth-api'
+include ':core-network'

@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.dev.miasnikoff.bookworm.ui.main.MainActivity">
+            android:name="com.dev.miasnikoff.bookworm.ui.MainActivity">
         </activity>
     </application>
 

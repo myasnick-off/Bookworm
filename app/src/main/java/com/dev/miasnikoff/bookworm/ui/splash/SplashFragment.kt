@@ -7,7 +7,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentSplashBinding
-import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
+import com.dev.miasnikoff.core_ui.BaseFragment
 
 class SplashFragment : BaseFragment(R.layout.fragment_splash) {
 

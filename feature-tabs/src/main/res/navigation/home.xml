@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.dev.miasnikoff.feature_tabs.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_bookListFragment"
+            app:destination="@id/bookListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_localListFragment"
+            app:destination="@id/localListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/localListFragment"
+        android:name="com.dev.miasnikoff.feature_tabs.ui.list.LocalListFragment"
+        android:label="fragment_list_local"
+        tools:layout="@layout/fragment_list_local">
+        <action
+            android:id="@+id/action_localListFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
+        <argument
+            android:name="categoryName"
+            android:defaultValue="NONE"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookListFragment"
+        android:name="com.dev.miasnikoff.feature_tabs.ui.list.BookListFragment"
+        android:label="fragment_list"
+        tools:layout="@layout/fragment_list">
+        <action
+            android:id="@+id/action_bookListFragment_to_bookDetailsFragment"
+            app:destination="@id/bookDetailsFragment" />
+        <argument
+            android:name="query"
+            android:defaultValue="null"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="category"
+            app:argType="com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookDetailsFragment"
+        android:name="com.dev.miasnikoff.feature_tabs.ui.details.BookDetailsFragment"
+        android:label="fragment_book_details"
+        tools:layout="@layout/fragment_book_details">
+        <argument
+            android:name="bookId"
+            app:argType="string" />
+    </fragment>
+</navigation>

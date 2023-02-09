@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.dev.miasnikoff.bookworm.databinding.ActivitySplashBinding
-import com.dev.miasnikoff.bookworm.ui.main.MainActivity
+import com.dev.miasnikoff.bookworm.ui.MainActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
