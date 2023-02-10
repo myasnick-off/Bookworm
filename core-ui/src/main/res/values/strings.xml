@@ -36,7 +36,7 @@
     <string name="subtitle">Подзаголовок:</string>
     <string name="language">Язык:</string>
     <string name="login">Логин</string>
-    <string name="enter">Вход</string>
+    <string name="enter">Войти</string>
     <string name="password">Пароль</string>
     <string name="login_helper">Логин по умолчанию: user</string>
     <string name="password_helper">Пароль по умолчанию: password</string>

@@ -4,13 +4,17 @@ import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.feature_auth.domain.AuthRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class LoginViewModel @Inject constructor(private val authRepository: AuthRepository) :
+class LoginViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val router: FlowRouter
+) :
     ViewModel() {
 
     private var _liveData: MutableLiveData<AuthState> = MutableLiveData()
@@ -30,7 +34,7 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
                     _liveData.value = AuthState.AuthFailure(message = "Wrong login or password!")
                 }
                 .subscribe(
-                    { user -> _liveData.value = AuthState.Success(data = user) },
+                    { back() },
                     { err -> _liveData.value = AuthState.Failure(err.message ?: "Unknown error!") }
                 )
         )
@@ -42,6 +46,10 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
 
     private fun checkPassword(pass: Editable?): String {
         return if (pass.isNullOrBlank()) "" else pass.toString()
+    }
+
+    fun back() {
+        router.back()
     }
 
     override fun onCleared() {

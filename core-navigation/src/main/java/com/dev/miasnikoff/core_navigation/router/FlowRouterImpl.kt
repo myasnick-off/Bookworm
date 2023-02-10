@@ -2,6 +2,7 @@ package com.dev.miasnikoff.core_navigation.router
 
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import com.dev.miasnikoff.core_navigation.DeepLink
 import com.dev.miasnikoff.core_navigation.navigator.NavigatorHolder
 
 class FlowRouterImpl(
@@ -15,8 +16,8 @@ class FlowRouterImpl(
         }
     }
 
-    override fun setNewFlow(startDestinationId: Int) {
-        globalRouter.setNewFlow(startDestinationId)
+    override fun navigateTo(link: DeepLink) {
+        globalRouter.navigateTo(link)
     }
 
     override fun back() {

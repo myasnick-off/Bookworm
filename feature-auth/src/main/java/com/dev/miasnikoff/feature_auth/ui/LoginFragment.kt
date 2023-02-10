@@ -5,13 +5,20 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.viewModels
-import com.dev.miasnikoff.core.model.UserModel
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.dev.miasnikoff.core_di.ViewModelFactory
+import com.dev.miasnikoff.core_di.annotations.FlowNavHolder
+import com.dev.miasnikoff.core_di.findFeatureExternalDeps
+import com.dev.miasnikoff.core_navigation.FlowFragment
+import com.dev.miasnikoff.core_navigation.navigator.NavigatorHolder
+import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_auth.R
 import com.dev.miasnikoff.feature_auth.databinding.FragmentLoginBinding
+import com.dev.miasnikoff.feature_auth.di.AuthFeatureComponentExternalDepsProvider
 import com.dev.miasnikoff.feature_auth.di.AuthFeatureComponentViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
@@ -21,18 +28,24 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class LoginFragment : BaseFragment(R.layout.fragment_login) {
+class LoginFragment : BaseFragment(R.layout.fragment_login), FlowFragment {
+
+    @Inject
+    @FlowNavHolder
+    lateinit var navigatorHolder: NavigatorHolder<NavController>
+
+    @Inject
+    lateinit var flowRouter: FlowRouter
 
     override lateinit var binding: FragmentLoginBinding
-
     private var disposables = CompositeDisposable()
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-
     private val viewModel: LoginViewModel by viewModels { viewModelFactory }
 
     override fun onAttach(context: Context) {
+        AuthFeatureComponentExternalDepsProvider.featureExternalDeps = findFeatureExternalDeps()
         viewModel<AuthFeatureComponentViewModel>().component.inject(this)
         super.onAttach(context)
     }
@@ -43,6 +56,16 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         initView()
         initMenu()
         initViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        navigatorHolder.bind(findNavController())
+    }
+
+    override fun onPause() {
+        navigatorHolder.unbind()
+        super.onPause()
     }
 
     override fun onDestroyView() {
@@ -94,7 +117,6 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             is AuthState.AuthFailure -> showAuthError(state.message)
             is AuthState.Failure -> showError(state.message)
             is AuthState.Loading -> showLoading()
-            is AuthState.Success -> showData(state.data)
         }
     }
 
@@ -111,13 +133,6 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         binding.errorMessage.text = message
         binding.loginInputLayout.isEnabled = true
         binding.passwordInputLayout.isEnabled = true
-    }
-
-    private fun showData(user: UserModel) {
-        binding.loginLoader.visibility = View.GONE
-        binding.loginInputLayout.isEnabled = true
-        binding.passwordInputLayout.isEnabled = true
-        // todo: navigate to profile
     }
 
     private fun showError(message: String) {

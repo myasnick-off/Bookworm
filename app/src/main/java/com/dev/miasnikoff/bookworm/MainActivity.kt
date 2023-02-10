@@ -60,8 +60,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FeatureExternalD
     }
 
     private fun setMainNavGraph() {
-        val graph = getRootNavController().navInflater.inflate(getMainGraphId())
-        getRootNavController().graph = graph
+        globalRouter.setNewGraph(getMainGraphId())
     }
 
     private fun getMainGraphId() = R.navigation.main_nav_graph

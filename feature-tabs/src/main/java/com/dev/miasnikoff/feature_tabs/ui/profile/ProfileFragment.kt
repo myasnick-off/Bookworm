@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import com.dev.miasnikoff.core.model.UserModel
 import com.dev.miasnikoff.core.prefs.UserPrefsHelper
 import com.dev.miasnikoff.core_di.ViewModelFactory
+import com.dev.miasnikoff.core_navigation.DeepLink
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.feature_tabs.R
@@ -52,11 +53,16 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         addressText.text = user.address
         emailText.text = user.email
         editButton.setOnClickListener { navigateToEdit() }
+        loginButton.setOnClickListener { navigateToLogin() }
     }
 
     private fun navigateToEdit() {
         val direction = ProfileFragmentDirections.actionProfileFragmentToEditFragment(user)
         viewModel.navigate(direction)
+    }
+
+    private fun navigateToLogin() {
+        viewModel.navigate(link = DeepLink.LOGIN_LINK)
     }
 
     private fun sendData() {

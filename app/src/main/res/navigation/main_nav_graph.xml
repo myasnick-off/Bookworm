@@ -10,4 +10,7 @@
         android:name="com.dev.miasnikoff.feature_tabs.ui.TabsFragment"
         android:label="fragment_tabs"
         tools:layout="@layout/fragment_tabs" />
+
+    <include app:graph="@navigation/auth_nav_graph" />
+
 </navigation>
