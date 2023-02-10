@@ -15,8 +15,9 @@ import dagger.Provides
 @Module
 class FlowNavigationModule {
 
-    @FeatureScope
+
     @Provides
+    @FeatureScope
     fun provideFlowRouter(
         globalRouter: GlobalRouter,
         @FlowNavHolder navigatorHolder: NavigatorHolder<NavController>
@@ -24,9 +25,10 @@ class FlowNavigationModule {
         return FlowRouterImpl(globalRouter, navigatorHolder)
     }
 
-    @FeatureScope
+
     @Provides
     @FlowNavHolder
+    @FeatureScope
     fun provideFlowNavigatorHolder(): NavigatorHolder<NavController> {
         return FlowNavigatorHolder()
     }

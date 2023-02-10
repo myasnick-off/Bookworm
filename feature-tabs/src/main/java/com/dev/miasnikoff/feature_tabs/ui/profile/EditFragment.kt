@@ -7,11 +7,11 @@ import androidx.activity.addCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.dev.miasnikoff.core.extensions.viewModel
 import com.dev.miasnikoff.core.model.EditField
 import com.dev.miasnikoff.core.model.UserModel
 import com.dev.miasnikoff.core.prefs.UserPrefsHelper
 import com.dev.miasnikoff.core_di.ViewModelFactory
+import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentEditBinding

@@ -4,9 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.dev.miasnikoff.core.extensions.viewModel
 import com.dev.miasnikoff.core_di.ViewModelFactory
+import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.core_ui.extensions.showSnackBar
@@ -119,8 +118,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private fun navigateToDetails(bookId: String) {
         val direction = HomeFragmentDirections.actionHomeFragmentToBookDetailsFragment(bookId)
-        val controller = findNavController()
-        controller.navigate(direction)
+        viewModel.navigate(direction)
     }
 
     private fun navigateToLocalList(categoryName: String) {

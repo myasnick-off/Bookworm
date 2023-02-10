@@ -6,11 +6,12 @@ import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.dev.miasnikoff.core.extensions.viewModel
 import com.dev.miasnikoff.core_di.annotations.FlowNavHolder
 import com.dev.miasnikoff.core_di.findFeatureExternalDeps
+import com.dev.miasnikoff.core_navigation.FlowFragment
 import com.dev.miasnikoff.core_navigation.navigator.NavigatorHolder
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
+import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentTabsBinding
@@ -18,7 +19,7 @@ import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentExternalDepsProvid
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
 import javax.inject.Inject
 
-class TabsFragment : BaseFragment(R.layout.fragment_tabs) {
+class TabsFragment : BaseFragment(R.layout.fragment_tabs), FlowFragment {
 
     @Inject
     @FlowNavHolder

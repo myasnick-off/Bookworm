@@ -1,7 +1,6 @@
 package com.dev.miasnikoff.feature_tabs.di.module
 
 import androidx.lifecycle.ViewModel
-import com.dev.miasnikoff.core_di.annotations.FeatureScope
 import com.dev.miasnikoff.core_di.annotations.ViewModelKey
 import com.dev.miasnikoff.feature_tabs.ui.home.HomeViewModel
 import com.dev.miasnikoff.feature_tabs.ui.list.BookListViewModel

@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import androidx.fragment.app.viewModels
-import com.dev.miasnikoff.core.extensions.viewModel
 import com.dev.miasnikoff.core.model.UserModel
 import com.dev.miasnikoff.core_di.ViewModelFactory
+import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_auth.R

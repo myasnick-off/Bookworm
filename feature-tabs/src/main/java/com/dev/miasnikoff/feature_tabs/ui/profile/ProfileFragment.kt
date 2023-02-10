@@ -8,10 +8,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import com.dev.miasnikoff.core.extensions.viewModel
 import com.dev.miasnikoff.core.model.UserModel
 import com.dev.miasnikoff.core.prefs.UserPrefsHelper
 import com.dev.miasnikoff.core_di.ViewModelFactory
+import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentProfileBinding
