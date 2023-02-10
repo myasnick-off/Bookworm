@@ -11,6 +11,7 @@ import com.dev.miasnikoff.core_di.FeatureExternalDepsProvider
 import com.dev.miasnikoff.core_di.annotations.GlobalNavHolder
 import com.dev.miasnikoff.core_navigation.navigator.NavigatorHolder
 import com.dev.miasnikoff.core_navigation.router.GlobalRouter
+import com.dev.miasnikoff.feature_auth_api.AuthFeatureApi
 import com.dev.miasnikoff.feature_tabs_api.TabsFeatureApi
 import javax.inject.Inject
 
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FeatureExternalD
     lateinit var tabsFeatureApi: TabsFeatureApi
 
     @Inject
+    lateinit var authFeatureApi: AuthFeatureApi
+
+    @Inject
     @GlobalNavHolder
     lateinit var navigatorHolder: NavigatorHolder<NavController>
 
@@ -32,9 +36,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FeatureExternalD
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        //setContentView(ActivityMainBinding.inflate(layoutInflater).root)
 
-        //globalRouter.setNewFlow(tabsFeatureApi.getTabsDestination())
         globalRouter.setNewFlow(getTabsDestination())
     }
 
