@@ -1,19 +1,17 @@
-package com.dev.miasnikoff.bookworm.ui.splash
+package com.dev.miasnikoff.splash
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
-import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.databinding.FragmentSplashBinding
+import com.dev.miasnikoff.core_navigation.FlowFragment
 import com.dev.miasnikoff.core_ui.BaseFragment
+import com.dev.miasnikoff.splash.databinding.FragmentSplashBinding
 
-class SplashFragment : BaseFragment(R.layout.fragment_splash) {
+class SplashFragment : BaseFragment(R.layout.fragment_splash), FlowFragment {
 
-    private val handler: Handler by lazy { Handler(requireActivity().mainLooper) }
+
     override lateinit var binding: FragmentSplashBinding
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,15 +26,5 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
             }
         binding.splashImg.startAnimation(splashAnimation)
         binding.splashImg.visibility = View.VISIBLE
-        handler.postDelayed(::startMainScreen, 2000)
-    }
-
-    private fun startMainScreen() {
-        (requireActivity() as? SplashActivity)?.startMainScreen()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        handler.removeCallbacksAndMessages(null)
     }
 }

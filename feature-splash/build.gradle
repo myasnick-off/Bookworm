@@ -1,23 +1,18 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
-    id 'kotlin-parcelize'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.20'
-    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.dev.miasnikoff.bookworm"
         minSdk 21
         targetSdk 32
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -40,16 +35,13 @@ android {
 }
 
 dependencies {
+
     implementation project(":core")
     implementation project(":core-di")
+    implementation project(":core-network")
     implementation project(":core-navigation")
     implementation project(":core-ui")
-    implementation project(":core-network")
-    implementation project(":feature-tabs")
     implementation project(":feature-tabs-api")
-    implementation project(":feature-auth")
-    implementation project(":feature-auth-api")
-    implementation project(":feature-splash")
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -67,12 +59,6 @@ dependencies {
     implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
     implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0'
 
-    // kotlinx-serialization
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
-
-    // logging
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
-
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.13.2'
 
@@ -80,18 +66,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
-    // RxJava
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'com.jakewharton.rxbinding3:rxbinding:3.1.0'
-
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-
-    // Room
-    implementation 'androidx.room:room-runtime:2.4.0'
-    implementation 'androidx.room:room-ktx:2.4.0'
-    kapt 'androidx.room:room-compiler:2.4.0'
 
     // Dagger 2
     implementation 'com.google.dagger:dagger:2.42'

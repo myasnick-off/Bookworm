@@ -1,10 +1,10 @@
 package com.dev.miasnikoff.bookworm.di
 
 import android.content.Context
+import com.dev.miasnikoff.bookworm.MainActivity
 import com.dev.miasnikoff.bookworm.di.module.AppModule
 import com.dev.miasnikoff.bookworm.di.module.AppNetworkModule
 import com.dev.miasnikoff.bookworm.di.module.FeatureExternalDepsModule
-import com.dev.miasnikoff.bookworm.ui.MainActivity
 import com.dev.miasnikoff.core_di.annotations.AppScope
 import com.dev.miasnikoff.core_navigation.di.GlobalNavigationModule
 import com.dev.miasnikoff.feature_auth.di.AuthExternalDependencies

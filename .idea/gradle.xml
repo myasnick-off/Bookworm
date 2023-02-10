@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/core-ui" />
             <option value="$PROJECT_DIR$/feature-auth" />
             <option value="$PROJECT_DIR$/feature-auth-api" />
+            <option value="$PROJECT_DIR$/feature-splash" />
             <option value="$PROJECT_DIR$/feature-tabs" />
             <option value="$PROJECT_DIR$/feature-tabs-api" />
           </set>

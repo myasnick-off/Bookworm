@@ -1,11 +1,10 @@
-package com.dev.miasnikoff.bookworm.ui
+package com.dev.miasnikoff.bookworm
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.dev.miasnikoff.bookworm.App
-import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.core_di.FeatureExternalDependenciesContainer
 import com.dev.miasnikoff.core_di.FeatureExternalDepsProvider
 import com.dev.miasnikoff.core_di.annotations.GlobalNavHolder
@@ -13,6 +12,8 @@ import com.dev.miasnikoff.core_navigation.navigator.NavigatorHolder
 import com.dev.miasnikoff.core_navigation.router.GlobalRouter
 import com.dev.miasnikoff.feature_auth_api.AuthFeatureApi
 import com.dev.miasnikoff.feature_tabs_api.TabsFeatureApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(R.layout.activity_main), FeatureExternalDepsProvider {
@@ -36,8 +37,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FeatureExternalD
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
-
-        globalRouter.setNewFlow(getTabsDestination())
+        lifecycleScope.launch {
+            delay(SPLASH_SCREEN_SHOW_TIME)
+            setMainNavGraph()
+        }
     }
 
     override fun onResumeFragments() {
@@ -56,9 +59,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FeatureExternalD
         return navHost.navController
     }
 
-    private fun getTabsDestination() = R.id.tabsFragment
+    private fun setMainNavGraph() {
+        val graph = getRootNavController().navInflater.inflate(getMainGraphId())
+        getRootNavController().graph = graph
+    }
 
-    private fun getAuthDestination() {
-        //todo: login destination id
+    private fun getMainGraphId() = R.navigation.main_nav_graph
+
+    companion object {
+        private const val SPLASH_SCREEN_SHOW_TIME = 2000L
     }
 }

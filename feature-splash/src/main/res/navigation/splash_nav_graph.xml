@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.dev.miasnikoff.bookworm.ui.splash.SplashFragment"
+        android:name="com.dev.miasnikoff.splash.SplashFragment"
         android:label="SplashFragment"
         tools:layout="@layout/fragment_splash"/>
 </navigation>
