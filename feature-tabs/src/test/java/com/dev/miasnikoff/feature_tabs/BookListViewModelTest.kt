@@ -163,12 +163,15 @@ class BookListViewModelTest {
                 )
             ).thenReturn(Either.Success(testVolumeResponse))
 
-                bookListViewModel.getInitialPage(TEST_QUERY)
-                val expectedVal = PagedListState.Success(data = listOf(testBookItem, testBookItemFavorite), loadMore = false)
-                val actualVal = bookListViewModel.liveData.value as? PagedListState.Success
+            bookListViewModel.getInitialPage(TEST_QUERY)
+            val expectedVal = PagedListState.Success(
+                data = listOf(testBookItem, testBookItemFavorite),
+                loadMore = false
+            )
+            val actualVal = bookListViewModel.liveData.value as? PagedListState.Success
 
-                assertNotNull(bookListViewModel.liveData.value)
-                assertEquals(expectedVal, actualVal)
+            assertNotNull(bookListViewModel.liveData.value)
+            assertEquals(expectedVal, actualVal)
         }
     }
 
@@ -185,13 +188,13 @@ class BookListViewModelTest {
                 )
             ).thenReturn(Either.Error(TEST_ERROR_MESSAGE))
 
-                bookListViewModel.getInitialPage(TEST_QUERY)
-                val expectedVal = PagedListState.Failure(TEST_ERROR_MESSAGE)
-                val actualVal = bookListViewModel.liveData.value as? PagedListState.Failure
+            bookListViewModel.getInitialPage(TEST_QUERY)
+            val expectedVal = PagedListState.Failure(TEST_ERROR_MESSAGE)
+            val actualVal = bookListViewModel.liveData.value as? PagedListState.Failure
 
-                assertNotNull(actualVal)
-                assertEquals(expectedVal, actualVal)
-                assertSame(expectedVal.message, actualVal?.message)
+            assertNotNull(actualVal)
+            assertEquals(expectedVal, actualVal)
+            assertSame(expectedVal.message, actualVal?.message)
         }
     }
 

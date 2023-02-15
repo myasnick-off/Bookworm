@@ -154,13 +154,13 @@ class ListInteractorTest {
     @Test
     fun `should mark remote books as favorite if they saved in local database`() {
         val expectedVolumes = listOf(
-                VolumeDTO(
-                    id = TEST_ID,
-                    selfLink = "self/link",
-                    volumeInfo = VolumeInfoDTO(title = "Test Title"),
-                    isFavorite = true
-                )
+            VolumeDTO(
+                id = TEST_ID,
+                selfLink = "self/link",
+                volumeInfo = VolumeInfoDTO(title = "Test Title"),
+                isFavorite = true
             )
+        )
         val expected = Either.Success(data = testVolumeResponse.copy(volumes = expectedVolumes))
         runTest {
             `when`(
