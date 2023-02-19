@@ -31,8 +31,8 @@
                 android:maxLength="100"
                 android:maxLines="1"
                 android:selectAllOnFocus="true"
-                android:textColor="?attr/colorControlNormal"
-                android:textColorHint="?attr/colorControlNormal" />
+                android:textColor="?attr/textFillColor"
+                android:textColorHint="?attr/textFillColor" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/search_button"
@@ -43,7 +43,7 @@
                 android:background="@android:color/transparent"
                 android:padding="@dimen/padding_8"
                 android:src="@drawable/ic_search_24"
-                android:tint="?attr/colorControlNormal" />
+                android:tint="?attr/textFillColor" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

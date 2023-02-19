@@ -23,7 +23,6 @@
         <item name="android:statusBarColor" >?attr/colorPrimary</item>
         <item name="textFillColor">@color/white</item>
         <item name="textOutlineColor">@color/black</item>
-        <item name="colorControlNormal">@color/white</item>
     </style>
 
     <style name="BookwormButton" parent="Widget.AppCompat.Button">
@@ -54,6 +53,10 @@
         <item name="startIconTint">?attr/colorSecondary</item>
         <item name="endIconTint">?attr/colorSecondary</item>
         <item name="hintTextColor">?attr/colorSecondary</item>
+    </style>
+
+    <style name="BookwormRatingBar" parent="Widget.AppCompat.RatingBar.Small">
+
     </style>
 
     <style name="BookwormLeafView" parent="@style/LeafViewStyle">

@@ -14,7 +14,7 @@
             android:id="@+id/book_image"
             android:layout_width="@dimen/size_150"
             android:layout_height="match_parent"
-            android:background="?attr/colorControlNormal"
+            android:background="?attr/textFillColor"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@android:drawable/ic_menu_gallery" />
