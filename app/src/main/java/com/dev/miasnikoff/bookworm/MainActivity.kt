@@ -37,9 +37,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FeatureExternalD
     override fun onCreate(savedInstanceState: Bundle?) {
         (application as App).appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            delay(SPLASH_SCREEN_SHOW_TIME)
-            setMainNavGraph()
+        if (savedInstanceState == null) {
+            setNavigationGraph(getSplashGraphId())
+            lifecycleScope.launch {
+                delay(SPLASH_SCREEN_SHOW_TIME)
+                setNavigationGraph(getMainGraphId())
+            }
         }
     }
 
@@ -59,9 +62,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), FeatureExternalD
         return navHost.navController
     }
 
-    private fun setMainNavGraph() {
-        globalRouter.setNewGraph(getMainGraphId())
+    private fun setNavigationGraph(graphResId: Int) {
+        globalRouter.setNewGraph(graphResId)
     }
+
+    private fun getSplashGraphId() = com.dev.miasnikoff.splash.R.navigation.splash_nav_graph
 
     private fun getMainGraphId() = R.navigation.main_nav_graph
 

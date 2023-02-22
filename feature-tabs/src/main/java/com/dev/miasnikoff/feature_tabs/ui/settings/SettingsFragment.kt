@@ -69,10 +69,8 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                     2 -> Themes.NIGHT_MODE
                     else -> Themes.AS_SYSTEM
                 }
-                if (theme != settingsPrefs.appTheme) {
-                    settingsPrefs.save(theme)
-                    AppCompatDelegate.setDefaultNightMode(theme.id)
-                }
+                settingsPrefs.save(theme)
+                AppCompatDelegate.setDefaultNightMode(theme.id)
             }
     }
 

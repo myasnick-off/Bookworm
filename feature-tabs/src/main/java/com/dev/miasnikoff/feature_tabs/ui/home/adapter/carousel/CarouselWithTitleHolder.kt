@@ -6,7 +6,7 @@ import com.dev.miasnikoff.feature_tabs.ui.home.adapter.CarouselAdapter
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.genre.GenreCell
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.litebook.LiteBookCell
 
-class CarouselWithTitleViewHolder(
+class CarouselWithTitleHolder(
     private val binding: ItemCarouselWithTitleListBinding,
     private val clickListener: CarouselWithTitleCell.ItemClickListener
 ) :

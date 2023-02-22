@@ -21,6 +21,7 @@
         <item name="colorOnSecondary">@color/color_yellow_light</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" >?attr/colorPrimary</item>
+        <item name="colorControlActivated">?attr/colorSecondary</item>
         <item name="textFillColor">@color/white</item>
         <item name="textOutlineColor">@color/black</item>
     </style>
@@ -28,9 +29,16 @@
     <style name="BookwormButton" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/shape_button</item>
         <item name="android:textColor">?attr/textFillColor</item>
-        <item name="android:textSize">@dimen/text_l</item>
+        <item name="android:textSize">@dimen/text_m</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:padding">@dimen/padding_16</item>
+    </style>
+
+    <style name="BookwormOutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:background">@drawable/shape_outlined_button</item>
+        <item name="strokeColor">?attr/colorSecondary</item>
+        <item name="android:textColor">?attr/textOutlineColor</item>
+        <item name="android:textSize">@dimen/text_m</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="BookwormTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -55,14 +63,9 @@
         <item name="hintTextColor">?attr/colorSecondary</item>
     </style>
 
-    <style name="BookwormRatingBar" parent="Widget.AppCompat.RatingBar.Small">
-
-    </style>
-
     <style name="BookwormLeafView" parent="@style/LeafViewStyle">
         <item name="leafColor">?attr/colorPrimary</item>
         <item name="leafIconsTint">?attr/textFillColor</item>
     </style>
-
 
 </resources>

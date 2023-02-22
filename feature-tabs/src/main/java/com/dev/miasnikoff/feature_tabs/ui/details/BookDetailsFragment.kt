@@ -13,14 +13,15 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
+import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentBookDetailsBinding
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
-import com.dev.miasnikoff.feature_tabs.domain.model.BookDetails
+import com.dev.miasnikoff.feature_tabs.ui.details.adapter.BookDetailsAdapter
+import com.dev.miasnikoff.feature_tabs.ui.details.adapter.controls.BookControlsCell
 import com.dev.miasnikoff.feature_tabs.ui.details.model.DetailsState
 import javax.inject.Inject
 
@@ -33,6 +34,18 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
     @Inject
     lateinit var viewModelFactory: BookDetailsViewModelAssistedFactory
     private val viewModel: BookDetailsViewModel by viewModels { viewModelFactory.create(args.bookId) }
+
+    private val controlsClickListener = object : BookControlsCell.ControlsClickListener {
+        override fun onFavoriteClick() {
+            //viewModel.setFavorite()
+        }
+
+        override fun onPreviewClick(url: String) {
+            //viewModel.navigate()
+        }
+    }
+
+    private val detailsAdapter = BookDetailsAdapter(controlsClickListener)
 
     override fun onAttach(context: Context) {
         viewModel<TabsFeatureComponentViewModel>().component.inject(this)
@@ -48,6 +61,7 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
     }
 
     override fun initView() {
+        binding.detailsRecycler.adapter = detailsAdapter
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             viewModel.back()
         }
@@ -91,19 +105,23 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
     private fun showLoading() {
         binding.detailsLoader.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
-        binding.detailsLayout.visibility = View.GONE
+        binding.detailsRecycler.visibility = View.GONE
+        //binding.detailsLayout.visibility = View.GONE
     }
 
-    private fun showData(bookDetails: BookDetails) {
+    private fun showData(bookDetails: List<RecyclerItem>) {
         binding.detailsLoader.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
-        binding.detailsLayout.visibility = View.VISIBLE
-        bindData(bookDetails)
+        binding.detailsRecycler.visibility = View.VISIBLE
+        detailsAdapter.submitList(bookDetails)
+        //binding.detailsLayout.visibility = View.VISIBLE
+        //bindData(bookDetails)
     }
 
     private fun showError(message: String) {
         binding.detailsLoader.visibility = View.GONE
-        binding.detailsLayout.visibility = View.GONE
+        binding.detailsRecycler.visibility = View.GONE
+        //binding.detailsLayout.visibility = View.GONE
         binding.errorImage.visibility = View.VISIBLE
         binding.root.showSnackBar(
             message = "${getString(com.dev.miasnikoff.core_ui.R.string.error)} $message",
@@ -111,7 +129,7 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
         ) { viewModel.getDetails() }
     }
 
-    private fun bindData(bookDetails: BookDetails) = with(binding) {
+    /*private fun bindData(bookDetails: BookDetails) = with(binding) {
         ratingBar.rating = bookDetails.averageRating
         bookRating.text = String.format("%.1f", bookDetails.averageRating)
         bookTitle.text = bookDetails.title
@@ -126,5 +144,5 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
             .load(bookDetails.imageLinkSmall)
             .error(com.dev.miasnikoff.core_ui.R.drawable.ic_broken_image_48)
             .into(bookImage)
-    }
+    }*/
 }

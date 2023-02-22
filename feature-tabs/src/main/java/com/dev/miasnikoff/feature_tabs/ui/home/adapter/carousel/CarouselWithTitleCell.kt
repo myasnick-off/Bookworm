@@ -18,11 +18,11 @@ class CarouselWithTitleCell(private val itemClickListener: ItemClickListener) : 
     override fun holder(parent: ViewGroup): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCarouselWithTitleListBinding.inflate(inflater, parent, false)
-        return CarouselWithTitleViewHolder(binding, itemClickListener)
+        return CarouselWithTitleHolder(binding, itemClickListener)
     }
 
     override fun bind(holder: RecyclerView.ViewHolder, item: RecyclerItem) {
-        if (holder is CarouselWithTitleViewHolder && item is CarouselWithTitleItem) {
+        if (holder is CarouselWithTitleHolder && item is CarouselWithTitleItem) {
             holder.bind(item)
         }
     }

@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.feature_tabs.databinding.ItemBookLiteListBinding
 
-class LiteBookViewHolder(
+class LiteBookHolder(
     private val binding: ItemBookLiteListBinding,
     private val itemClickListener: LiteBookCell.ItemClickListener
 ) :

@@ -14,9 +14,9 @@ import com.dev.miasnikoff.feature_tabs.domain.model.Filter
 import com.dev.miasnikoff.feature_tabs.domain.model.OrderBy
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookItem
 import com.dev.miasnikoff.network.calladapter.ApiResponse
-import org.junit.Assert.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

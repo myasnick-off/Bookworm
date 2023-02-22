@@ -58,7 +58,7 @@ class BookListViewModelTest {
     @Before
     fun setup() {
         mapper = DtoToUiMapper()
-        bookListViewModel = BookListViewModel(listInteractor, mapper, router)
+        bookListViewModel = BookListViewModel(listInteractor, mapper, router, TEST_QUERY, null)
         testVolumeResponse = VolumeResponse(
             kind = "kind",
             volumes = listOf(
@@ -96,7 +96,7 @@ class BookListViewModelTest {
             imageLink = null,
             language = "",
             isFavorite = true,
-            favoriteIcon = 2131230831
+            favoriteIcon = 2131230832
         )
 
         observer = Observer<PagedListState> {}
@@ -111,7 +111,6 @@ class BookListViewModelTest {
     @Test
     fun `should execute interactor's getBooksList method when request data by query`() {
         runTest {
-            bookListViewModel.getInitialPage(TEST_QUERY)
             verify(listInteractor, times(1)).getBooksList(
                 query = TEST_QUERY,
                 filter = null,
@@ -124,8 +123,8 @@ class BookListViewModelTest {
 
     @Test
     fun `should execute interactor's getBooksList method when request data by NEWEST category`() {
+        bookListViewModel = BookListViewModel(listInteractor, mapper, router, null, Category.NEWEST)
         runTest {
-            bookListViewModel.getInitialPage(Category.NEWEST)
             verify(listInteractor, times(1)).getBooksList(
                 query = QueryFields.IN_TITLE.type,
                 filter = null,
@@ -138,8 +137,8 @@ class BookListViewModelTest {
 
     @Test
     fun `should execute interactor's getBooksList method when request data by FREE category`() {
+        bookListViewModel = BookListViewModel(listInteractor, mapper, router, null, Category.FREE)
         runTest {
-            bookListViewModel.getInitialPage(Category.FREE)
             verify(listInteractor, times(1)).getBooksList(
                 query = QueryFields.IN_TITLE.type,
                 filter = Filter.FREE_BOOKS.type,
@@ -163,7 +162,7 @@ class BookListViewModelTest {
                 )
             ).thenReturn(Either.Success(testVolumeResponse))
 
-            bookListViewModel.getInitialPage(TEST_QUERY)
+            bookListViewModel.getData()
             val expectedVal = PagedListState.Success(
                 data = listOf(testBookItem, testBookItemFavorite),
                 loadMore = false
@@ -188,7 +187,7 @@ class BookListViewModelTest {
                 )
             ).thenReturn(Either.Error(TEST_ERROR_MESSAGE))
 
-            bookListViewModel.getInitialPage(TEST_QUERY)
+            bookListViewModel.getData()
             val expectedVal = PagedListState.Failure(TEST_ERROR_MESSAGE)
             val actualVal = bookListViewModel.liveData.value as? PagedListState.Failure
 
@@ -211,7 +210,7 @@ class BookListViewModelTest {
                 )
             ).thenReturn(Either.Success(testVolumeResponse))
 
-            bookListViewModel.getInitialPage(TEST_QUERY)
+            bookListViewModel.getData()
             bookListViewModel.setFavorite(TEST_ID)
             verify(listInteractor, times(1)).saveInFavorite(testBookItem)
         }
@@ -230,7 +229,7 @@ class BookListViewModelTest {
                 )
             ).thenReturn(Either.Success(testVolumeResponse))
 
-            bookListViewModel.getInitialPage(TEST_QUERY)
+            bookListViewModel.getData()
             bookListViewModel.setFavorite(TEST_ID_FAVORITE)
             verify(listInteractor, times(1)).removeFromFavorite(testBookItemFavorite)
         }
