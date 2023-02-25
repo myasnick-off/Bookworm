@@ -11,7 +11,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class GlobalNavigationModule {
+object GlobalNavigationModule {
 
     @AppScope
     @Provides

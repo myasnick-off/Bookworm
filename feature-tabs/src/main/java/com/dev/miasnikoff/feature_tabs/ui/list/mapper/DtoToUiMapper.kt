@@ -1,6 +1,7 @@
 package com.dev.miasnikoff.feature_tabs.ui.list.mapper
 
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
+import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.data.remote.model.ImageSize
 import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.feature_tabs.ui.base.BaseUiDataMapper
@@ -20,7 +21,8 @@ class DtoToUiMapper @Inject constructor() : BaseUiDataMapper<VolumeDTO>() {
             imageLink = getImageOfSize(item.volumeInfo.imageLinks, imageSize),
             language = item.volumeInfo.language.orEmpty(),
             isFavorite = item.isFavorite,
-            favoriteIcon = if (item.isFavorite) com.dev.miasnikoff.core_ui.R.drawable.ic_bookmark_24
-            else com.dev.miasnikoff.core_ui.R.drawable.ic_bookmark_border_24
+            favoriteIcon =
+            if (item.isFavorite) R.drawable.ic_bookmark_24
+            else R.drawable.ic_bookmark_border_24
         )
 }

@@ -1,6 +1,7 @@
 package com.dev.miasnikoff.feature_tabs.ui.list.mapper
 
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
+import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.data.local.BookEntity
 import com.dev.miasnikoff.feature_tabs.data.remote.model.ImageSize
 import com.dev.miasnikoff.feature_tabs.ui.base.BaseUiDataMapper
@@ -20,7 +21,8 @@ class EntityToUiMapper @Inject constructor() : BaseUiDataMapper<BookEntity>() {
             imageLink = item.imageLinkSmall,
             language = item.language.orEmpty(),
             isFavorite = item.inFavorite,
-            favoriteIcon = if (item.inFavorite) com.dev.miasnikoff.core_ui.R.drawable.ic_bookmark_24
-            else com.dev.miasnikoff.core_ui.R.drawable.ic_bookmark_border_24
+            favoriteIcon =
+            if (item.inFavorite) R.drawable.ic_bookmark_24
+            else R.drawable.ic_bookmark_border_24
         )
 }

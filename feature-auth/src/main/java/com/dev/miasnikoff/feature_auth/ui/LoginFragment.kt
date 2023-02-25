@@ -12,7 +12,6 @@ import com.dev.miasnikoff.core_di.annotations.FlowNavHolder
 import com.dev.miasnikoff.core_di.findFeatureExternalDeps
 import com.dev.miasnikoff.core_navigation.FlowFragment
 import com.dev.miasnikoff.core_navigation.navigator.NavigatorHolder
-import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.extensions.showSnackBar
@@ -33,9 +32,6 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), FlowFragment {
     @Inject
     @FlowNavHolder
     lateinit var navigatorHolder: NavigatorHolder<NavController>
-
-    @Inject
-    lateinit var flowRouter: FlowRouter
 
     override lateinit var binding: FragmentLoginBinding
     private var disposables = CompositeDisposable()

@@ -81,10 +81,12 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvid
         return when (menuItem.itemId) {
             R.id.menu_remove_all -> {
                 if (args.categoryName == Category.LAST_VIEWED.name) {
-                    showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_history_warning) { viewModel.removeHistory() }
+                    showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_history_warning) {
+                        viewModel.removeHistory() }
                 }
                 if (args.categoryName == Category.FAVORITE.name) {
-                    showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_favorites_warning) { viewModel.removeFavorites() }
+                    showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_favorites_warning) {
+                        viewModel.removeFavorites() }
                 }
                 true
             }

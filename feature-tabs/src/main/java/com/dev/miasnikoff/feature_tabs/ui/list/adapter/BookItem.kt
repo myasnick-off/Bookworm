@@ -1,7 +1,7 @@
 package com.dev.miasnikoff.feature_tabs.ui.list.adapter
 
-import com.dev.miasnikoff.core_ui.R
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
+import com.dev.miasnikoff.feature_tabs.R
 
 data class BookItem(
     override val id: String,

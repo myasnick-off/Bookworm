@@ -16,7 +16,7 @@ import dagger.Component
 @Component(
     modules = [
         TabsNetworkModule::class,
-        TabDBModule::class,
+        TabDatabaseModule::class,
         TabsRepositoryModule::class,
         TabsInteractorModule::class,
         TabsViewModelModule::class,

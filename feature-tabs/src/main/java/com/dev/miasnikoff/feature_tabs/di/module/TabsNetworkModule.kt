@@ -6,7 +6,7 @@ import dagger.Provides
 import retrofit2.Retrofit
 
 @Module
-class TabsNetworkModule {
+object TabsNetworkModule {
 
     @Provides
     fun apiService(retrofit: Retrofit): ApiService {

@@ -7,7 +7,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class TabDBModule {
+object TabDatabaseModule {
 
     @Provides
     fun database(context: Context): BooksDataBase {

@@ -25,7 +25,7 @@ class BookDetailsMapper @Inject constructor() {
             pageCount = dto.volumeInfo.pageCount ?: 0,
             printType = dto.volumeInfo.printType.orEmpty(),
             imageLinkSmall = getImageOfSize(dto.volumeInfo.imageLinks, ImageSize.S),
-            imageLinkLarge = getImageOfSize(dto.volumeInfo.imageLinks, ImageSize.L),
+            imageLinkLarge = getImageOfSize(dto.volumeInfo.imageLinks, ImageSize.M),
             language = dto.volumeInfo.language.orEmpty(),
             previewLink = dto.volumeInfo.previewLink.orEmpty(),
             infoLink = dto.volumeInfo.infoLink.orEmpty(),

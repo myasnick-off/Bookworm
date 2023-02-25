@@ -7,8 +7,10 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.annotation.PluralsRes
 import androidx.core.content.getSystemService
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
@@ -46,4 +48,8 @@ fun View.getLocalizedQuantityString(
         resources = context.createConfigurationContext(configuration).resources
         resources.getQuantityString(id, quantity)
     }.getOrDefault("")
+}
+
+fun ImageView.setImageById(imageRes: Int) {
+    setImageDrawable(ResourcesCompat.getDrawable(context.resources, imageRes, context.theme))
 }

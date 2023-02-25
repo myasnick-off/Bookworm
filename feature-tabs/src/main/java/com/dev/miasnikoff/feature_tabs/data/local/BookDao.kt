@@ -32,6 +32,6 @@ interface BookDao {
     @Query("DELETE FROM BookEntity WHERE in_history = :history")
     fun deleteAllHistory(history: Boolean = true)
 
-    @Query("DELETE FROM BookEntity WHERE in_history = :favorite")
+    @Query("DELETE FROM BookEntity WHERE in_favorite = :favorite")
     fun deleteAllFavorite(favorite: Boolean = true)
 }

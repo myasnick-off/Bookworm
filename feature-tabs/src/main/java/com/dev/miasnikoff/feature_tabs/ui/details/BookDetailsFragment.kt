@@ -37,7 +37,7 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
 
     private val controlsClickListener = object : BookControlsCell.ControlsClickListener {
         override fun onFavoriteClick() {
-            //viewModel.setFavorite()
+            viewModel.setFavorite()
         }
 
         override fun onPreviewClick(url: String) {

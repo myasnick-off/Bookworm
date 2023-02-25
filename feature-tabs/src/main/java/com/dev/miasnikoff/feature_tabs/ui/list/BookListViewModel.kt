@@ -2,8 +2,11 @@ package com.dev.miasnikoff.feature_tabs.ui.list
 
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
+import com.dev.miasnikoff.core.event.AppEvent
+import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
+import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractor
 import com.dev.miasnikoff.feature_tabs.domain.model.*
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
@@ -14,6 +17,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +25,7 @@ class BookListViewModel @Inject constructor(
     private val interactor: ListInteractor,
     private val dtoToUiMapper: DtoToUiMapper,
     private val router: FlowRouter,
+    private val eventBus: EventBus,
     private val query: String?,
     private val category: Category?
 ) : ViewModel() {
@@ -38,6 +43,18 @@ class BookListViewModel @Inject constructor(
 
     init {
         getData()
+        handleAppEvents()
+    }
+
+    private fun handleAppEvents() {
+        viewModelScope.launch {
+            eventBus.events.collectLatest { event ->
+                when(event) {
+                    is AppEvent.FavoriteUpdate -> updateBookList()
+                    else -> {}
+                }
+            }
+        }
     }
 
     fun getData() {
@@ -68,15 +85,15 @@ class BookListViewModel @Inject constructor(
     private fun loadInitialPage() {
         _liveData.value = PagedListState.Loading
         currentList.clear()
-        getVolumeList()
+        getBookList()
     }
 
     fun loadNextPage() {
         _liveData.value = PagedListState.MoreLoading
-        getVolumeList()
+        getBookList()
     }
 
-    private fun getVolumeList() {
+    private fun getBookList() {
         if (liveData.value !is PagedListState.Success) {
             job?.cancel()
             job = viewModelScope.launch {
@@ -101,41 +118,50 @@ class BookListViewModel @Inject constructor(
                             PagedListState.Success(currentList, false)
                         }
                     }
-                    .onFailure { message ->
-                        _liveData.value = PagedListState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
-                    }
-
+                    .onFailure(::postError)
             }
         }
     }
 
-    fun setFavorite(itemId: String) {
+    fun setFavorite(itemId: String?) {
         viewModelScope.launch {
-            val newList: MutableList<RecyclerItem> = mutableListOf()
-            val currentState = liveData.value as? PagedListState.Success
-            currentState?.let { state ->
-                newList.addAll(state.data)
-                val index = newList.indexOfFirst { it.id == itemId }
-                val bookItem = (newList.firstOrNull { it.id == itemId } as? BookItem)
-                if (index > -1 && bookItem != null) {
-                    newList[index] = if (bookItem.isFavorite) {
-                        interactor.removeFromFavorite(bookItem)
-                        bookItem.copy(
-                            isFavorite = false,
-                            favoriteIcon = com.dev.miasnikoff.core_ui.R.drawable.ic_bookmark_border_24
-                        )
-                    } else {
-                        interactor.saveInFavorite(bookItem)
-                        bookItem.copy(
-                            isFavorite = true,
-                            favoriteIcon = com.dev.miasnikoff.core_ui.R.drawable.ic_bookmark_24
-                        )
+            (liveData.value as? PagedListState.Success)?.let { state ->
+                val bookItem = (state.data.firstOrNull { it.id == itemId } as? BookItem)
+                bookItem?.let {
+                    when (bookItem.isFavorite) {
+                        true -> interactor.removeFromFavorite(bookItem)
+                        false -> interactor.saveInFavorite(bookItem)
+                    }
+                    eventBus.emitEvent(AppEvent.FavoriteUpdate(itemId))
+                }
+            }
+        }
+    }
+
+    private fun updateBookList() {
+        viewModelScope.launch {
+        val newList: MutableList<RecyclerItem> = mutableListOf()
+        (liveData.value as? PagedListState.Success)?.let { state ->
+                _liveData.value = PagedListState.MoreLoading
+                val favoriteList = interactor.getFavorite()
+                state.data.forEach { book ->
+                    val index = favoriteList.indexOfFirst { favorite -> book.id == favorite.id }
+                    when {
+                        index > -1 && (book as BookItem).isFavorite.not() ->
+                            newList.add(book.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24))
+                        index == -1 && (book as BookItem).isFavorite ->
+                            newList.add(book.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24))
+                        else -> newList.add(book)
                     }
                 }
-                currentList = newList
+            currentList = newList
                 _liveData.value = state.copy(data = currentList)
             }
         }
+    }
+
+    private fun postError(message: String? = null) {
+        _liveData.value = PagedListState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
     }
 
     fun navigate(direction: NavDirections) {
@@ -159,12 +185,13 @@ class BookListViewModelFactory @AssistedInject constructor(
     private val interactor: ListInteractor,
     private val dtoToUiMapper: DtoToUiMapper,
     private val router: FlowRouter,
+    private val eventBus: EventBus,
     @Assisted private val query: String?,
     @Assisted private val category: Category?
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         assert(modelClass == BookListViewModel::class.java)
-        return BookListViewModel(interactor, dtoToUiMapper, router, query, category) as T
+        return BookListViewModel(interactor, dtoToUiMapper, router, eventBus, query, category) as T
     }
 }
 
