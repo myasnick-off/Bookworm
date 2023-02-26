@@ -72,7 +72,7 @@ class LocalListViewModel @AssistedInject constructor(
             }
             currentList = newList
             _liveData.value = if (currentList.isEmpty()) {
-                PagedListState.Failure(EMPTY_RESULT_MESSAGE)
+                PagedListState.Empty
             } else {
                 PagedListState.Success(currentList, false)
             }
@@ -87,7 +87,7 @@ class LocalListViewModel @AssistedInject constructor(
             }
             currentList = newList
             _liveData.value = if (currentList.isEmpty()) {
-                PagedListState.Failure(EMPTY_RESULT_MESSAGE)
+                PagedListState.Empty
             } else {
                 PagedListState.Success(currentList, false)
             }
@@ -147,10 +147,6 @@ class LocalListViewModel @AssistedInject constructor(
 
     fun back() {
         router.back()
-    }
-
-    companion object {
-        private const val EMPTY_RESULT_MESSAGE = "Nothing found!"
     }
 }
 

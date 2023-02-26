@@ -105,17 +105,21 @@ class BookListViewModel @Inject constructor(
                     maxResults = DEFAULT_MAX_VALUES
                 )
                     .onSuccess { volumeResponse ->
-                        _liveData.value = volumeResponse.volumes?.let { volumesDTO ->
+                        volumeResponse.volumes?.let { volumesDTO ->
                             startIndex += DEFAULT_MAX_VALUES
                             val newList = mutableListOf<RecyclerItem>().apply {
                                 addAll((currentList + dtoToUiMapper.toItemList(volumesDTO)).distinctBy { it.id })
                             }
                             currentList = newList
-                            PagedListState.Success(currentList, newList.size < volumeResponse.totalItems)
+                            _liveData.value = if (newList.isEmpty()) {
+                                PagedListState.Empty
+                            } else {
+                                PagedListState.Success(newList, newList.size < volumeResponse.totalItems)
+                            }
                         } ?: if (currentList.isEmpty()) {
-                            PagedListState.Failure(EMPTY_RESULT_MESSAGE)
+                            _liveData.value = PagedListState.Empty
                         } else {
-                            PagedListState.Success(currentList, false)
+                            _liveData.value = PagedListState.Success(currentList, false)
                         }
                     }
                     .onFailure(::postError)
@@ -176,7 +180,6 @@ class BookListViewModel @Inject constructor(
         private const val DEFAULT_START_INDEX = 0
         private const val DEFAULT_MAX_VALUES = 20
         private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
-        private const val EMPTY_RESULT_MESSAGE = "Nothing found!"
     }
 }
 

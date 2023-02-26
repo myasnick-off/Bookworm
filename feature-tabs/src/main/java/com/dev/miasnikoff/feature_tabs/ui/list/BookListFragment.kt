@@ -154,6 +154,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
 
     private fun renderState(state: PagedListState) {
         when (state) {
+            is PagedListState.Empty -> showEmpty()
             is PagedListState.Loading -> showLoading()
             is PagedListState.MoreLoading -> showMoreLoading()
             is PagedListState.Failure -> showError(state.message)
@@ -161,21 +162,31 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
         }
     }
 
+    private fun showEmpty() {
+        binding.listLoader.visibility = View.GONE
+        binding.errorImage.visibility = View.GONE
+        binding.volumeList.visibility = View.GONE
+        binding.emptyResult?.root?.visibility = View.VISIBLE
+    }
+
     private fun showLoading() {
         binding.listLoader.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
         binding.volumeList.visibility = View.GONE
+        binding.emptyResult?.root?.visibility = View.GONE
     }
 
     private fun showMoreLoading() {
         binding.listLoader.visibility = View.VISIBLE
         binding.volumeList.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
+        binding.emptyResult?.root?.visibility = View.GONE
     }
 
     private fun showData(volumes: List<RecyclerItem>, loadMore: Boolean) {
         binding.listLoader.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
+        binding.emptyResult?.root?.visibility = View.GONE
         binding.volumeList.visibility = View.VISIBLE
         bookListAdapter.updateList(volumes, loadMore)
     }
@@ -183,6 +194,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
     private fun showError(message: String) {
         binding.listLoader.visibility = View.GONE
         binding.volumeList.visibility = View.GONE
+        binding.emptyResult?.root?.visibility = View.GONE
         binding.errorImage.visibility = View.VISIBLE
         binding.root.showSnackBar(
             message = "${getString(com.dev.miasnikoff.core_ui.R.string.error)} $message",

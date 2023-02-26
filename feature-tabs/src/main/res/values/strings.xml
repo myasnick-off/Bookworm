@@ -4,6 +4,7 @@
     <string name="open_with">Открыть с помощью…</string>
     <string name="browser_error">Браузер не найден!</string>
     <string name="no_ratings">Пока нет оценок</string>
+    <string name="empty_result">Ничего не найдено!</string>
 
     <plurals name="rating_count_suffix">
         <item quantity="one">%d отзыв</item>

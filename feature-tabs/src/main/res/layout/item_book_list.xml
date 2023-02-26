@@ -23,7 +23,7 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/book_image"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="@dimen/size_200"
             android:layout_margin="@dimen/margin_16"
             android:background="?attr/textFillColor"

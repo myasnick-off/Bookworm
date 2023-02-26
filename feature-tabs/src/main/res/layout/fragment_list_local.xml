@@ -5,9 +5,6 @@
     android:id="@+id/create_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/textFillColor"
-    android:clickable="true"
-    android:focusable="true"
     tools:context=".ui.list.LocalListFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -34,7 +31,7 @@
         android:id="@+id/volume_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="true"
+        android:clipToPadding="false"
         android:orientation="vertical"
         android:padding="@dimen/padding_8"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -51,6 +48,14 @@
         android:src="@drawable/ic_report_problem_96"
         android:visibility="gone"
         tools:visibility="visible" />
+
+    <include
+        android:id="@+id/empty_result"
+        layout="@layout/item_empty_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/list_loader"
