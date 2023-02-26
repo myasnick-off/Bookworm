@@ -29,7 +29,6 @@
     <string name="add_user">Добавить пользователя</string>
     <string name="categories">Категории:</string>
     <string name="about">О книге:</string>
-    <string name="about_volume">О книге</string>
     <string name="published_date">Дата публикации:</string>
     <string name="publisher">Издательство:</string>
     <string name="authors">Авторы:</string>
@@ -66,15 +65,8 @@
     <string name="remove_favorites_warning">Очистить избранное?</string>
     <string name="remove">Удалить</string>
     <string name="edit">Редактировать</string>
-    <string name="no_ratings">Пока нет оценок</string>
     <string name="pages_count">Количество страниц:</string>
     <string name="preview">Подробнее</string>
 
-    <plurals name="rating_count_suffix">
-        <item quantity="one">%d отзыв</item>
-        <item quantity="two">%d отзыва</item>
-        <item quantity="few">%d отзыва</item>
-        <item quantity="many">%d отзывов</item>
-        <item quantity="other">%d отзывов</item>
-    </plurals>
+
 </resources>

@@ -4,6 +4,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.core_ui.extensions.getLocalizedQuantityString
+import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.ItemBookOfDayBinding
 
 class BookOfDayHolder(
@@ -23,9 +24,10 @@ class BookOfDayHolder(
             text = item.averageRating.toString()
         }
         ratingCount.text = if (item.hasRating) root.getLocalizedQuantityString(
-            com.dev.miasnikoff.core_ui.R.plurals.rating_count_suffix,
+            R.plurals.rating_count_suffix,
+            item.ratingsCount,
             item.ratingsCount
-        ) else root.context.getString(com.dev.miasnikoff.core_ui.R.string.no_ratings)
+        ) else root.context.getString(R.string.no_ratings)
         Glide.with(bookImage.context)
             .load(item.imageLink)
             .error(com.dev.miasnikoff.core_ui.R.drawable.ic_broken_image_48)

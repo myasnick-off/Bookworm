@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_volume">О книге</string>
+    <string name="open_with">Открыть с помощью…</string>
+    <string name="browser_error">Браузер не найден!</string>
+    <string name="no_ratings">Пока нет оценок</string>
+
+    <plurals name="rating_count_suffix">
+        <item quantity="one">%d отзыв</item>
+        <item quantity="two">%d отзыва</item>
+        <item quantity="few">%d отзыва</item>
+        <item quantity="many">%d отзывов</item>
+        <item quantity="other">%d отзывов</item>
+    </plurals>
+</resources>

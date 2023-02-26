@@ -27,9 +27,9 @@ class BookDetailsMapper @Inject constructor() {
             imageLinkSmall = getImageOfSize(dto.volumeInfo.imageLinks, ImageSize.S),
             imageLinkLarge = getImageOfSize(dto.volumeInfo.imageLinks, ImageSize.M),
             language = dto.volumeInfo.language.orEmpty(),
-            previewLink = dto.volumeInfo.previewLink.orEmpty(),
-            infoLink = dto.volumeInfo.infoLink.orEmpty(),
-            canonicalLink = dto.volumeInfo.canonicalVolumeLink.orEmpty(),
+            previewLink = formatUrl(dto.volumeInfo.previewLink.orEmpty()),
+            infoLink = formatUrl(dto.volumeInfo.infoLink.orEmpty()),
+            canonicalLink = formatUrl(dto.volumeInfo.canonicalVolumeLink.orEmpty()),
             isFavorite = dto.isFavorite
         )
 
@@ -50,9 +50,9 @@ class BookDetailsMapper @Inject constructor() {
             imageLinkSmall = entity.imageLinkSmall,
             imageLinkLarge = entity.imageLinkLarge,
             language = entity.language.orEmpty(),
-            previewLink = entity.previewLink.orEmpty(),
-            infoLink = entity.infoLink.orEmpty(),
-            canonicalLink = entity.canonicalVolumeLink.orEmpty(),
+            previewLink = formatUrl(entity.previewLink.orEmpty()),
+            infoLink = formatUrl(entity.infoLink.orEmpty()),
+            canonicalLink = formatUrl(entity.canonicalVolumeLink.orEmpty()),
             isHistory = entity.inHistory,
             isFavorite = entity.inFavorite
         )
@@ -94,10 +94,10 @@ class BookDetailsMapper @Inject constructor() {
             }
             it.small ?: it.thumbnail ?: it.smallThumbnail
         }
-        return imgUrl?.let { formatImageUrl(it) }
+        return imgUrl?.let { formatUrl(it) }
     }
 
-    private fun formatImageUrl(sourceUrl: String): String {
+    private fun formatUrl(sourceUrl: String): String {
         if (sourceUrl.startsWith("http:")) {
             return sourceUrl.replaceFirst("http:", "https:")
         }

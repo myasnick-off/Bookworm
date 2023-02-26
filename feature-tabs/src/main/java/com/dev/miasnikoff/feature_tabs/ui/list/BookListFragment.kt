@@ -81,7 +81,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
         binding = FragmentListBinding.bind(view)
         initView()
         initMenu()
-        initPresenter()
+        initViewModel()
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
@@ -148,7 +148,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
         }.show(parentFragmentManager, null)
     }
 
-    private fun initPresenter() {
+    private fun initViewModel() {
         viewModel.liveData.observe(viewLifecycleOwner, ::renderState)
     }
 

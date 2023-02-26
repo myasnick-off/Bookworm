@@ -39,6 +39,7 @@ fun View.hideSoftKeyboard() {
 fun View.getLocalizedQuantityString(
     @PluralsRes id: Int,
     quantity: Int,
+    vararg formatArgs: Any,
     locale: Locale = Locale("ru")
 ): String {
     return runCatching {
@@ -46,7 +47,7 @@ fun View.getLocalizedQuantityString(
         val configuration = Configuration(resources.configuration)
         configuration.setLocale(locale)
         resources = context.createConfigurationContext(configuration).resources
-        resources.getQuantityString(id, quantity)
+        resources.getQuantityString(id, quantity, *formatArgs)
     }.getOrDefault("")
 }
 

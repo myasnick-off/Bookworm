@@ -1,11 +1,15 @@
 package com.dev.miasnikoff.feature_tabs.ui.details
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
@@ -41,7 +45,7 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
         }
 
         override fun onPreviewClick(url: String) {
-            //viewModel.navigate()
+            openBrowser(url)
         }
     }
 
@@ -71,8 +75,9 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
         super.initMenu()
         (requireActivity() as AppCompatActivity).apply {
             setSupportActionBar(binding.detailsToolbar)
-            title = getString(com.dev.miasnikoff.core_ui.R.string.about_volume)
+            title = getString(R.string.about_volume)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setHomeAsUpIndicator(com.dev.miasnikoff.core_ui.R.drawable.ic_arrow_back_24)
         }
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
@@ -81,7 +86,7 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when(menuItem.itemId) {
+        return when (menuItem.itemId) {
             android.R.id.home -> {
                 viewModel.back()
                 true
@@ -95,7 +100,7 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
     }
 
     private fun renderData(state: DetailsState) {
-        when(state) {
+        when (state) {
             DetailsState.Loading -> showLoading()
             is DetailsState.Failure -> showError(state.message)
             is DetailsState.Success -> showData(state.data)
@@ -106,7 +111,6 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
         binding.detailsLoader.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
         binding.detailsRecycler.visibility = View.GONE
-        //binding.detailsLayout.visibility = View.GONE
     }
 
     private fun showData(bookDetails: List<RecyclerItem>) {
@@ -114,14 +118,11 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
         binding.errorImage.visibility = View.GONE
         binding.detailsRecycler.visibility = View.VISIBLE
         detailsAdapter.submitList(bookDetails)
-        //binding.detailsLayout.visibility = View.VISIBLE
-        //bindData(bookDetails)
     }
 
     private fun showError(message: String) {
         binding.detailsLoader.visibility = View.GONE
         binding.detailsRecycler.visibility = View.GONE
-        //binding.detailsLayout.visibility = View.GONE
         binding.errorImage.visibility = View.VISIBLE
         binding.root.showSnackBar(
             message = "${getString(com.dev.miasnikoff.core_ui.R.string.error)} $message",
@@ -129,20 +130,15 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
         ) { viewModel.getDetails() }
     }
 
-    /*private fun bindData(bookDetails: BookDetails) = with(binding) {
-        ratingBar.rating = bookDetails.averageRating
-        bookRating.text = String.format("%.1f", bookDetails.averageRating)
-        bookTitle.text = bookDetails.title
-        bookSubtitle.text = bookDetails.subtitle
-        authors.text = bookDetails.authors
-        categories.text = bookDetails.categories
-        publisher.text = bookDetails.publisher
-        publishedDate.text = bookDetails.publishedDate
-        language.text = bookDetails.language
-        this.bookDetails.text = bookDetails.description
-        Glide.with(root.context)
-            .load(bookDetails.imageLinkSmall)
-            .error(com.dev.miasnikoff.core_ui.R.drawable.ic_broken_image_48)
-            .into(bookImage)
-    }*/
+    private fun openBrowser(contentUrl: String) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(contentUrl)
+        }
+        try {
+            startActivity(Intent.createChooser(intent, getString(R.string.open_with)))
+        } catch (ex: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), getString(R.string.browser_error), Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
 }

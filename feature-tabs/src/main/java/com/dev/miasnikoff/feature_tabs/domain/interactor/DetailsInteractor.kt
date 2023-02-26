@@ -14,15 +14,16 @@ class DetailsInteractor @Inject constructor(
     private val mapper: BookDetailsMapper,
 ) {
     suspend fun getDetails(bookId: String): Either<BookDetails> {
+        var inFavorite = false
         localRepository.getBook(bookId)?.let { detailsEntity ->
-            if (detailsEntity.inHistory.not()) {
-                localRepository.saveBook(detailsEntity.copy(inHistory = true))
+            if (detailsEntity.inHistory) {
+                return Either.Success(data = mapper.fromEntity(detailsEntity))
             }
-            return Either.Success(data = mapper.fromEntity(detailsEntity))
+            inFavorite = detailsEntity.inFavorite
         }
         return when (val response = remoteRepository.getVolume(bookId)) {
             is ApiResponse.Success -> {
-                val details = mapper.fromDto(response.data)
+                val details = mapper.fromDto(response.data.copy(isFavorite = inFavorite))
                 localRepository.saveBook(mapper.toEntity(details))
                 Either.Success(data = details)
             }
