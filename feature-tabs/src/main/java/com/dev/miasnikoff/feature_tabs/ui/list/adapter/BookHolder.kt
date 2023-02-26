@@ -19,6 +19,7 @@ class BookHolder(
 
         binding.bookTitle.text = item.title
         binding.bookAuthors.text = item.authors
+        binding.bookRatingLabel.setValue(item.averageRating)
 
         Glide.with(binding.bookImage.context)
             .load(item.imageLink)

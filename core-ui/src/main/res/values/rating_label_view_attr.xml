@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RatingLabelView">
+        <attr name="ratingMaxValue" format="float"/>
+        <attr name="ratingLabelColor" format="color"/>
+        <attr name="ratingLabelIconTint" format="color"/>
+        <attr name="ratingLabelCornerRadius" format="dimension"/>
+        <attr name="ratingLabelTextColor" format="color"/>
+        <attr name="ratingLabelViewStyle" format="reference"/>
+    </declare-styleable>
+
+    <style name="RatingLabelViewStyle">
+        <item name="ratingMaxValue">5.0</item>
+        <item name="ratingLabelColor">?attr/colorPrimaryVariant</item>
+        <item name="ratingLabelIconTint">@color/white</item>
+        <item name="ratingLabelCornerRadius">16dp</item>
+        <item name="ratingLabelTextColor">@color/white</item>
+    </style>
+</resources>

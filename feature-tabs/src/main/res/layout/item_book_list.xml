@@ -10,6 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.dev.miasnikoff.core_ui.customview.RatingLabelView
+            android:id="@+id/book_rating_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:ratingLabelIconTint="@color/color_yellow_light"
+            app:ratingLabelTextColor="@color/color_yellow_light"
+            android:layout_marginStart="@dimen/margin_4"
+            android:layout_marginTop="@dimen/margin_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/book_image"
             android:layout_width="match_parent"
@@ -57,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_8"
             android:src="@drawable/ic_bookmark_border_24"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

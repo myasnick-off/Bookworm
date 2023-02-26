@@ -96,6 +96,7 @@
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_search_24.xml" value="0.186" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_settings_24.xml" value="0.186" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_settings_menu_24.xml" value="0.1725" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_star_rate_16.xml" value="0.1935" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/leaf_number_img_shape.xml" value="0.1725" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/sds.xml" value="0.2255" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/shape_button.xml" value="0.1" />
@@ -104,6 +105,7 @@
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/activity_main.xml" value="0.3723958333333333" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/dbd.xml" value="0.37135416666666665" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/leaf_view.xml" value="0.35833333333333334" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/rating_label_view.xml" value="0.5" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-auth/src/main/res/layout/activity_main_test.xml" value="0.2259963768115942" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-auth/src/main/res/layout/fragment_login.xml" value="0.24909420289855072" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-auth/src/main/res/layout/jjjj.xml" value="0.24909420289855072" />
