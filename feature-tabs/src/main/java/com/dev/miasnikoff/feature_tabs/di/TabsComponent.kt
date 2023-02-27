@@ -10,6 +10,7 @@ import com.dev.miasnikoff.feature_tabs.ui.list.BookListFragment
 import com.dev.miasnikoff.feature_tabs.ui.list.LocalListFragment
 import com.dev.miasnikoff.feature_tabs.ui.profile.EditFragment
 import com.dev.miasnikoff.feature_tabs.ui.profile.ProfileFragment
+import com.dev.miasnikoff.feature_tabs.ui.settings.SettingsFragment
 import dagger.Component
 
 @FeatureScope
@@ -36,6 +37,7 @@ interface TabsComponent {
     fun inject(bookListFragment: BookListFragment)
     fun inject(localListFragment: LocalListFragment)
     fun inject(detailsFragment: BookDetailsFragment)
+    fun inject(detailsFragment: SettingsFragment)
     fun inject(profileFragment: ProfileFragment)
     fun inject(editFragment: EditFragment)
 }

@@ -2,13 +2,12 @@ package com.dev.miasnikoff.feature_tabs.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavDirections
 import com.dev.miasnikoff.core.event.AppEvent
 import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core.extensions.addNotNull
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
+import com.dev.miasnikoff.core_ui.BaseViewModel
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.feature_tabs.data.remote.model.ImageSize
 import com.dev.miasnikoff.feature_tabs.domain.interactor.HomeDataInteractor
@@ -28,9 +27,9 @@ class HomeViewModel @Inject constructor(
     private val interactor: HomeDataInteractor,
     private val homeDtoToUiMapper: HomeDtoToUiMapper,
     private val homeEntityToUiMapper: HomeEntityToUiMapper,
-    private val router: FlowRouter,
+    router: FlowRouter,
     private val eventBus: EventBus
-): ViewModel() {
+) : BaseViewModel(router) {
 
     private var job: Job? = null
 
@@ -99,10 +98,6 @@ class HomeViewModel @Inject constructor(
                 _liveData.value = HomeState.Success(homeList)
             } else _liveData.value = HomeState.Failure(EMPTY_RESULT_MESSAGE)
         }
-    }
-
-    fun navigate(direction: NavDirections) {
-        router.navigateTo(direction)
     }
 
     private fun updateHistoryList() {

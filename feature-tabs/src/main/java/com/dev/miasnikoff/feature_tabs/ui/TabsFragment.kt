@@ -3,6 +3,7 @@ package com.dev.miasnikoff.feature_tabs.ui
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -11,20 +12,19 @@ import com.dev.miasnikoff.core_di.findFeatureExternalDeps
 import com.dev.miasnikoff.core_navigation.FlowFragment
 import com.dev.miasnikoff.core_navigation.navigator.NavigatorHolder
 import com.dev.miasnikoff.core_navigation.viewModel
-import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentTabsBinding
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentExternalDepsProvider
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
 import javax.inject.Inject
 
-class TabsFragment : BaseFragment(R.layout.fragment_tabs), FlowFragment {
+class TabsFragment : Fragment(R.layout.fragment_tabs), FlowFragment {
 
     @Inject
     @FlowNavHolder
     lateinit var navigatorHolder: NavigatorHolder<NavController>
 
-    override lateinit var binding: FragmentTabsBinding
+    private lateinit var binding: FragmentTabsBinding
     private lateinit var navController: NavController
 
     override fun onAttach(context: Context) {
@@ -49,7 +49,7 @@ class TabsFragment : BaseFragment(R.layout.fragment_tabs), FlowFragment {
         super.onPause()
     }
 
-    override fun initView() {
+    private fun initView() {
         val navHost = childFragmentManager.findFragmentById(R.id.tabs_container) as NavHostFragment
         navController = navHost.navController
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController)

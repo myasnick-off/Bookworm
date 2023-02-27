@@ -1,10 +1,10 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
 import androidx.lifecycle.*
-import androidx.navigation.NavDirections
 import com.dev.miasnikoff.core.event.AppEvent
 import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
+import com.dev.miasnikoff.core_ui.BaseViewModel
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractor
 import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractorImpl
@@ -15,16 +15,17 @@ import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class LocalListViewModel @AssistedInject constructor(
     private val interactor: ListInteractor,
     private val entityToUiMapper: EntityToUiMapper,
-    private val router: FlowRouter,
+    router: FlowRouter,
     private val eventBus: EventBus,
     @Assisted private val category: Category
-) : ViewModel() {
+) : BaseViewModel(router) {
 
     private var job: Job? = null
 
@@ -139,14 +140,6 @@ class LocalListViewModel @AssistedInject constructor(
                 }
             }
         }
-    }
-
-    fun navigate(direction: NavDirections) {
-        router.navigateTo(direction)
-    }
-
-    fun back() {
-        router.back()
     }
 }
 

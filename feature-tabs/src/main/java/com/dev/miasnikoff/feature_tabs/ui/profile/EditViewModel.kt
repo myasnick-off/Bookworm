@@ -3,18 +3,18 @@ package com.dev.miasnikoff.feature_tabs.ui.profile
 import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.dev.miasnikoff.core.model.EditField
 import com.dev.miasnikoff.core.model.UserModel
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
+import com.dev.miasnikoff.core_ui.BaseViewModel
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 class EditViewModel @Inject constructor(
-    private val router: FlowRouter
-) : ViewModel() {
+    router: FlowRouter
+) : BaseViewModel(router) {
 
     private var _liveData: MutableLiveData<UserModel> = MutableLiveData(UserModel())
     val liveData: LiveData<UserModel> get() = _liveData
@@ -87,9 +87,5 @@ class EditViewModel @Inject constructor(
             errorFields.removeAll { it == EditField.EMAIL_FIELD }
             user.copy(email = email.toString(), errorFields = errorFields)
         }
-    }
-
-    fun back() {
-        router.back()
     }
 }

@@ -3,7 +3,6 @@
     <string name="create_user">Создать пользователя</string>
     <string name="save">Сохранить</string>
     <string name="user_name">Имя</string>
-    <string name="berth_date">Дата рождения</string>
     <string name="address">Адрес</string>
     <string name="email">E-mail</string>
     <string name="send">Отправить</string>
@@ -17,7 +16,6 @@
     <string name="light_mode">Светлая тема</string>
     <string name="night_mode">Темная тема</string>
     <string name="system_mode">Как в системе</string>
-    <string name="settings">Настройки</string>
     <string name="user_name_label">Имя:</string>
     <string name="user_berth_label">Дата рождения:</string>
     <string name="user_address_label">Адрес:</string>
@@ -43,13 +41,7 @@
     <string name="required_field">Поле обязательное для заполнения</string>
     <string name="home">Главная</string>
     <string name="search">Поиск</string>
-    <string name="profile">Профиль</string>
-    <string name="popular_genres">Популярные жанры</string>
-    <string name="last_viewed">Недавно просмотренные</string>
-    <string name="newest">Новинки</string>
-    <string name="free_books">Бесплатные книги</string>
     <string name="quick_search">Быстрый поиск…</string>
-    <string name="favorite">Избранное</string>
     <string name="science">Наука</string>
     <string name="romance">Роман</string>
     <string name="fiction">Фантаситка</string>
@@ -67,6 +59,7 @@
     <string name="edit">Редактировать</string>
     <string name="pages_count">Количество страниц:</string>
     <string name="preview">Подробнее</string>
-
-
+    <string name="share">Поделиться</string>
+    <string name="to_favorite">В избранное</string>
+    <string name="remove_selected">Удалить выделенное</string>
 </resources>

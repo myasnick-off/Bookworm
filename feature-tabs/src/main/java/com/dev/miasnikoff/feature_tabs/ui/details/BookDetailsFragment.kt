@@ -5,17 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
@@ -29,15 +21,18 @@ import com.dev.miasnikoff.feature_tabs.ui.details.adapter.controls.BookControlsC
 import com.dev.miasnikoff.feature_tabs.ui.details.model.DetailsState
 import javax.inject.Inject
 
-class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuProvider {
+class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
 
     override lateinit var binding: FragmentBookDetailsBinding
+    override val titleRes: Int = R.string.about_volume
+    override val hasShareButton: Boolean = true
+    override val shareAction: () -> Unit = { shareLink() }
 
     private val args: BookDetailsFragmentArgs by navArgs()
 
     @Inject
     lateinit var viewModelFactory: BookDetailsViewModelAssistedFactory
-    private val viewModel: BookDetailsViewModel by viewModels { viewModelFactory.create(args.bookId) }
+    override val viewModel: BookDetailsViewModel by viewModels { viewModelFactory.create(args.bookId) }
 
     private val controlsClickListener = object : BookControlsCell.ControlsClickListener {
         override fun onFavoriteClick() {
@@ -65,34 +60,8 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
     }
 
     override fun initView() {
+        super.initView()
         binding.detailsRecycler.adapter = detailsAdapter
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            viewModel.back()
-        }
-    }
-
-    override fun initMenu() {
-        super.initMenu()
-        (requireActivity() as AppCompatActivity).apply {
-            setSupportActionBar(binding.detailsToolbar)
-            title = getString(R.string.about_volume)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setHomeAsUpIndicator(com.dev.miasnikoff.core_ui.R.drawable.ic_arrow_back_24)
-        }
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when (menuItem.itemId) {
-            android.R.id.home -> {
-                viewModel.back()
-                true
-            }
-            else -> false
-        }
     }
 
     private fun initViewModel() {
@@ -139,6 +108,20 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details), MenuPr
         } catch (ex: ActivityNotFoundException) {
             Toast.makeText(requireContext(), getString(R.string.browser_error), Toast.LENGTH_SHORT)
                 .show()
+        }
+    }
+
+    private fun shareLink() {
+        viewModel.getBookUrl()?.let { bookUrl ->
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "message/rfc822"
+                putExtra(Intent.EXTRA_TEXT, bookUrl)
+            }
+            try {
+                startActivity(Intent.createChooser(intent, getString(R.string.share_link)))
+            } catch (ex: ActivityNotFoundException) {
+                Toast.makeText(requireContext(), getString(R.string.messenger_error), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

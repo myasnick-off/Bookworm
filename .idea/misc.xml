@@ -78,6 +78,7 @@
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_bookmark_36.xml" value="0.215" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_bookmark_96.xml" value="0.1995" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_bookmark_border_24.xml" value="0.1995" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_bookmark_border_36.xml" value="0.1" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_bookmark_border_48.xml" value="0.215" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_bookmark_menu_24.xml" value="0.1995" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_brightness_24.xml" value="0.1995" />
@@ -91,12 +92,14 @@
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_home_24.xml" value="0.186" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_last_page_24.xml" value="0.2255" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_lock_24.xml" value="0.186" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_overflow_24.xml" value="0.1" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_person_24.xml" value="0.186" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_person_add_24.xml" value="0.186" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_report_problem_96.xml" value="0.186" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_search_24.xml" value="0.186" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_settings_24.xml" value="0.186" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_settings_menu_24.xml" value="0.1725" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_share_24.xml" value="0.1" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/ic_star_rate_16.xml" value="0.1935" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/leaf_number_img_shape.xml" value="0.1725" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/sds.xml" value="0.2255" />
@@ -104,10 +107,13 @@
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/shape_outlined_button.xml" value="0.215" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/drawable/shape_toolbar.xml" value="0.1725" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/activity_main.xml" value="0.3723958333333333" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/base_layout.xml" value="0.1324200913242009" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/dbd.xml" value="0.37135416666666665" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/item_empty_result.xml" value="0.37083333333333335" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/item_toolbar_main.xml" value="0.1" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/leaf_view.xml" value="0.35833333333333334" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/layout/rating_label_view.xml" value="0.5" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/core-ui/src/main/res/menu/menu_main.xml" value="0.35128205128205126" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-auth/src/main/res/layout/activity_main_test.xml" value="0.2259963768115942" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-auth/src/main/res/layout/fragment_login.xml" value="0.24909420289855072" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-auth/src/main/res/layout/jjjj.xml" value="0.24909420289855072" />
@@ -124,8 +130,8 @@
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/fragment_home.xml" value="0.3723958333333333" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/fragment_list.xml" value="0.18840579710144928" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/fragment_list_local.xml" value="0.18840579710144928" />
-        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/fragment_profile.xml" value="0.19117647058823528" />
-        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/fragment_settings.xml" value="0.18840579710144928" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/fragment_profile.xml" value="0.1" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/fragment_settings.xml" value="0.1724137931034483" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/fragment_tabs.xml" value="0.2064676616915423" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/fragment_web_view.xml" value="0.17401215805471124" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/item_book_controls.xml" value="0.33" />
@@ -141,7 +147,7 @@
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/layout/layout.xml" value="0.21822916666666667" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/menu/menu.xml" value="0.21822916666666667" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/menu/menu_bottom_navigation.xml" value="0.3723958333333333" />
-        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/menu/menu_list_local.xml" value="0.3723958333333333" />
+        <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/menu/menu_list_local.xml" value="0.21052631578947367" />
         <entry key="..\:/Users/dmitr/AndroidStudioProjects/bookworm/feature-tabs/src/main/res/menu/menu_popup.xml" value="0.3723958333333333" />
         <entry key="..\:/Users/dmitr/AppData/Local/Android/Sdk/platforms/android-32/data/res/drawable/ratingbar_full.xml" value="0.2215" />
         <entry key="..\:/Users/dmitr/AppData/Local/Android/Sdk/platforms/android-32/data/res/drawable/ratingbar_small_material.xml" value="0.2215" />

@@ -16,5 +16,6 @@
     <color name="color_yellow_light">#ffd95b</color>
     <color name="color_yellow_transparent">#70ffa726</color>
     <color name="color_gray_transparent">#60718792</color>
+    <color name="transparent">#00000000</color>
 
 </resources>

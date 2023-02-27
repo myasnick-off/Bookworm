@@ -8,6 +8,7 @@ import com.dev.miasnikoff.core_di.ViewModelFactory
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
+import com.dev.miasnikoff.core_ui.extensions.hideSoftKeyboard
 import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentHomeBinding
@@ -23,10 +24,11 @@ import javax.inject.Inject
 class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     override lateinit var binding: FragmentHomeBinding
+    override val hasBackButton = false
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: HomeViewModel by viewModels { viewModelFactory }
+    override val viewModel: HomeViewModel by viewModels { viewModelFactory }
 
     private val itemClickListener = object : BookOfDayCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
@@ -73,7 +75,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     override fun initMenu() {
         binding.searchButton.setOnClickListener {
             binding.searchEditText.text?.let { phrase ->
-                hideSoftKeyboard()
+                binding.root.hideSoftKeyboard()
                 binding.searchEditText.text = null
                 navigateToBookList(query = phrase.toString())
             }

@@ -5,17 +5,9 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
@@ -33,7 +25,7 @@ import com.dev.miasnikoff.feature_tabs.ui.search.SearchDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
-class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
+class BookListFragment : BaseFragment(R.layout.fragment_list) {
 
     override lateinit var binding: FragmentListBinding
 
@@ -41,7 +33,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
 
     @Inject
     lateinit var viewModelFactory: BookListViewModelAssistedFactory
-    private val viewModel: BookListViewModel by viewModels {
+    override val viewModel: BookListViewModel by viewModels {
         viewModelFactory.create(args.query, args.category)
     }
 
@@ -84,22 +76,8 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
         initViewModel()
     }
 
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when(menuItem.itemId) {
-            android.R.id.home -> {
-                viewModel.back()
-                true
-            }
-            else -> false
-        }
-    }
-
     override fun initView() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            viewModel.back()
-        }
+        super.initView()
         binding.volumeList.adapter = bookListAdapter
         val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
             duration = FAB_ANIMATION_DURATION
@@ -123,15 +101,6 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
             }
             showSearchDialog()
         }
-    }
-
-    override fun initMenu() {
-        (requireActivity() as AppCompatActivity).apply {
-            setSupportActionBar(binding.listToolbar)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun showSearchDialog() {

@@ -14,6 +14,7 @@ import com.dev.miasnikoff.core_navigation.FlowFragment
 import com.dev.miasnikoff.core_navigation.navigator.NavigatorHolder
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
+import com.dev.miasnikoff.core_ui.extensions.hideSoftKeyboard
 import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_auth.R
 import com.dev.miasnikoff.feature_auth.databinding.FragmentLoginBinding
@@ -38,7 +39,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), FlowFragment {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: LoginViewModel by viewModels { viewModelFactory }
+    override val viewModel: LoginViewModel by viewModels { viewModelFactory }
 
     override fun onAttach(context: Context) {
         AuthFeatureComponentExternalDepsProvider.featureExternalDeps = findFeatureExternalDeps()
@@ -83,7 +84,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), FlowFragment {
         observeEditTextFocus(passwordEditText, passwordInputLayout)
 
         loginButton.setOnClickListener {
-            hideSoftKeyboard()
+            binding.root.hideSoftKeyboard()
             val login = binding.loginEditText.text
             val pass = binding.passwordEditText.text
             viewModel.getUser(login, pass)

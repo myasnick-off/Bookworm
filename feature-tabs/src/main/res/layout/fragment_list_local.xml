@@ -7,25 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.list.LocalListFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/list_appbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="?attr/colorPrimary">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/home_col_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|enterAlways">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/list_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+    <include layout="@layout/item_toolbar_main"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/volume_list"

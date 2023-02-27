@@ -2,21 +2,14 @@ package com.dev.miasnikoff.feature_tabs.ui.list
 
 import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.adapter.BasePagedListAdapter
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
+import com.dev.miasnikoff.core_ui.extensions.showAlertDialog
 import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentListLocalBinding
@@ -28,15 +21,26 @@ import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
-class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvider {
+class LocalListFragment : BaseFragment(R.layout.fragment_list_local) {
 
     override lateinit var binding: FragmentListLocalBinding
+    override val titleRes = R.string.favorite
+    override val hasRemoveAllButton = true
+    override val removeAllAction: () -> Unit
+        get() = {
+            if (args.categoryName == Category.LAST_VIEWED.name) {
+                showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_history_warning) { viewModel.removeHistory() }
+            }
+            if (args.categoryName == Category.FAVORITE.name) {
+                showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_favorites_warning) { viewModel.removeFavorites() }
+            }
+        }
 
     private val args: LocalListFragmentArgs by navArgs()
 
     @Inject
     lateinit var viewModelFactory: LocalListViewModelAssistedFactory
-    private val viewModel: LocalListViewModel by viewModels {
+    override val viewModel: LocalListViewModel by viewModels {
         viewModelFactory.create(Category.valueOf(args.categoryName))
     }
 
@@ -70,52 +74,16 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local), MenuProvid
         binding = FragmentListLocalBinding.bind(view)
         initView()
         initMenu()
-        initPresenter()
-    }
-
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.menu_list_local, menu)
-    }
-
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when (menuItem.itemId) {
-            R.id.menu_remove_all -> {
-                if (args.categoryName == Category.LAST_VIEWED.name) {
-                    showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_history_warning) {
-                        viewModel.removeHistory() }
-                }
-                if (args.categoryName == Category.FAVORITE.name) {
-                    showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_favorites_warning) {
-                        viewModel.removeFavorites() }
-                }
-                true
-            }
-            android.R.id.home -> {
-                viewModel.back()
-                true
-            }
-            else -> false
-        }
+        initViewModel()
     }
 
     override fun initView() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            viewModel.back()
-        }
+        super.initView()
         binding.volumeList.adapter = bookListAdapter
         binding.listFab.visibility = View.GONE
     }
 
-    override fun initMenu() {
-        (requireActivity() as AppCompatActivity).apply {
-            setSupportActionBar(binding.listToolbar)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private fun initPresenter() {
+    private fun initViewModel() {
         viewModel.liveData.observe(viewLifecycleOwner, ::renderState)
     }
 

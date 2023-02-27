@@ -1,10 +1,10 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
 import androidx.lifecycle.*
-import androidx.navigation.NavDirections
 import com.dev.miasnikoff.core.event.AppEvent
 import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
+import com.dev.miasnikoff.core_ui.BaseViewModel
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractor
@@ -24,11 +24,11 @@ import javax.inject.Inject
 class BookListViewModel @Inject constructor(
     private val interactor: ListInteractor,
     private val dtoToUiMapper: DtoToUiMapper,
-    private val router: FlowRouter,
+    router: FlowRouter,
     private val eventBus: EventBus,
     private val query: String?,
     private val category: Category?
-) : ViewModel() {
+) : BaseViewModel(router) {
 
     private var job: Job? = null
 
@@ -166,14 +166,6 @@ class BookListViewModel @Inject constructor(
 
     private fun postError(message: String? = null) {
         _liveData.value = PagedListState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
-    }
-
-    fun navigate(direction: NavDirections) {
-        router.navigateTo(direction)
-    }
-
-    fun back() {
-        router.back()
     }
 
     companion object {
