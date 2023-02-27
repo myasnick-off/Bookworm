@@ -1,18 +1,14 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
+import com.dev.miasnikoff.core_di.ViewModelFactory
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
-import com.dev.miasnikoff.core_ui.adapter.BasePagedListAdapter
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
+import com.dev.miasnikoff.core_ui.extensions.showAlertDialog
 import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentListBinding
@@ -20,22 +16,22 @@ import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookCell
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookListAdapter
 import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
-import com.dev.miasnikoff.feature_tabs.ui.search.SearchClickListener
-import com.dev.miasnikoff.feature_tabs.ui.search.SearchDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
-class BookListFragment : BaseFragment(R.layout.fragment_list) {
+class HistoryListFragment : BaseFragment(R.layout.fragment_list) {
 
     override lateinit var binding: FragmentListBinding
-
-    private val args: BookListFragmentArgs by navArgs()
+    override val titleRes = R.string.view_history
+    override val hasRemoveAllButton = true
+    override val removeAllAction: () -> Unit
+        get() = {
+            showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_history_warning) { viewModel.removeAllHistory() }
+        }
 
     @Inject
-    lateinit var viewModelFactory: BookListViewModelAssistedFactory
-    override val viewModel: BookListViewModel by viewModels {
-        viewModelFactory.create(args.query, args.category)
-    }
+    lateinit var viewModelFactory: ViewModelFactory
+    override val viewModel: HistoryViewModel by viewModels { viewModelFactory }
 
     private val itemClickListener = object : BookCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
@@ -43,9 +39,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list) {
         }
 
         override fun onItemLongClick(itemId: String) {
-            //todo: change toast to real action
-            Toast.makeText(context, "Made long click on item with id #$itemId", Toast.LENGTH_SHORT)
-                .show()
+            viewModel.removeFromHistory(itemId)
         }
 
         override fun onFavoriteClick(itemId: String) {
@@ -53,15 +47,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list) {
         }
     }
 
-    private val pageListener = object : BasePagedListAdapter.PageListener {
-        override fun loadNextPage() {
-            viewModel.loadNextPage()
-        }
-    }
-
-    private val bookListAdapter = BookListAdapter(pageListener, itemClickListener)
-
-    private var fabAnimSet: AnimatorSet? = null
+    private val bookListAdapter = BookListAdapter(itemClickListener = itemClickListener)
 
     override fun onAttach(context: Context) {
         viewModel<TabsFeatureComponentViewModel>().component.inject(this)
@@ -79,42 +65,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list) {
     override fun initView() {
         super.initView()
         binding.contentRecycler.adapter = bookListAdapter
-        val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
-        val animScaleY = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_Y, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
-        val animAlpha = ObjectAnimator.ofFloat(binding.listFab, View.ALPHA, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
-        fabAnimSet = AnimatorSet().apply {
-            playTogether(animScaleX, animScaleY, animAlpha)
-            start()
-        }
-        binding.listFab.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                fabAnimSet?.reverse()
-            }
-            showSearchDialog()
-        }
-    }
-
-    private fun showSearchDialog() {
-        SearchDialogFragment.newInstance().apply {
-            setOnSearchClickListener(object : SearchClickListener {
-                override fun onSearchClick(phrase: String) {
-                    viewModel.getData(query = phrase)
-                }
-
-                override fun onDialogDismiss() {
-                    fabAnimSet?.start()
-                }
-            })
-        }.show(parentFragmentManager, null)
+        binding.listFab.visibility = View.GONE
     }
 
     private fun initViewModel() {
@@ -169,16 +120,16 @@ class BookListFragment : BaseFragment(R.layout.fragment_list) {
             message = "${getString(com.dev.miasnikoff.core_ui.R.string.error)} $message",
             actionText = getString(com.dev.miasnikoff.core_ui.R.string.reload),
             length = Snackbar.LENGTH_LONG,
-        ) { viewModel.getData() }
+        ) { getData() }
+    }
+
+    private fun getData() {
+        viewModel.getInitialPage()
     }
 
     private fun navigateToDetails(bookId: String) {
         val direction =
-            BookListFragmentDirections.actionBookListFragmentToBookDetailsFragment(bookId)
+            HistoryListFragmentDirections.actionHistoryListFragmentToBookDetailsFragment(bookId)
         viewModel.navigate(direction)
-    }
-
-    companion object {
-        private const val FAB_ANIMATION_DURATION = 500L
     }
 }

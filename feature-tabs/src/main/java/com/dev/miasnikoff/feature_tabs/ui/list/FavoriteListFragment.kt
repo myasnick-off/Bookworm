@@ -4,45 +4,34 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
+import com.dev.miasnikoff.core_di.ViewModelFactory
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
-import com.dev.miasnikoff.core_ui.adapter.BasePagedListAdapter
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.core_ui.extensions.showAlertDialog
 import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_tabs.R
-import com.dev.miasnikoff.feature_tabs.databinding.FragmentListLocalBinding
+import com.dev.miasnikoff.feature_tabs.databinding.FragmentListBinding
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
-import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookCell
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookListAdapter
 import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
-class LocalListFragment : BaseFragment(R.layout.fragment_list_local) {
+class FavoriteListFragment : BaseFragment(R.layout.fragment_list) {
 
-    override lateinit var binding: FragmentListLocalBinding
+    override lateinit var binding: FragmentListBinding
     override val titleRes = R.string.favorite
     override val hasRemoveAllButton = true
     override val removeAllAction: () -> Unit
         get() = {
-            if (args.categoryName == Category.LAST_VIEWED.name) {
-                showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_history_warning) { viewModel.removeHistory() }
-            }
-            if (args.categoryName == Category.FAVORITE.name) {
-                showAlertDialog(com.dev.miasnikoff.core_ui.R.string.remove_favorites_warning) { viewModel.removeFavorites() }
-            }
+            showAlertDialog(R.string.remove_favorites_warning) { viewModel.removeAllFavorite() }
         }
 
-    private val args: LocalListFragmentArgs by navArgs()
-
     @Inject
-    lateinit var viewModelFactory: LocalListViewModelAssistedFactory
-    override val viewModel: LocalListViewModel by viewModels {
-        viewModelFactory.create(Category.valueOf(args.categoryName))
-    }
+    lateinit var viewModelFactory: ViewModelFactory
+    override val viewModel: FavoriteViewModel by viewModels { viewModelFactory }
 
     private val itemClickListener = object : BookCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
@@ -50,19 +39,15 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local) {
         }
 
         override fun onItemLongClick(itemId: String) {
-            viewModel.removeFromLocal(itemId)
+            viewModel.removeFromFavorite(itemId)
         }
 
         override fun onFavoriteClick(itemId: String) {
-            viewModel.setFavorite(itemId)
+            viewModel.removeFromFavorite(itemId)
         }
     }
 
-    private val pageListener = object : BasePagedListAdapter.PageListener {
-        override fun loadNextPage() {}
-    }
-
-    private val bookListAdapter: BookListAdapter = BookListAdapter(pageListener, itemClickListener)
+    private val bookListAdapter = BookListAdapter(itemClickListener = itemClickListener)
 
     override fun onAttach(context: Context) {
         viewModel<TabsFeatureComponentViewModel>().component.inject(this)
@@ -71,7 +56,7 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentListLocalBinding.bind(view)
+        binding = FragmentListBinding.bind(view)
         initView()
         initMenu()
         initViewModel()
@@ -79,7 +64,7 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local) {
 
     override fun initView() {
         super.initView()
-        binding.volumeList.adapter = bookListAdapter
+        binding.contentRecycler.adapter = bookListAdapter
         binding.listFab.visibility = View.GONE
     }
 
@@ -100,20 +85,20 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local) {
     private fun showEmpty() {
         binding.listLoader.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
-        binding.volumeList.visibility = View.GONE
+        binding.contentRecycler.visibility = View.GONE
         binding.emptyResult.root.visibility = View.VISIBLE
     }
 
     private fun showLoading() {
         binding.listLoader.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
-        binding.volumeList.visibility = View.GONE
+        binding.contentRecycler.visibility = View.GONE
         binding.emptyResult.root.visibility = View.GONE
     }
 
     private fun showMoreLoading() {
         binding.listLoader.visibility = View.VISIBLE
-        binding.volumeList.visibility = View.VISIBLE
+        binding.contentRecycler.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
         binding.emptyResult.root.visibility = View.GONE
     }
@@ -122,13 +107,13 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local) {
         binding.listLoader.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
         binding.emptyResult.root.visibility = View.GONE
-        binding.volumeList.visibility = View.VISIBLE
+        binding.contentRecycler.visibility = View.VISIBLE
         bookListAdapter.updateList(volumes, loadMore)
     }
 
     private fun showError(message: String) {
         binding.listLoader.visibility = View.GONE
-        binding.volumeList.visibility = View.GONE
+        binding.contentRecycler.visibility = View.GONE
         binding.emptyResult.root.visibility = View.GONE
         binding.errorImage.visibility = View.VISIBLE
         binding.root.showSnackBar(
@@ -144,7 +129,7 @@ class LocalListFragment : BaseFragment(R.layout.fragment_list_local) {
 
     private fun navigateToDetails(bookId: String) {
         val direction =
-            LocalListFragmentDirections.actionLocalListFragmentToBookDetailsFragment(bookId)
+            FavoriteListFragmentDirections.actionFavoriteListFragmentToBookDetailsFragment(bookId)
         viewModel.navigate(direction)
     }
 }

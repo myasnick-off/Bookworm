@@ -38,7 +38,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     private val carouselClickListener = object : CarouselWithTitleCell.ItemClickListener {
         override fun onTitleClick(category: Category) {
             when (category) {
-                Category.LAST_VIEWED, Category.FAVORITE -> navigateToLocalList(category.name)
+                Category.LAST_VIEWED -> navigateToHistoryList()
                 Category.POP_GENRES -> { /*todo: create genres fragment*/ }
                 else -> navigateToBookList(category = category)
             }
@@ -123,8 +123,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         viewModel.navigate(direction)
     }
 
-    private fun navigateToLocalList(categoryName: String) {
-        val direction = HomeFragmentDirections.actionHomeFragmentToLocalListFragment(categoryName)
+    private fun navigateToHistoryList() {
+        val direction = HomeFragmentDirections.actionHomeFragmentToHistoryListFragment()
         viewModel.navigate(direction)
     }
 

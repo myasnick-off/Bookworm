@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dev.miasnikoff.core_ui.adapter.BasePagedListAdapter
 
 class BookListAdapter(
-    pageListener: PageListener,
+    pageListener: PageListener? = null,
     itemClickListener: BookCell.ItemClickListener
 ) : BasePagedListAdapter(
     diffUtilItemCallback = ListDiffUtilItemCallback(),

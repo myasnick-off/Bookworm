@@ -18,6 +18,8 @@
     <string name="messenger_error">Мессенджкр не найден!</string>
     <string name="profile_edit">Редактировать профиль</string>
     <string name="berth_date">Дата рождения</string>
+    <string name="view_history">История просмотров</string>
+    <string name="remove_favorites_warning">Очистить избранное?</string>
 
 
     <plurals name="rating_count_suffix">

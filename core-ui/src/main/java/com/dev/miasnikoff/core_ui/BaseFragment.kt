@@ -31,7 +31,7 @@ abstract class BaseFragment(layoutRes: Int) : Fragment(layoutRes) {
         get() = view?.findViewById(R.id.collapsing_toolbar)
 
     protected val contentRecycler: RecyclerView?
-        get() = view?.findViewById(R.id.contentRecycler)
+        get() = view?.findViewById(R.id.content_recycler)
 
 
     protected open fun initMenu() {

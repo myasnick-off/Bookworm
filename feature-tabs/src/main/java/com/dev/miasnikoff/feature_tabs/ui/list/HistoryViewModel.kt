@@ -1,33 +1,27 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.dev.miasnikoff.core.event.AppEvent
 import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.core_ui.BaseViewModel
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractor
-import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractorImpl
-import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookItem
 import com.dev.miasnikoff.feature_tabs.ui.list.mapper.EntityToUiMapper
 import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LocalListViewModel @AssistedInject constructor(
+class HistoryViewModel @Inject constructor(
     private val interactor: ListInteractor,
     private val entityToUiMapper: EntityToUiMapper,
     router: FlowRouter,
     private val eventBus: EventBus,
-    @Assisted private val category: Category
 ) : BaseViewModel(router) {
-
-    private var job: Job? = null
 
     private val _liveData: MutableLiveData<PagedListState> = MutableLiveData()
     val liveData: LiveData<PagedListState> get() = _liveData
@@ -43,7 +37,7 @@ class LocalListViewModel @AssistedInject constructor(
         viewModelScope.launch {
             eventBus.events.collectLatest { event ->
                 when(event) {
-                    is AppEvent.FavoriteUpdate, is AppEvent.HistoryUpdate -> getBookList()
+                    is AppEvent.FavoriteUpdate, is AppEvent.HistoryUpdate -> getAllHistory()
                     else -> {}
                 }
             }
@@ -53,20 +47,11 @@ class LocalListViewModel @AssistedInject constructor(
     fun getInitialPage() {
         _liveData.value = PagedListState.Loading
         currentList.clear()
-        getBookList()
-    }
-
-    private fun getBookList() {
-        when (category) {
-            Category.LAST_VIEWED -> getAllHistory()
-            Category.FAVORITE -> getAllFavorite()
-            else -> {}
-        }
+        getAllHistory()
     }
 
     private fun getAllHistory() {
-        job?.cancel()
-        job = viewModelScope.launch {
+        viewModelScope.launch {
             val newList = mutableListOf<RecyclerItem>().apply {
                 addAll(entityToUiMapper.toItemList(interactor.getHistory()))
                 sortBy { it.id }
@@ -80,24 +65,9 @@ class LocalListViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getAllFavorite() {
-        job?.cancel()
-        job = viewModelScope.launch {
-            val newList = mutableListOf<RecyclerItem>().apply {
-                addAll(entityToUiMapper.toItemList(interactor.getFavorite()))
-            }
-            currentList = newList
-            _liveData.value = if (currentList.isEmpty()) {
-                PagedListState.Empty
-            } else {
-                PagedListState.Success(currentList, false)
-            }
-        }
-    }
-
     fun setFavorite(itemId: String) {
-        _liveData.value = PagedListState.MoreLoading
         viewModelScope.launch {
+            _liveData.value = PagedListState.MoreLoading
             val index = currentList.indexOfFirst { it.id == itemId }
             val bookItem = (currentList.firstOrNull { it.id == itemId } as? BookItem)
             if (index > -1 && bookItem != null) {
@@ -111,53 +81,22 @@ class LocalListViewModel @AssistedInject constructor(
         }
     }
 
-    fun removeHistory() {
+    fun removeAllHistory() {
         viewModelScope.launch {
             interactor.removeAllHistory()
             eventBus.emitEvent(AppEvent.HistoryUpdate())
         }
     }
 
-    fun removeFavorites() {
+    fun removeFromHistory(itemId: String) {
         viewModelScope.launch {
-            interactor.removeAllFavorite()
-            eventBus.emitEvent(AppEvent.FavoriteUpdate())
-        }
-    }
-
-    fun removeFromLocal(itemId: String) {
-        _liveData.value = PagedListState.MoreLoading
-        viewModelScope.launch {
+            _liveData.value = PagedListState.MoreLoading
             val index = currentList.indexOfFirst { it.id == itemId }
             val bookItem = (currentList.firstOrNull { it.id == itemId } as? BookItem)
             if (index > -1 && bookItem != null) {
-                if (category == Category.FAVORITE) {
-                    interactor.removeFromFavorite(bookItem)
-                    eventBus.emitEvent(AppEvent.FavoriteUpdate(itemId))
-                } else {
-                    interactor.removeFromHistory(bookItem)
-                    eventBus.emitEvent(AppEvent.HistoryUpdate(itemId))
-                }
+                interactor.removeFromHistory(bookItem)
+                eventBus.emitEvent(AppEvent.HistoryUpdate(itemId))
             }
         }
     }
-}
-
-@Suppress("UNCHECKED_CAST")
-class LocalListViewModelFactory @AssistedInject constructor(
-    private val interactor: ListInteractorImpl,
-    private val entityToUiMapper: EntityToUiMapper,
-    private val router: FlowRouter,
-    private val eventBus: EventBus,
-    @Assisted private val category: Category
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        assert(modelClass == LocalListViewModel::class.java)
-        return LocalListViewModel(interactor, entityToUiMapper, router, eventBus, category) as T
-    }
-}
-
-@AssistedFactory
-interface LocalListViewModelAssistedFactory {
-    fun create(@Assisted category: Category): LocalListViewModelFactory
 }
