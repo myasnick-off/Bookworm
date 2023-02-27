@@ -1,7 +1,5 @@
 package com.dev.miasnikoff.feature_tabs.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.dev.miasnikoff.core.event.AppEvent
 import com.dev.miasnikoff.core.event.EventBus
@@ -19,6 +17,8 @@ import com.dev.miasnikoff.feature_tabs.ui.home.mapper.HomeDtoToUiMapper
 import com.dev.miasnikoff.feature_tabs.ui.home.mapper.HomeEntityToUiMapper
 import com.dev.miasnikoff.feature_tabs.ui.home.model.HomeState
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,8 +33,8 @@ class HomeViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    private val _liveData: MutableLiveData<HomeState> = MutableLiveData()
-    val liveData: LiveData<HomeState> get() = _liveData
+    private val mutableStateFlow = MutableStateFlow<HomeState>(HomeState.Empty)
+    val stateFlow = mutableStateFlow.asStateFlow()
 
     init {
         getHomeData()
@@ -53,7 +53,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getHomeData() {
-        _liveData.value = HomeState.Loading
+        mutableStateFlow.value = HomeState.Loading
         job = viewModelScope.launch {
             val homeList = mutableListOf<RecyclerItem>()
             interactor.getBookOfDay()
@@ -95,14 +95,14 @@ class HomeViewModel @Inject constructor(
                 .onFailure(::postError)
 
             if (homeList.size > 1) {
-                _liveData.value = HomeState.Success(homeList)
-            } else _liveData.value = HomeState.Failure(EMPTY_RESULT_MESSAGE)
+                mutableStateFlow.value = HomeState.Success(homeList)
+            } else mutableStateFlow.value = HomeState.Failure(EMPTY_RESULT_MESSAGE)
         }
     }
 
     private fun updateHistoryList() {
         viewModelScope.launch {
-            (liveData.value as? HomeState.Success)?.let { state ->
+            (stateFlow.value as? HomeState.Success)?.let { state ->
                 val newList: MutableList<RecyclerItem> = mutableListOf()
                 newList.addAll(state.data)
                 val historyList = homeEntityToUiMapper.toItemList(interactor.getHistory())
@@ -114,13 +114,13 @@ class HomeViewModel @Inject constructor(
                     index > -1 && historyList.isNotEmpty() -> newList[index] = (newList[index] as CarouselWithTitleItem).copy(items = historyList)
                     else -> newList.addNotNull(HISTORY_INDEX, CarouselWithTitleItem.createCarouselOfCategory(category = Category.LAST_VIEWED, items = historyList))
                 }
-                _liveData.value = state.copy(data = newList)
+                mutableStateFlow.value = state.copy(data = newList)
             }
         }
     }
 
     private fun postError(message: String?) {
-        _liveData.value = HomeState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
+        mutableStateFlow.value = HomeState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
     }
 
     companion object {

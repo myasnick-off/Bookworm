@@ -1,6 +1,8 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.dev.miasnikoff.core.event.AppEvent
 import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
@@ -17,6 +19,8 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,8 +36,8 @@ class BookListViewModel @Inject constructor(
 
     private var job: Job? = null
 
-    private val _liveData: MutableLiveData<PagedListState> = MutableLiveData()
-    val liveData: LiveData<PagedListState> get() = _liveData
+    private val mutableStateFlow = MutableStateFlow<PagedListState>(PagedListState.Empty)
+    val stateFlow = mutableStateFlow.asStateFlow()
 
     private var currentList: MutableList<RecyclerItem> = mutableListOf()
     private var startIndex: Int = DEFAULT_START_INDEX
@@ -83,18 +87,18 @@ class BookListViewModel @Inject constructor(
     }
 
     private fun loadInitialPage() {
-        _liveData.value = PagedListState.Loading
+        mutableStateFlow.value = PagedListState.Loading
         currentList.clear()
         getBookList()
     }
 
     fun loadNextPage() {
-        _liveData.value = PagedListState.MoreLoading
+        mutableStateFlow.value = PagedListState.MoreLoading
         getBookList()
     }
 
     private fun getBookList() {
-        if (liveData.value !is PagedListState.Success) {
+        if (stateFlow.value !is PagedListState.Success) {
             job?.cancel()
             job = viewModelScope.launch {
                 interactor.getBooksList(
@@ -105,22 +109,16 @@ class BookListViewModel @Inject constructor(
                     maxResults = DEFAULT_MAX_VALUES
                 )
                     .onSuccess { volumeResponse ->
-                        volumeResponse.volumes?.let { volumesDTO ->
+                        mutableStateFlow.value = volumeResponse.volumes?.let { volumesDTO ->
                             startIndex += DEFAULT_MAX_VALUES
                             val newList = mutableListOf<RecyclerItem>().apply {
                                 addAll((currentList + dtoToUiMapper.toItemList(volumesDTO)).distinctBy { it.id })
                             }
                             currentList = newList
-                            _liveData.value = if (newList.isEmpty()) {
-                                PagedListState.Empty
-                            } else {
-                                PagedListState.Success(newList, newList.size < volumeResponse.totalItems)
-                            }
-                        } ?: if (currentList.isEmpty()) {
-                            _liveData.value = PagedListState.Empty
-                        } else {
-                            _liveData.value = PagedListState.Success(currentList, false)
-                        }
+                            if (newList.isEmpty()) PagedListState.Empty
+                            else PagedListState.Success(newList, newList.size < volumeResponse.totalItems)
+                        } ?: if (currentList.isEmpty()) PagedListState.Empty
+                             else PagedListState.Success(currentList, false)
                     }
                     .onFailure(::postError)
             }
@@ -129,7 +127,7 @@ class BookListViewModel @Inject constructor(
 
     fun setFavorite(itemId: String?) {
         viewModelScope.launch {
-            (liveData.value as? PagedListState.Success)?.let { state ->
+            (stateFlow.value as? PagedListState.Success)?.let { state ->
                 val bookItem = (state.data.firstOrNull { it.id == itemId } as? BookItem)
                 bookItem?.let {
                     when (bookItem.isFavorite) {
@@ -145,27 +143,27 @@ class BookListViewModel @Inject constructor(
     private fun updateBookList() {
         viewModelScope.launch {
         val newList: MutableList<RecyclerItem> = mutableListOf()
-        (liveData.value as? PagedListState.Success)?.let { state ->
-                _liveData.value = PagedListState.MoreLoading
-                val favoriteList = interactor.getFavorite()
-                state.data.forEach { book ->
-                    val index = favoriteList.indexOfFirst { favorite -> book.id == favorite.id }
-                    when {
-                        index > -1 && (book as BookItem).isFavorite.not() ->
-                            newList.add(book.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24))
-                        index == -1 && (book as BookItem).isFavorite ->
-                            newList.add(book.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24))
-                        else -> newList.add(book)
-                    }
+        (stateFlow.value as? PagedListState.Success)?.let { state ->
+            mutableStateFlow.value = PagedListState.MoreLoading
+            val favoriteList = interactor.getFavorite()
+            state.data.forEach { book ->
+                val index = favoriteList.indexOfFirst { favorite -> book.id == favorite.id }
+                when {
+                    index > -1 && (book as BookItem).isFavorite.not() ->
+                        newList.add(book.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24))
+                    index == -1 && (book as BookItem).isFavorite ->
+                        newList.add(book.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24))
+                    else -> newList.add(book)
                 }
+            }
             currentList = newList
-                _liveData.value = state.copy(data = currentList)
+            mutableStateFlow.value = state.copy(data = currentList)
             }
         }
     }
 
     private fun postError(message: String? = null) {
-        _liveData.value = PagedListState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
+        mutableStateFlow.value = PagedListState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
     }
 
     companion object {

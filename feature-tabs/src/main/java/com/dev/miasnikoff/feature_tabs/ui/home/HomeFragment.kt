@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.dev.miasnikoff.core_di.ViewModelFactory
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
@@ -19,6 +20,8 @@ import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.CarouselWithTitl
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.feature_tabs.ui.home.model.HomeState
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class HomeFragment : BaseFragment(R.layout.fragment_home) {
@@ -69,7 +72,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     }
 
     override fun initView() {
-        binding.homeList.adapter = homeListAdapter
+        binding.contentRecycler.adapter = homeListAdapter
     }
 
     override fun initMenu() {
@@ -83,33 +86,40 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     }
 
     private fun initViewModel() {
-        viewModel.liveData.observe(viewLifecycleOwner, ::renderState)
+        viewModel.stateFlow.onEach(::renderState).launchIn(lifecycleScope)
     }
 
     private fun renderState(state: HomeState) {
         when (state) {
+            is HomeState.Empty -> showEmpty()
             is HomeState.Loading -> showLoading()
             is HomeState.Failure -> showError(state.message)
             is HomeState.Success -> showData(state.data)
         }
     }
 
+    private fun showEmpty() {
+        binding.homeLoader.visibility = View.GONE
+        binding.errorImage.visibility = View.GONE
+        binding.contentRecycler.visibility = View.GONE
+    }
+
     private fun showLoading() {
         binding.homeLoader.visibility = View.VISIBLE
         binding.errorImage.visibility = View.GONE
-        binding.homeList.visibility = View.GONE
+        binding.contentRecycler.visibility = View.GONE
     }
 
     private fun showData(data: List<RecyclerItem>) {
         binding.homeLoader.visibility = View.GONE
         binding.errorImage.visibility = View.GONE
-        binding.homeList.visibility = View.VISIBLE
+        binding.contentRecycler.visibility = View.VISIBLE
         homeListAdapter.submitList(data)
     }
 
     private fun showError(message: String) {
         binding.homeLoader.visibility = View.GONE
-        binding.homeList.visibility = View.GONE
+        binding.contentRecycler.visibility = View.GONE
         binding.errorImage.visibility = View.VISIBLE
         binding.root.showSnackBar(
             message = "${getString(com.dev.miasnikoff.core_ui.R.string.error)} $message",

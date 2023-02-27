@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.dev.miasnikoff.core_di.ViewModelFactory
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
@@ -17,6 +18,8 @@ import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookCell
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookListAdapter
 import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class HistoryListFragment : BaseFragment(R.layout.fragment_list) {
@@ -69,7 +72,7 @@ class HistoryListFragment : BaseFragment(R.layout.fragment_list) {
     }
 
     private fun initViewModel() {
-        viewModel.liveData.observe(viewLifecycleOwner, ::renderState)
+        viewModel.stateFlow.onEach(::renderState).launchIn(lifecycleScope)
     }
 
     private fun renderState(state: PagedListState) {

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
@@ -23,6 +24,8 @@ import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
 import com.dev.miasnikoff.feature_tabs.ui.search.SearchClickListener
 import com.dev.miasnikoff.feature_tabs.ui.search.SearchDialogFragment
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class BookListFragment : BaseFragment(R.layout.fragment_list) {
@@ -118,7 +121,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list) {
     }
 
     private fun initViewModel() {
-        viewModel.liveData.observe(viewLifecycleOwner, ::renderState)
+        viewModel.stateFlow.onEach(::renderState).launchIn(lifecycleScope)
     }
 
     private fun renderState(state: PagedListState) {

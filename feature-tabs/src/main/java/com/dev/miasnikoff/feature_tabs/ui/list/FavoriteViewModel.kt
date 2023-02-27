@@ -1,7 +1,5 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.dev.miasnikoff.core.event.AppEvent
 import com.dev.miasnikoff.core.event.EventBus
@@ -12,6 +10,8 @@ import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractor
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookItem
 import com.dev.miasnikoff.feature_tabs.ui.list.mapper.EntityToUiMapper
 import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,8 +23,8 @@ class FavoriteViewModel @Inject constructor(
     private val eventBus: EventBus
 ) : BaseViewModel(router) {
 
-    private val _liveData: MutableLiveData<PagedListState> = MutableLiveData()
-    val liveData: LiveData<PagedListState> get() = _liveData
+    private val mutableStateFlow = MutableStateFlow<PagedListState>(PagedListState.Empty)
+    val stateFlow = mutableStateFlow.asStateFlow()
 
     private var currentList: MutableList<RecyclerItem> = mutableListOf()
 
@@ -45,7 +45,7 @@ class FavoriteViewModel @Inject constructor(
     }
 
     fun getInitialPage() {
-        _liveData.value = PagedListState.Loading
+        mutableStateFlow.value = PagedListState.Loading
         currentList.clear()
         getAllFavorite()
     }
@@ -56,16 +56,14 @@ class FavoriteViewModel @Inject constructor(
                 addAll(entityToUiMapper.toItemList(interactor.getFavorite()))
             }
             currentList = newList
-            _liveData.value = if (currentList.isEmpty()) {
-                PagedListState.Empty
-            } else {
-                PagedListState.Success(currentList, false)
-            }
+            mutableStateFlow.value =
+                if (currentList.isEmpty()) PagedListState.Empty
+                else PagedListState.Success(currentList, false)
         }
     }
 
     fun removeFromFavorite(itemId: String) {
-        _liveData.value = PagedListState.MoreLoading
+        mutableStateFlow.value = PagedListState.MoreLoading
         viewModelScope.launch {
             val index = currentList.indexOfFirst { it.id == itemId }
             val bookItem = (currentList.firstOrNull { it.id == itemId } as? BookItem)
