@@ -16,6 +16,7 @@ import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.CarouselWithTitleCel
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.home.model.HomeState
 import com.dev.miasnikoff.bookworm.ui.list.BookListFragment
+import com.dev.miasnikoff.bookworm.ui.list.LocalListFragment
 import com.dev.miasnikoff.bookworm.utils.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 
@@ -33,10 +34,13 @@ class HomeFragment : BaseFragment() {
             openFragment(fragment = VolumeDetailsFragment.newInstance(itemId))
         }
     }
-    private val carouselClickListener = object: CarouselWithTitleCell.ItemClickListener {
+    private val carouselClickListener = object : CarouselWithTitleCell.ItemClickListener {
         override fun onTitleClick(category: Category) {
-            if (category != Category.POP_GENRES) {
-                openFragment(fragment = BookListFragment.newInstance(category = category))
+            when (category) {
+                Category.LAST_VIEWED, Category.FAVORITE ->
+                    openFragment(fragment = LocalListFragment.newInstance(category = category))
+                Category.POP_GENRES -> {}
+                else -> openFragment(fragment = BookListFragment.newInstance(category = category))
             }
         }
 

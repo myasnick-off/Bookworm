@@ -3,28 +3,23 @@ package com.dev.miasnikoff.bookworm.ui.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.dev.miasnikoff.bookworm.R
-import com.dev.miasnikoff.bookworm.data.RepositoryImpl
-import com.dev.miasnikoff.bookworm.domain.Repository
-import com.dev.miasnikoff.bookworm.domain.model.Filter
-import com.dev.miasnikoff.bookworm.domain.model.OrderBy
-import com.dev.miasnikoff.bookworm.domain.model.QueryFields
+import com.dev.miasnikoff.bookworm.domain.ListInteractor
+import com.dev.miasnikoff.bookworm.domain.model.*
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.bookworm.ui.list.adapter.BookItem
-import com.dev.miasnikoff.bookworm.ui.list.mapper.BookUiDataMapper
+import com.dev.miasnikoff.bookworm.ui.list.mapper.DtoToUiMapper
 import com.dev.miasnikoff.bookworm.ui.list.model.PagedListState
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class BookListViewModel(
-    private val repository: Repository = RepositoryImpl(),
-    private val mapper: BookUiDataMapper = BookUiDataMapper()
+    private val interactor: ListInteractor = ListInteractor(),
+    private val dtoToUiMapper: DtoToUiMapper = DtoToUiMapper(),
 ) : ViewModel() {
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        _liveData.value = PagedListState.Failure(throwable.message ?: DEFAULT_ERROR_MESSAGE)
-    }
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + exceptionHandler)
     private var job: Job? = null
 
     private val _liveData: MutableLiveData<PagedListState> = MutableLiveData()
@@ -39,13 +34,12 @@ class BookListViewModel(
     fun getInitialPage(query: String) {
         currentQuery = query
         _liveData.value = PagedListState.Loading
-        getVolumeList()
         currentList.clear()
+        getVolumeList()
     }
 
     fun getInitialPage(category: Category) {
         when (category) {
-            Category.LAST_VIEWED -> {}
             Category.NEWEST -> {
                 orderBy = OrderBy.NEWEST.type
                 getInitialPage(query = QueryFields.IN_TITLE.type)
@@ -67,52 +61,58 @@ class BookListViewModel(
     private fun getVolumeList() {
         if (liveData.value !is PagedListState.Success) {
             job?.cancel()
-            job = scope.launch {
-                val volumeResponse = repository.getVolumeList(
+            job = viewModelScope.launch {
+                interactor.getBooksList(
                     query = currentQuery,
                     filter = filter,
                     orderBy = orderBy,
                     startIndex = startIndex,
                     maxResults = DEFAULT_MAX_VALUES
                 )
-                _liveData.value = volumeResponse.volumes?.let { volumesDTO ->
-                    startIndex += DEFAULT_MAX_VALUES
-                    val newList = mutableListOf<RecyclerItem>().apply {
-                        addAll((currentList + mapper.toItemList(volumesDTO)).distinctBy { it.id })
+                    .onSuccess { volumeResponse ->
+                        _liveData.value = volumeResponse.volumes?.let { volumesDTO ->
+                            startIndex += DEFAULT_MAX_VALUES
+                            val newList = mutableListOf<RecyclerItem>().apply {
+                                addAll((currentList + dtoToUiMapper.toItemList(volumesDTO)).distinctBy { it.id })
+                            }
+                            currentList = newList
+                            PagedListState.Success(currentList, newList.size < volumeResponse.totalItems)
+                        } ?: if (currentList.isEmpty()) {
+                            PagedListState.Failure(EMPTY_RESULT_MESSAGE)
+                        } else {
+                            PagedListState.Success(currentList, false)
+                        }
                     }
-                    currentList = newList
-                    PagedListState.Success(currentList, newList.size < volumeResponse.totalItems)
-                } ?: if (currentList.isEmpty()) {
-                    PagedListState.Failure(EMPTY_RESULT_MESSAGE)
-                } else {
-                    PagedListState.FullData(currentList)
-                }
+                    .onFailure { message ->
+                        _liveData.value = PagedListState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
+                    }
+
             }
         }
     }
-
 
     fun setFavorite(itemId: String) {
-        val newList: MutableList<RecyclerItem> = mutableListOf()
-        val currentState = liveData.value as? PagedListState.Success
-        currentState?.let { state ->
-            newList.addAll(state.data)
-            val index = newList.indexOfFirst { it.id == itemId }
-            val bookItem = (newList.firstOrNull { it.id == itemId } as? BookItem)
-            if (index > -1 && bookItem != null) {
-                newList[index] = if (bookItem.isFavorite)
-                    bookItem.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24)
-                else
-                    bookItem.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24)
+        viewModelScope.launch {
+            val newList: MutableList<RecyclerItem> = mutableListOf()
+            val currentState = liveData.value as? PagedListState.Success
+            currentState?.let { state ->
+                newList.addAll(state.data)
+                val index = newList.indexOfFirst { it.id == itemId }
+                val bookItem = (newList.firstOrNull { it.id == itemId } as? BookItem)
+                if (index > -1 && bookItem != null) {
+                    newList[index] = if (bookItem.isFavorite) {
+                        interactor.removeFromFavorite(bookItem)
+                        bookItem.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24)
+                    }
+                    else {
+                        interactor.saveInFavorite(bookItem)
+                        bookItem.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24)
+                    }
+                }
+                currentList = newList
+                _liveData.value = state.copy(data = currentList)
             }
-            currentList = newList
-            _liveData.value = state.copy(data = currentList)
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        scope.cancel()
     }
 
     companion object {

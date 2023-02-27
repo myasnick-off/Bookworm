@@ -29,7 +29,7 @@ class BookCell(private val itemClickListener: ItemClickListener): Cell<RecyclerI
 
     interface ItemClickListener {
         fun onItemClick(itemId: String)
-        fun onItemLongClick(itemId: String): Boolean
+        fun onItemLongClick(itemId: String)
         fun onFavoriteClick(itemId: String)
     }
 }

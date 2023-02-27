@@ -9,7 +9,7 @@ import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentSettingsBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui.main.MainActivity
-import com.dev.miasnikoff.bookworm.utils.ThemePrefsHandler
+import com.dev.miasnikoff.bookworm.utils.SettingsPrefsHelper
 import com.dev.miasnikoff.bookworm.utils.Themes
 
 class SettingsFragment : BaseFragment() {
@@ -65,8 +65,8 @@ class SettingsFragment : BaseFragment() {
             R.layout.item_dropdown_menu,
             Themes.values().map { getString(it.textResId) }
         )
-        val themePrefs = ThemePrefsHandler(requireContext())
-        selectAppThemeText.setText(themePrefs.appTheme.textResId)
+        val settingsPrefs = SettingsPrefsHelper(requireContext())
+        selectAppThemeText.setText(settingsPrefs.appTheme.textResId)
         selectAppThemeText.setAdapter(adapter)
         selectAppThemeText.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -76,8 +76,8 @@ class SettingsFragment : BaseFragment() {
                     2 -> Themes.NIGHT_MODE
                     else -> Themes.AS_SYSTEM
                 }
-                if (theme != themePrefs.appTheme) {
-                    themePrefs.save(theme)
+                if (theme != settingsPrefs.appTheme) {
+                    settingsPrefs.save(theme)
                     AppCompatDelegate.setDefaultNightMode(theme.id)
                 }
             }

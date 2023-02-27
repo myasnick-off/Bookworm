@@ -2,7 +2,7 @@ package com.dev.miasnikoff.bookworm.utils
 
 import android.content.Context
 
-class ThemePrefsHandler(context: Context) {
+class SettingsPrefsHelper(context: Context) {
 
     private val prefs = context.getSharedPreferences(SETTINGS_PREFS, Context.MODE_PRIVATE)
 

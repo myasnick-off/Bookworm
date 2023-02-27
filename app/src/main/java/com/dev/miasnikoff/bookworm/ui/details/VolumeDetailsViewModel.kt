@@ -3,37 +3,27 @@ package com.dev.miasnikoff.bookworm.ui.details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.dev.miasnikoff.bookworm.data.RepositoryImpl
-import com.dev.miasnikoff.bookworm.domain.Repository
-import com.dev.miasnikoff.bookworm.ui.details.mapper.VolumeDetailsMapper
+import androidx.lifecycle.viewModelScope
+import com.dev.miasnikoff.bookworm.domain.DetailsInteractor
+import com.dev.miasnikoff.bookworm.domain.model.onFailure
+import com.dev.miasnikoff.bookworm.domain.model.onSuccess
 import com.dev.miasnikoff.bookworm.ui.details.model.DetailsState
-import kotlinx.coroutines.*
+import kotlinx.coroutines.launch
 
 class VolumeDetailsViewModel(
-    private val repository: Repository = RepositoryImpl(),
-    private val mapper: VolumeDetailsMapper = VolumeDetailsMapper(),
+    private val interactor: DetailsInteractor = DetailsInteractor(),
 ) : ViewModel() {
-
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        _liveData.value = DetailsState.Failure(throwable.message ?: DEFAULT_ERROR_MESSAGE)
-    }
-    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob() + exceptionHandler)
 
     private var _liveData: MutableLiveData<DetailsState> = MutableLiveData()
     val liveData: LiveData<DetailsState> get() = _liveData
 
-    fun getDetails(volumeId: String) {
+    fun getDetails(bookId: String) {
         _liveData.value = DetailsState.Loading
-        scope.launch {
-
-            val volumeDTO = repository.getVolume(volumeId)
-            _liveData.value = DetailsState.Success(mapper(volumeDTO))
+        viewModelScope.launch {
+            interactor.getDetails(bookId)
+                .onSuccess { details -> _liveData.value = DetailsState.Success(details) }
+                .onFailure { message -> _liveData.value = DetailsState.Failure(message ?: DEFAULT_ERROR_MESSAGE) }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        scope.cancel()
     }
 
     companion object {

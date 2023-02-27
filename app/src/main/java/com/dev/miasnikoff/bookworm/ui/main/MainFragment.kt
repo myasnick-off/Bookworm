@@ -9,7 +9,8 @@ import com.dev.miasnikoff.bookworm.R
 import com.dev.miasnikoff.bookworm.databinding.FragmentMainBinding
 import com.dev.miasnikoff.bookworm.ui._core.BaseFragment
 import com.dev.miasnikoff.bookworm.ui.home.HomeFragment
-import com.dev.miasnikoff.bookworm.ui.list.BookListFragment
+import com.dev.miasnikoff.bookworm.ui.home.adapter.carousel.Category
+import com.dev.miasnikoff.bookworm.ui.list.LocalListFragment
 import com.dev.miasnikoff.bookworm.ui.login.LoginFragment
 import com.dev.miasnikoff.bookworm.ui.settings.SettingsFragment
 
@@ -48,12 +49,15 @@ class MainFragment : BaseFragment(), BackPressMonitor {
                     childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     true
                 }
-                R.id.action_search -> {
+                R.id.action_settings -> {
                     navigateToFragment(fragment = SettingsFragment.newInstance(), isAddToBackStack = true)
                     true
                 }
                 R.id.action_favorite -> {
-                    navigateToFragment(fragment = BookListFragment.newInstance(), isAddToBackStack = true)
+                    navigateToFragment(
+                        fragment = LocalListFragment.newInstance(category = Category.FAVORITE),
+                        isAddToBackStack = true
+                    )
                     true
                 }
                 R.id.action_profile -> {

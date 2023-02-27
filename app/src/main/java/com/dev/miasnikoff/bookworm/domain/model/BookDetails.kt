@@ -1,4 +1,4 @@
-package com.dev.miasnikoff.bookworm.ui.details.model
+package com.dev.miasnikoff.bookworm.domain.model
 
 data class BookDetails(
     val id: String,
@@ -11,7 +11,14 @@ data class BookDetails(
     val averageRating: Float,
     val ratingsCount: Int,
     val description: String,
-    val imageLink: String?,
+    val pageCount: Int,
+    val printType: String,
+    val imageLinkSmall: String?,
+    val imageLinkLarge: String?,
     val language: String,
+    val previewLink: String,
+    val infoLink: String,
+    val canonicalLink: String,
+    val isHistory: Boolean = false,
     val isFavorite: Boolean = false
 )

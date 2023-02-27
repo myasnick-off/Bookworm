@@ -1,14 +1,14 @@
 package com.dev.miasnikoff.bookworm.ui._core.mapper
 
-import com.dev.miasnikoff.bookworm.data.model.ImageLinksDTO
-import com.dev.miasnikoff.bookworm.data.model.ImageSize
+import com.dev.miasnikoff.bookworm.data.remote.model.ImageLinksDTO
+import com.dev.miasnikoff.bookworm.data.remote.model.ImageSize
 import com.dev.miasnikoff.bookworm.ui._core.adapter.RecyclerItem
 
 abstract class BaseUiDataMapper<T> {
     fun toItemList(volumes: List<T>): List<RecyclerItem> =
         volumes.map { toItem(it, ImageSize.S) }
 
-    abstract fun toItem(itemDTO: T, imageSize: ImageSize): RecyclerItem
+    abstract fun toItem(item: T, imageSize: ImageSize): RecyclerItem
 
     protected fun getImageOfSize(imgLinks: ImageLinksDTO?, imageSize: ImageSize): String? {
         val imgUrl = imgLinks?.let {
@@ -20,7 +20,6 @@ abstract class BaseUiDataMapper<T> {
                 ImageSize.L -> it.large ?: it.medium ?: it.small
                 ImageSize.XL -> it.extraLarge ?: it.large ?: it.medium
             }
-            it.small ?: it.thumbnail ?: it.smallThumbnail
         }
         return imgUrl?.let { formatImageUrl(it) }
     }
