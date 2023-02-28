@@ -15,3 +15,5 @@ Bookworm - это приложение на базе Google Books API, пред�
 * Coroutines    
 * Navigation Component  
 * Glide
+-------------------
+![photo_2023-02-28_20-46-06](/uploads/293fb231e0e3b8625d9a2342bcf496f7/photo_2023-02-28_20-46-06.jpg)  ![photo_2023-02-28_20-46-03](/uploads/deec599e946139229831381d4837e102/photo_2023-02-28_20-46-03.jpg)
