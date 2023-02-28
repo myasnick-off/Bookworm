@@ -61,7 +61,7 @@
         tools:listitem="@layout/item_carousel_with_title_list" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/error_image"
+        android:id="@+id/error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -70,7 +70,7 @@
         tools:visibility="visible" />
 
     <ProgressBar
-        android:id="@+id/home_loader"
+        android:id="@+id/loader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

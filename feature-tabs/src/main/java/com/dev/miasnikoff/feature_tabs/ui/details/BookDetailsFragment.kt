@@ -8,23 +8,18 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.core_navigation.viewModel
-import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
-import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentBookDetailsBinding
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
+import com.dev.miasnikoff.feature_tabs.ui.base.BaseListFragment
 import com.dev.miasnikoff.feature_tabs.ui.details.adapter.BookDetailsAdapter
 import com.dev.miasnikoff.feature_tabs.ui.details.adapter.controls.BookControlsCell
-import com.dev.miasnikoff.feature_tabs.ui.details.model.DetailsState
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
+class BookDetailsFragment : BaseListFragment(R.layout.fragment_book_details) {
 
     override lateinit var binding: FragmentBookDetailsBinding
     override val titleRes: Int = R.string.about_volume
@@ -67,46 +62,8 @@ class BookDetailsFragment : BaseFragment(R.layout.fragment_book_details) {
         binding.contentRecycler.adapter = detailsAdapter
     }
 
-    private fun initViewModel() {
-        viewModel.stateFlow.onEach(::renderData).launchIn(lifecycleScope)
-    }
-
-    private fun renderData(state: DetailsState) {
-        when (state) {
-            is DetailsState.Empty -> showEmpty()
-            is DetailsState.Loading -> showLoading()
-            is DetailsState.Failure -> showError(state.message)
-            is DetailsState.Success -> showData(state.data)
-        }
-    }
-
-    private fun showEmpty() {
-        binding.detailsLoader.visibility = View.GONE
-        binding.errorImage.visibility = View.GONE
-        binding.contentRecycler.visibility = View.GONE
-    }
-
-    private fun showLoading() {
-        binding.detailsLoader.visibility = View.VISIBLE
-        binding.errorImage.visibility = View.GONE
-        binding.contentRecycler.visibility = View.GONE
-    }
-
-    private fun showData(bookDetails: List<RecyclerItem>) {
-        binding.detailsLoader.visibility = View.GONE
-        binding.errorImage.visibility = View.GONE
-        binding.contentRecycler.visibility = View.VISIBLE
-        detailsAdapter.submitList(bookDetails)
-    }
-
-    private fun showError(message: String) {
-        binding.detailsLoader.visibility = View.GONE
-        binding.contentRecycler.visibility = View.GONE
-        binding.errorImage.visibility = View.VISIBLE
-        binding.root.showSnackBar(
-            message = "${getString(com.dev.miasnikoff.core_ui.R.string.error)} $message",
-            actionText = getString(com.dev.miasnikoff.core_ui.R.string.reload)
-        ) { viewModel.getDetails() }
+    override fun updateList(data: List<RecyclerItem>, loadMore: Boolean) {
+        detailsAdapter.submitList(data)
     }
 
     private fun openBrowser(contentUrl: String) {

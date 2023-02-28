@@ -4,14 +4,12 @@ import androidx.lifecycle.viewModelScope
 import com.dev.miasnikoff.core.event.AppEvent
 import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
-import com.dev.miasnikoff.core_ui.BaseViewModel
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractor
+import com.dev.miasnikoff.feature_tabs.ui.base.BaseListViewModel
+import com.dev.miasnikoff.feature_tabs.ui.base.ListState
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookItem
 import com.dev.miasnikoff.feature_tabs.ui.list.mapper.EntityToUiMapper
-import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,15 +19,12 @@ class HistoryViewModel @Inject constructor(
     private val entityToUiMapper: EntityToUiMapper,
     router: FlowRouter,
     private val eventBus: EventBus,
-) : BaseViewModel(router) {
-
-    private val mutableStateFlow = MutableStateFlow<PagedListState>(PagedListState.Empty)
-    val stateFlow = mutableStateFlow.asStateFlow()
+) : BaseListViewModel(router) {
 
     private var currentList: MutableList<RecyclerItem> = mutableListOf()
 
     init {
-        getInitialPage()
+        getInitialData()
         handleAppEvents()
     }
 
@@ -44,8 +39,8 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    fun getInitialPage() {
-        mutableStateFlow.value = PagedListState.Loading
+    override fun getInitialData() {
+        mutableStateFlow.value = ListState.EmptyLoading
         currentList.clear()
         getAllHistory()
     }
@@ -58,16 +53,16 @@ class HistoryViewModel @Inject constructor(
             }
             currentList = newList
             mutableStateFlow.value = if (currentList.isEmpty()) {
-                PagedListState.Empty
+                ListState.Empty
             } else {
-                PagedListState.Success(currentList, false)
+                ListState.Success(currentList, false)
             }
         }
     }
 
     fun setFavorite(itemId: String) {
         viewModelScope.launch {
-            mutableStateFlow.value = PagedListState.MoreLoading
+            mutableStateFlow.value = ListState.Loading
             val index = currentList.indexOfFirst { it.id == itemId }
             val bookItem = (currentList.firstOrNull { it.id == itemId } as? BookItem)
             if (index > -1 && bookItem != null) {
@@ -90,7 +85,7 @@ class HistoryViewModel @Inject constructor(
 
     fun removeFromHistory(itemId: String) {
         viewModelScope.launch {
-            mutableStateFlow.value = PagedListState.MoreLoading
+            mutableStateFlow.value = ListState.Loading
             val index = currentList.indexOfFirst { it.id == itemId }
             val bookItem = (currentList.firstOrNull { it.id == itemId } as? BookItem)
             if (index > -1 && bookItem != null) {

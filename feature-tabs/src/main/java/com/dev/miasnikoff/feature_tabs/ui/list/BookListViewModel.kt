@@ -1,26 +1,25 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.dev.miasnikoff.core.event.AppEvent
 import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
-import com.dev.miasnikoff.core_ui.BaseViewModel
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractor
 import com.dev.miasnikoff.feature_tabs.domain.model.*
+import com.dev.miasnikoff.feature_tabs.ui.base.BaseListViewModel
+import com.dev.miasnikoff.feature_tabs.ui.base.ListState
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookItem
 import com.dev.miasnikoff.feature_tabs.ui.list.mapper.DtoToUiMapper
-import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,12 +31,9 @@ class BookListViewModel @Inject constructor(
     private val eventBus: EventBus,
     private val query: String?,
     private val category: Category?
-) : BaseViewModel(router) {
+) : BaseListViewModel(router) {
 
     private var job: Job? = null
-
-    private val mutableStateFlow = MutableStateFlow<PagedListState>(PagedListState.Empty)
-    val stateFlow = mutableStateFlow.asStateFlow()
 
     private var currentList: MutableList<RecyclerItem> = mutableListOf()
     private var startIndex: Int = DEFAULT_START_INDEX
@@ -46,7 +42,7 @@ class BookListViewModel @Inject constructor(
     private var orderBy: String? = null
 
     init {
-        getData()
+        getInitialData()
         handleAppEvents()
     }
 
@@ -61,7 +57,7 @@ class BookListViewModel @Inject constructor(
         }
     }
 
-    fun getData() {
+    override fun getInitialData() {
         if (query.isNullOrEmpty()) {
             when (category) {
                 Category.NEWEST -> {
@@ -87,18 +83,18 @@ class BookListViewModel @Inject constructor(
     }
 
     private fun loadInitialPage() {
-        mutableStateFlow.value = PagedListState.Loading
+        mutableStateFlow.value = ListState.EmptyLoading
         currentList.clear()
         getBookList()
     }
 
     fun loadNextPage() {
-        mutableStateFlow.value = PagedListState.MoreLoading
+        mutableStateFlow.value = ListState.Loading
         getBookList()
     }
 
     private fun getBookList() {
-        if (stateFlow.value !is PagedListState.Success) {
+        if (stateFlow.value !is ListState.Success) {
             job?.cancel()
             job = viewModelScope.launch {
                 interactor.getBooksList(
@@ -115,10 +111,10 @@ class BookListViewModel @Inject constructor(
                                 addAll((currentList + dtoToUiMapper.toItemList(volumesDTO)).distinctBy { it.id })
                             }
                             currentList = newList
-                            if (newList.isEmpty()) PagedListState.Empty
-                            else PagedListState.Success(newList, newList.size < volumeResponse.totalItems)
-                        } ?: if (currentList.isEmpty()) PagedListState.Empty
-                             else PagedListState.Success(currentList, false)
+                            if (newList.isEmpty()) ListState.Empty
+                            else ListState.Success(newList, newList.size < volumeResponse.totalItems)
+                        } ?: if (currentList.isEmpty()) ListState.Empty
+                             else ListState.Success(currentList, false)
                     }
                     .onFailure(::postError)
             }
@@ -127,7 +123,7 @@ class BookListViewModel @Inject constructor(
 
     fun setFavorite(itemId: String?) {
         viewModelScope.launch {
-            (stateFlow.value as? PagedListState.Success)?.let { state ->
+            (stateFlow.value as? ListState.Success)?.let { state ->
                 val bookItem = (state.data.firstOrNull { it.id == itemId } as? BookItem)
                 bookItem?.let {
                     when (bookItem.isFavorite) {
@@ -143,8 +139,8 @@ class BookListViewModel @Inject constructor(
     private fun updateBookList() {
         viewModelScope.launch {
         val newList: MutableList<RecyclerItem> = mutableListOf()
-        (stateFlow.value as? PagedListState.Success)?.let { state ->
-            mutableStateFlow.value = PagedListState.MoreLoading
+        (stateFlow.value as? ListState.Success)?.let { state ->
+            mutableStateFlow.value = ListState.Loading
             val favoriteList = interactor.getFavorite()
             state.data.forEach { book ->
                 val index = favoriteList.indexOfFirst { favorite -> book.id == favorite.id }
@@ -163,13 +159,13 @@ class BookListViewModel @Inject constructor(
     }
 
     private fun postError(message: String? = null) {
-        mutableStateFlow.value = PagedListState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
+        Log.e("###", message ?: "")
+        mutableStateFlow.value = ListState.Failure
     }
 
     companion object {
         private const val DEFAULT_START_INDEX = 0
         private const val DEFAULT_MAX_VALUES = 20
-        private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
     }
 }
 

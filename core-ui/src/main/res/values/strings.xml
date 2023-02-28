@@ -62,4 +62,5 @@
     <string name="share">Поделиться</string>
     <string name="to_favorite">В избранное</string>
     <string name="remove_selected">Удалить выделенное</string>
+    <string name="message_error">Ой, что-то пошло не так :(</string>
 </resources>

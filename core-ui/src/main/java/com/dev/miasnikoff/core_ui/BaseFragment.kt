@@ -4,42 +4,37 @@ import androidx.activity.addCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 
 abstract class BaseFragment(layoutRes: Int) : Fragment(layoutRes) {
 
-    protected abstract val binding: ViewBinding
-    protected abstract val viewModel: BaseViewModel
+    abstract val binding: ViewBinding
+    abstract val viewModel: BaseViewModel
 
-    protected open val titleRes: Int? = null
-    protected open val isStickyToolbar: Boolean = false
-    protected open val hasBackButton: Boolean = true
-    protected open val hasShareButton: Boolean = false
-    protected var hasFavoriteButton: Boolean = false
-    protected var hasRemoveButton: Boolean = false
-    protected open val hasRemoveAllButton: Boolean = false
-    protected open val shareAction: () -> Unit = {}
-    protected open val removeAllAction: () -> Unit = {}
+    open val titleRes: Int? = null
+    open val isStickyToolbar: Boolean = false
+    open val hasBackButton: Boolean = true
+    open val hasShareButton: Boolean = false
+    var hasFavoriteButton: Boolean = false
+    var hasRemoveButton: Boolean = false
+    open val hasRemoveAllButton: Boolean = false
+    open val shareAction: () -> Unit = {}
+    open val removeAllAction: () -> Unit = {}
 
-    protected val toolbar: Toolbar?
+    val toolbar: Toolbar?
         get() = view?.findViewById(R.id.toolbar)
 
-    protected val collapsingToolbar: CollapsingToolbarLayout?
+    val collapsingToolbar: CollapsingToolbarLayout?
         get() = view?.findViewById(R.id.collapsing_toolbar)
 
-    protected val contentRecycler: RecyclerView?
-        get() = view?.findViewById(R.id.content_recycler)
-
-
-    protected open fun initMenu() {
+    open fun initMenu() {
         collapsingToolbarConfig()
         toolbarConfig()
     }
 
-    protected open fun initView() {
+    open fun initView() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             viewModel.back()
         }

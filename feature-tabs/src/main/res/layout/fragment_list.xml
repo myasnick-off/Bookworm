@@ -23,7 +23,7 @@
         tools:listitem="@layout/item_book_list" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/error_image"
+        android:id="@+id/error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -40,7 +40,7 @@
         android:visibility="gone" />
 
     <ProgressBar
-        android:id="@+id/list_loader"
+        android:id="@+id/loader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -4,27 +4,21 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.dev.miasnikoff.core_di.ViewModelFactory
 import com.dev.miasnikoff.core_navigation.viewModel
-import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.core_ui.extensions.hideSoftKeyboard
-import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentHomeBinding
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
+import com.dev.miasnikoff.feature_tabs.ui.base.BaseListFragment
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.HomeListAdapter
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.bookofday.BookOfDayCell
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.CarouselWithTitleCell
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
-import com.dev.miasnikoff.feature_tabs.ui.home.model.HomeState
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-class HomeFragment : BaseFragment(R.layout.fragment_home) {
+class HomeFragment : BaseListFragment(R.layout.fragment_home) {
 
     override lateinit var binding: FragmentHomeBinding
     override val hasBackButton = false
@@ -86,47 +80,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         }
     }
 
-    private fun initViewModel() {
-        viewModel.stateFlow.onEach(::renderState).launchIn(lifecycleScope)
-    }
-
-    private fun renderState(state: HomeState) {
-        when (state) {
-            is HomeState.Empty -> showEmpty()
-            is HomeState.Loading -> showLoading()
-            is HomeState.Failure -> showError(state.message)
-            is HomeState.Success -> showData(state.data)
-        }
-    }
-
-    private fun showEmpty() {
-        binding.homeLoader.visibility = View.GONE
-        binding.errorImage.visibility = View.GONE
-        binding.contentRecycler.visibility = View.GONE
-    }
-
-    private fun showLoading() {
-        binding.homeLoader.visibility = View.VISIBLE
-        binding.errorImage.visibility = View.GONE
-        binding.contentRecycler.visibility = View.GONE
-    }
-
-    private fun showData(data: List<RecyclerItem>) {
-        binding.homeLoader.visibility = View.GONE
-        binding.errorImage.visibility = View.GONE
-        binding.contentRecycler.visibility = View.VISIBLE
+    override fun updateList(data: List<RecyclerItem>, loadMore: Boolean) {
         homeListAdapter.submitList(data)
-    }
-
-    private fun showError(message: String) {
-        binding.homeLoader.visibility = View.GONE
-        binding.contentRecycler.visibility = View.GONE
-        binding.errorImage.visibility = View.VISIBLE
-        binding.root.showSnackBar(
-            message = "${getString(com.dev.miasnikoff.core_ui.R.string.error)} $message",
-            actionText = getString(com.dev.miasnikoff.core_ui.R.string.reload),
-            length = Snackbar.LENGTH_LONG,
-        ) { viewModel.getHomeData() }
     }
 
     private fun navigateToDetails(bookId: String) {

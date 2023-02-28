@@ -4,25 +4,19 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.dev.miasnikoff.core_di.ViewModelFactory
 import com.dev.miasnikoff.core_navigation.viewModel
-import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.core_ui.extensions.showAlertDialog
-import com.dev.miasnikoff.core_ui.extensions.showSnackBar
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentListBinding
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
+import com.dev.miasnikoff.feature_tabs.ui.base.BaseListFragment
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookCell
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookListAdapter
-import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-class HistoryListFragment : BaseFragment(R.layout.fragment_list) {
+class HistoryListFragment : BaseListFragment(R.layout.fragment_list) {
 
     override lateinit var binding: FragmentListBinding
     override val titleRes = R.string.view_history
@@ -71,63 +65,8 @@ class HistoryListFragment : BaseFragment(R.layout.fragment_list) {
         binding.listFab.visibility = View.GONE
     }
 
-    private fun initViewModel() {
-        viewModel.stateFlow.onEach(::renderState).launchIn(lifecycleScope)
-    }
-
-    private fun renderState(state: PagedListState) {
-        when (state) {
-            is PagedListState.Empty -> showEmpty()
-            is PagedListState.Loading -> showLoading()
-            is PagedListState.MoreLoading -> showMoreLoading()
-            is PagedListState.Failure -> showError(state.message)
-            is PagedListState.Success -> showData(state.data, state.loadMore)
-        }
-    }
-
-    private fun showEmpty() {
-        binding.listLoader.visibility = View.GONE
-        binding.errorImage.visibility = View.GONE
-        binding.contentRecycler.visibility = View.GONE
-        binding.emptyResult.root.visibility = View.VISIBLE
-    }
-
-    private fun showLoading() {
-        binding.listLoader.visibility = View.VISIBLE
-        binding.errorImage.visibility = View.GONE
-        binding.contentRecycler.visibility = View.GONE
-        binding.emptyResult.root.visibility = View.GONE
-    }
-
-    private fun showMoreLoading() {
-        binding.listLoader.visibility = View.VISIBLE
-        binding.contentRecycler.visibility = View.VISIBLE
-        binding.errorImage.visibility = View.GONE
-        binding.emptyResult.root.visibility = View.GONE
-    }
-
-    private fun showData(volumes: List<RecyclerItem>, loadMore: Boolean) {
-        binding.listLoader.visibility = View.GONE
-        binding.errorImage.visibility = View.GONE
-        binding.emptyResult.root.visibility = View.GONE
-        binding.contentRecycler.visibility = View.VISIBLE
-        bookListAdapter.updateList(volumes, loadMore)
-    }
-
-    private fun showError(message: String) {
-        binding.listLoader.visibility = View.GONE
-        binding.contentRecycler.visibility = View.GONE
-        binding.emptyResult.root.visibility = View.GONE
-        binding.errorImage.visibility = View.VISIBLE
-        binding.root.showSnackBar(
-            message = "${getString(com.dev.miasnikoff.core_ui.R.string.error)} $message",
-            actionText = getString(com.dev.miasnikoff.core_ui.R.string.reload),
-            length = Snackbar.LENGTH_LONG,
-        ) { getData() }
-    }
-
-    private fun getData() {
-        viewModel.getInitialPage()
+    override fun updateList(data: List<RecyclerItem>, loadMore: Boolean) {
+        bookListAdapter.updateList(data, loadMore)
     }
 
     private fun navigateToDetails(bookId: String) {
