@@ -8,6 +8,7 @@ import androidx.navigation.NavDirections
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractor
+import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractorImpl
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookItem
 import com.dev.miasnikoff.feature_tabs.ui.list.mapper.EntityToUiMapper
@@ -151,7 +152,7 @@ class LocalListViewModel @AssistedInject constructor(
 
 @Suppress("UNCHECKED_CAST")
 class LocalListViewModelFactory @AssistedInject constructor(
-    private val interactor: ListInteractor,
+    private val interactor: ListInteractorImpl,
     private val entityToUiMapper: EntityToUiMapper,
     private val router: FlowRouter,
     @Assisted private val category: Category

@@ -2,10 +2,7 @@ package com.dev.miasnikoff.feature_tabs.di
 
 import com.dev.miasnikoff.core_di.annotations.FeatureScope
 import com.dev.miasnikoff.core_navigation.di.FlowNavigationModule
-import com.dev.miasnikoff.feature_tabs.di.module.TabDBModule
-import com.dev.miasnikoff.feature_tabs.di.module.TabsNetworkModule
-import com.dev.miasnikoff.feature_tabs.di.module.TabsRepositoryModule
-import com.dev.miasnikoff.feature_tabs.di.module.TabsViewModelModule
+import com.dev.miasnikoff.feature_tabs.di.module.*
 import com.dev.miasnikoff.feature_tabs.ui.TabsFragment
 import com.dev.miasnikoff.feature_tabs.ui.details.BookDetailsFragment
 import com.dev.miasnikoff.feature_tabs.ui.home.HomeFragment
@@ -21,6 +18,7 @@ import dagger.Component
         TabsNetworkModule::class,
         TabDBModule::class,
         TabsRepositoryModule::class,
+        TabsInteractorModule::class,
         TabsViewModelModule::class,
         FlowNavigationModule::class
     ],

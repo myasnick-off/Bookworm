@@ -1,6 +1,7 @@
 package com.dev.miasnikoff.feature_auth.di.module
 
 import com.dev.miasnikoff.feature_auth.data.AuthService
+import com.dev.miasnikoff.feature_auth.data.AuthServiceImpl
 import dagger.Module
 import dagger.Provides
 
@@ -9,6 +10,6 @@ class AuthNetworkModule {
 
     @Provides
     fun authService(): AuthService {
-        return AuthService()
+        return AuthServiceImpl()
     }
 }
