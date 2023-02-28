@@ -30,4 +30,9 @@ abstract class BaseUiDataMapper<T> {
         }
         return sourceUrl
     }
+
+    companion object {
+        const val FLOAT_FORMAT = "%.2g"
+        const val DATE_FORMAT = "dd MMMM yyyy"
+    }
 }

@@ -23,7 +23,7 @@ class BookEntityDataMapper @Inject constructor() {
                 mainCategory = null,
                 categories = null,
                 averageRating = item.averageRating,
-                ratingsCount = null,
+                ratingsCount = 0,
                 imageLinkSmall = item.imageLink,
                 imageLinkLarge = null,
                 language = item.language,

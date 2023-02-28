@@ -31,8 +31,10 @@ import javax.inject.Inject
 class BookListFragment : BaseFragment(R.layout.fragment_list) {
 
     override lateinit var binding: FragmentListBinding
-
     private val args: BookListFragmentArgs by navArgs()
+
+    override val titleRes: Int?
+        get() = if (args.query.isNullOrEmpty()) args.category.titleRes else null
 
     @Inject
     lateinit var viewModelFactory: BookListViewModelAssistedFactory

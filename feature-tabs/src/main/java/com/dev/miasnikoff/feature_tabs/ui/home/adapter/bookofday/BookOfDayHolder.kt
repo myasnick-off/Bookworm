@@ -21,7 +21,7 @@ class BookOfDayHolder(
         ratingBar.rating = item.averageRating
         bookRating.apply {
             isVisible = item.hasRating
-            text = item.averageRating.toString()
+            text = item.averageRatingTxt
         }
         ratingCount.text = if (item.hasRating) root.getLocalizedQuantityString(
             R.plurals.rating_count_suffix,

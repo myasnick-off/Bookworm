@@ -8,10 +8,8 @@ data class DetailsMainItem(
     val authors: String,
     val publisher: String,
     val averageRating: Float,
+    val averageRatingTxt: String,
     val ratingsCount: Int,
-    val imageLink: String?
-) : RecyclerItem {
-
+    val imageLink: String?,
     val hasRating: Boolean
-        get() = averageRating > 0 && ratingsCount > 0
-}
+) : RecyclerItem

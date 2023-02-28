@@ -10,6 +10,7 @@ data class BookItem(
     val publishedDate: String,
     val mainCategory: String,
     val averageRating: Float,
+    val averageRatingTxt: String,
     val imageLink: String?,
     val language: String,
     val isFavorite: Boolean = false,

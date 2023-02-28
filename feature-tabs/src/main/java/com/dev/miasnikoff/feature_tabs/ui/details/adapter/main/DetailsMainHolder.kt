@@ -17,7 +17,7 @@ class DetailsMainHolder(private val binding: ItemBookDetailsMainBinding) :
         ratingBar.rating = item.averageRating
         bookRating.apply {
             isVisible = item.hasRating
-            text = item.averageRating.toString()
+            text = item.averageRatingTxt
         }
         bookRatingCount.text = if (item.hasRating) root.getLocalizedQuantityString(
             R.plurals.rating_count_suffix,

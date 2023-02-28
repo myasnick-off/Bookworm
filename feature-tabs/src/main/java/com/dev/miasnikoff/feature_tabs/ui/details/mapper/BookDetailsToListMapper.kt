@@ -19,8 +19,10 @@ class BookDetailsToListMapper @Inject constructor() {
                 authors = details.authors,
                 publisher = details.publisher,
                 averageRating = details.averageRating,
+                averageRatingTxt = String.format(FLOAT_FORMAT, details.averageRating),
                 ratingsCount = details.ratingsCount,
-                imageLink = details.imageLinkLarge
+                imageLink = details.imageLinkLarge,
+                hasRating = details.ratingsCount> 0
             )
         )
         val languageItem = if (details.language.isEmpty()) null else TextWithLabelItem(
@@ -36,7 +38,7 @@ class BookDetailsToListMapper @Inject constructor() {
         val publishDateItem = if (details.publishedDate.isEmpty()) null else TextWithLabelItem(
             id = "$PUBLISH_DATE_ID_PREFIX${details.id}",
             labelRes = com.dev.miasnikoff.core_ui.R.string.published_date,
-            text = details.publishedDate.customDateFormat("dd MMMM yyyy"),
+            text = details.publishedDate.customDateFormat(DATE_FORMAT),
         )
         val controlsItem = BookControlsItem(
             id = "$CTRL_ID_PREFIX${details.id}",
@@ -70,6 +72,8 @@ class BookDetailsToListMapper @Inject constructor() {
     }
 
     companion object {
+        private const val FLOAT_FORMAT = "%.2g"
+        private const val DATE_FORMAT = "dd MMMM yyyy"
         private const val LANG_ID_PREFIX = "lang_"
         private const val PAGES_ID_PREFIX = "pages_"
         private const val PUBLISH_DATE_ID_PREFIX = "publish_date_"
