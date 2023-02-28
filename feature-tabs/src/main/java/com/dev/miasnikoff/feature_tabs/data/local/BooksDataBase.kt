@@ -11,7 +11,7 @@ abstract class BooksDataBase : RoomDatabase() {
     abstract fun bookDao(): BookDao
 
     companion object {
-        private const val DB_NAME = "books_database.db"
+        private const val DB_NAME = "book_database.db"
         private var instance: BooksDataBase? = null
 
         fun getInstance(context: Context): BooksDataBase {

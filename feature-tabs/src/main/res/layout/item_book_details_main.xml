@@ -16,7 +16,7 @@
             android:id="@+id/book_image"
             android:layout_width="@dimen/size_150"
             android:layout_height="@dimen/size_220"
-            android:background="?attr/textFillColor"
+            android:background="?attr/textOutlineColor"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

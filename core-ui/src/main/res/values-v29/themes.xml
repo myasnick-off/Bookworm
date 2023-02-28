@@ -10,5 +10,6 @@
         <item name="leafViewStyle">@style/BookwormLeafView</item>
         <item name="android:forceDarkAllowed">false</item>
         <item name="toolbarNavigationButtonStyle">@style/BookwormToolbarButton</item>
+        <item name="bottomNavigationStyle">@style/BookwormBottomNavStyle</item>
     </style>
 </resources>

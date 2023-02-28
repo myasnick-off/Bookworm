@@ -8,12 +8,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="color_gray_dark">#1c313a</color>
-    <color name="color_gray_medium">#455a64</color>
-    <color name="color_gray_light">#718792</color>
-    <color name="color_yellow_dark">#c77800</color>
-    <color name="color_yellow_medium">#ffa726</color>
-    <color name="color_yellow_light">#ffd95b</color>
+    <color name="color_gray_dark">#355361</color>
+    <color name="color_gray_medium">#617e8c</color>
+    <color name="color_gray_light">#aab7be</color>
+    <color name="color_yellow_dark">#FF9900</color>
+    <color name="color_yellow_medium">#ffad33</color>
+    <color name="color_yellow_light">#fdd34a</color>
     <color name="color_yellow_transparent">#70ffa726</color>
     <color name="color_gray_transparent">#60718792</color>
     <color name="transparent">#00000000</color>

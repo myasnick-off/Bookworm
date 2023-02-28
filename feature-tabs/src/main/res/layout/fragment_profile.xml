@@ -27,14 +27,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/user_name"
-            android:textColor="?attr/textOutlineColor"
+            android:textColor="?attr/textFillColor"
             android:textSize="@dimen/text_l" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_4"
-            android:background="?attr/colorOnSecondary" />
+            android:background="?attr/colorSecondary" />
 
         <TextView
             android:id="@+id/berth_label"
@@ -48,14 +48,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/berth_date"
-            android:textColor="?attr/textOutlineColor"
+            android:textColor="?attr/textFillColor"
             android:textSize="@dimen/text_l" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_4"
-            android:background="?attr/colorOnSecondary" />
+            android:background="?attr/colorSecondary" />
 
         <TextView
             android:id="@+id/address_label"
@@ -69,14 +69,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/address"
-            android:textColor="?attr/textOutlineColor"
+            android:textColor="?attr/textFillColor"
             android:textSize="@dimen/text_l" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_4"
-            android:background="?attr/colorOnSecondary" />
+            android:background="?attr/colorSecondary" />
 
         <TextView
             android:id="@+id/email_label"
@@ -90,14 +90,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/email"
-            android:textColor="?attr/textOutlineColor"
+            android:textColor="?attr/textFillColor"
             android:textSize="@dimen/text_l" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_4"
-            android:background="?attr/colorOnSecondary" />
+            android:background="?attr/colorSecondary" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/edit_button"
@@ -110,7 +110,7 @@
             android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_36"
+            android:layout_marginTop="@dimen/margin_24"
             android:text="@string/enter" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -77,9 +77,10 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     override fun initMenu() {
         binding.searchButton.setOnClickListener {
-            binding.searchEditText.text?.let { phrase ->
+            val phrase = binding.searchEditText.text
                 binding.root.hideSoftKeyboard()
                 binding.searchEditText.text = null
+            if (phrase.isNullOrEmpty().not()) {
                 navigateToBookList(query = phrase.toString())
             }
         }
