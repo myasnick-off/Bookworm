@@ -12,7 +12,7 @@ class DtoToUiMapper @Inject constructor() : BaseUiDataMapper<VolumeDTO>() {
     override fun toItem(item: VolumeDTO, imageSize: ImageSize): RecyclerItem =
         BookItem(
             id = item.id,
-            title = item.volumeInfo.title.orEmpty(),
+            title = item.volumeInfo.title,
             authors = item.volumeInfo.authors?.joinToString().orEmpty(),
             publishedDate = item.volumeInfo.publishedDate.orEmpty(),
             mainCategory = item.volumeInfo.mainCategory.orEmpty(),

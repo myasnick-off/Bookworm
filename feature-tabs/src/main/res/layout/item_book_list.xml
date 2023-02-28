@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_200"
             android:layout_margin="@dimen/margin_16"
-            android:background="?attr/colorControlNormal"
+            android:background="?attr/textFillColor"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

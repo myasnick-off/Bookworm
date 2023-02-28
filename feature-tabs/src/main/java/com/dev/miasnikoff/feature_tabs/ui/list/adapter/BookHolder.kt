@@ -10,7 +10,7 @@ import com.dev.miasnikoff.core_ui.extensions.vibrate
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.ItemBookListBinding
 
-class BookViewHolder(
+class BookHolder(
     private val binding: ItemBookListBinding,
     private val itemClickListener: BookCell.ItemClickListener
 ) :

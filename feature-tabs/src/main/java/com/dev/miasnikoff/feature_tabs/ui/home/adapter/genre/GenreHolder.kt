@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.feature_tabs.databinding.ItemGenreListBinding
 
-class GenreViewHolder(
+class GenreHolder(
     private val binding: ItemGenreListBinding,
     private val itemClickListener: GenreCell.ItemClickListener
 ) :

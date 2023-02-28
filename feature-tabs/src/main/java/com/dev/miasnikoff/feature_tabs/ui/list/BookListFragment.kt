@@ -17,7 +17,6 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
-import com.dev.miasnikoff.core_di.ViewModelFactory
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.adapter.BasePagedListAdapter
@@ -41,8 +40,10 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
     private val args: BookListFragmentArgs by navArgs()
 
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: BookListViewModel by viewModels { viewModelFactory }
+    lateinit var viewModelFactory: BookListViewModelAssistedFactory
+    private val viewModel: BookListViewModel by viewModels {
+        viewModelFactory.create(args.query, args.category)
+    }
 
     private val itemClickListener = object : BookCell.ItemClickListener {
         override fun onItemClick(itemId: String) {
@@ -66,7 +67,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
         }
     }
 
-    private val bookListAdapter: BookListAdapter = BookListAdapter(pageListener, itemClickListener)
+    private val bookListAdapter = BookListAdapter(pageListener, itemClickListener)
 
     private var fabAnimSet: AnimatorSet? = null
 
@@ -137,7 +138,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
         SearchDialogFragment.newInstance().apply {
             setOnSearchClickListener(object : SearchClickListener {
                 override fun onSearchClick(phrase: String) {
-                    viewModel.getInitialPage(query = phrase)
+                    viewModel.getData(query = phrase)
                 }
 
                 override fun onDialogDismiss() {
@@ -149,7 +150,6 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
 
     private fun initPresenter() {
         viewModel.liveData.observe(viewLifecycleOwner, ::renderState)
-        getData()
     }
 
     private fun renderState(state: PagedListState) {
@@ -188,13 +188,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
             message = "${getString(com.dev.miasnikoff.core_ui.R.string.error)} $message",
             actionText = getString(com.dev.miasnikoff.core_ui.R.string.reload),
             length = Snackbar.LENGTH_LONG,
-        ) { getData() }
-    }
-
-    private fun getData() {
-        args.query?.let {
-            viewModel.getInitialPage(query = it)
-        } ?: viewModel.getInitialPage(category = args.category)
+        ) { viewModel.getData() }
     }
 
     private fun navigateToDetails(bookId: String) {

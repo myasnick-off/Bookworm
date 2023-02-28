@@ -18,11 +18,11 @@ class LiteBookCell(private val itemClickListener: ItemClickListener) : Cell<Recy
     override fun holder(parent: ViewGroup): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemBookLiteListBinding.inflate(inflater, parent, false)
-        return LiteBookViewHolder(binding, itemClickListener)
+        return LiteBookHolder(binding, itemClickListener)
     }
 
     override fun bind(holder: RecyclerView.ViewHolder, item: RecyclerItem) {
-        if (holder is LiteBookViewHolder && item is LiteBookItem) {
+        if (holder is LiteBookHolder && item is LiteBookItem) {
             holder.bind(item)
         }
     }

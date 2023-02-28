@@ -1,5 +1,6 @@
 package com.dev.miasnikoff.feature_tabs.ui.home.mapper
 
+import com.dev.miasnikoff.core.extensions.customDateFormat
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
 import com.dev.miasnikoff.feature_tabs.data.local.BookEntity
 import com.dev.miasnikoff.feature_tabs.data.remote.model.ImageSize
@@ -26,8 +27,9 @@ class HomeEntityToUiMapper @Inject constructor(): BaseUiDataMapper<BookEntity>()
                 title = item.title.orEmpty(),
                 authors = item.authors.orEmpty(),
                 publisher = item.publisher.orEmpty(),
-                publishedDate = item.publishedDate.orEmpty(),
+                publishedDate = item.publishedDate.orEmpty().customDateFormat("dd MMMM yyyy"),
                 averageRating = item.averageRating ?: 0f,
+                ratingsCount = item.ratingsCount ?: 0,
                 imageLink = item.imageLinkLarge
             )
         }

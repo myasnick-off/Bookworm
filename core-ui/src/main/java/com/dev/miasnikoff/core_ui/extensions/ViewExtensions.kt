@@ -1,13 +1,16 @@
 package com.dev.miasnikoff.core_ui.extensions
 
 import android.app.Activity
+import android.content.res.Configuration
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.PluralsRes
 import androidx.core.content.getSystemService
 import com.google.android.material.snackbar.Snackbar
+import java.util.*
 
 fun View.showSnackBar(
     message: String,
@@ -29,4 +32,18 @@ fun View.hideSoftKeyboard() {
     this.findFocus()?.clearFocus()
     val imm = this.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(this.windowToken, 0)
+}
+
+fun View.getLocalizedQuantityString(
+    @PluralsRes id: Int,
+    quantity: Int,
+    locale: Locale = Locale("ru")
+): String {
+    return runCatching {
+        var resources = this.resources
+        val configuration = Configuration(resources.configuration)
+        configuration.setLocale(locale)
+        resources = context.createConfigurationContext(configuration).resources
+        resources.getQuantityString(id, quantity)
+    }.getOrDefault("")
 }

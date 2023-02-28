@@ -21,7 +21,7 @@ class BookListAdapter(
             super.onBindViewHolder(holder, position)
         } else {
             val iconRes = payloads.first { it is Int } as Int
-            (holder as? BookViewHolder)?.updateFavorite(iconRes)
+            (holder as? BookHolder)?.updateFavorite(iconRes)
         }
     }
 }

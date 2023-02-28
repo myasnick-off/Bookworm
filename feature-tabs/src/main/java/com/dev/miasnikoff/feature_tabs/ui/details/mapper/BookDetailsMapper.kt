@@ -12,7 +12,7 @@ class BookDetailsMapper @Inject constructor() {
     fun fromDto(dto: VolumeDTO): BookDetails =
         BookDetails(
             id = dto.id,
-            title = dto.volumeInfo.title.orEmpty(),
+            title = dto.volumeInfo.title,
             subtitle = dto.volumeInfo.subtitle.orEmpty(),
             authors = dto.volumeInfo.authors?.joinToString().orEmpty(),
             publisher = dto.volumeInfo.publisher.orEmpty(),

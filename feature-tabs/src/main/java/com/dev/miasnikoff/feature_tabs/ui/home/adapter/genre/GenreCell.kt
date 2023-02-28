@@ -18,11 +18,11 @@ class GenreCell(private val itemClickListener: ItemClickListener) : Cell<Recycle
     override fun holder(parent: ViewGroup): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemGenreListBinding.inflate(inflater, parent, false)
-        return GenreViewHolder(binding, itemClickListener)
+        return GenreHolder(binding, itemClickListener)
     }
 
     override fun bind(holder: RecyclerView.ViewHolder, item: RecyclerItem) {
-        if (holder is GenreViewHolder && item is GenreItem) {
+        if (holder is GenreHolder && item is GenreItem) {
             holder.bind(item)
         }
     }

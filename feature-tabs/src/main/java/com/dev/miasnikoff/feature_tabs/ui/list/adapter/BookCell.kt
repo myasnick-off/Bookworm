@@ -18,11 +18,11 @@ class BookCell(private val itemClickListener: ItemClickListener): Cell<RecyclerI
     override fun holder(parent: ViewGroup): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemBookListBinding.inflate(inflater, parent, false)
-        return BookViewHolder(binding, itemClickListener)
+        return BookHolder(binding, itemClickListener)
     }
 
     override fun bind(holder: RecyclerView.ViewHolder, item: RecyclerItem) {
-        if (holder is BookViewHolder && item is BookItem) {
+        if (holder is BookHolder && item is BookItem) {
             holder.bind(item)
         }
     }
