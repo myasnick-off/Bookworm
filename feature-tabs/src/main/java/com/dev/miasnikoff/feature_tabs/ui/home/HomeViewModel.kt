@@ -117,7 +117,7 @@ class HomeViewModel @Inject constructor(
     }
 
     companion object {
-        private const val INVALID_INDEX = 2
+        private const val INVALID_INDEX = -1
         private const val HISTORY_INDEX = 2
     }
 }
