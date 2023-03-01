@@ -1,10 +1,12 @@
 package com.dev.miasnikoff.core_ui.extensions
 
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.res.Configuration
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Property
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
@@ -53,4 +55,10 @@ fun View.getLocalizedQuantityString(
 
 fun ImageView.setImageById(imageRes: Int) {
     setImageDrawable(ResourcesCompat.getDrawable(context.resources, imageRes, context.theme))
+}
+
+fun View.createObjectAnimator(property: Property<View, Float>, animDuration: Long): ObjectAnimator =
+    ObjectAnimator.ofFloat(this, property, 0f, 1f).apply {
+        duration = animDuration
+        start()
 }

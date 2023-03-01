@@ -26,12 +26,12 @@ object Dependencies {
     private const val RX_BINDING_VERSION = "3.1.0"
     private const val GLIDE_VERSION = "4.13.2"
     private const val ROOM_VERSION = "2.5.0"
+    private const val SWIPE_REFRESH_VERSION = "1.1.0"
 
 
     const val KTX_CORE = "androidx.core:core-ktx:$KTX_CORE_VERSION"
     const val APPCOMPAT = "androidx.appcompat:appcompat:$APPCOMPAT_VERSION"
     const val ANDROID_MATERIAL = "com.google.android.material:material:$ANDROID_MATERIAL_VERSION"
-    const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:$CONSTRAINT_LAYOUT_VERSION"
 
     const val JUNIT = "junit:junit:$JUNIT_VERSION"
     const val JUNIT_EXT = "androidx.test.ext:junit:$JUNIT_EXT_VERSION"
@@ -40,7 +40,9 @@ object Dependencies {
     const val ARCH_TESTING = "androidx.arch.core:core-testing:$ARCH_TESTING_VERSION"
     const val COROUTINES_TESTING = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$COROUTINES_TESTING_VERSION"
 
+    const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:$CONSTRAINT_LAYOUT_VERSION"
     const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:$FRAGMENT_KTX_VERSION"
+    const val SWIPE_REFRESH = "androidx.swiperefreshlayout:swiperefreshlayout:$SWIPE_REFRESH_VERSION"
 
     const val RETROFIT = "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     const val RETROFIT_COROUTINES = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$RETROFIT_COROUTINES_VERSION"
@@ -70,5 +72,4 @@ object Dependencies {
     const val ROOM = "androidx.room:room-runtime:$ROOM_VERSION"
     const val ROOM_KTX = "androidx.room:room-ktx:$ROOM_VERSION"
     const val ROOM_COMPILER = "androidx.room:room-compiler:$ROOM_VERSION"
-
 }

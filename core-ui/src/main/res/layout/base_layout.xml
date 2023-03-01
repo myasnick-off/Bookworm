@@ -15,6 +15,11 @@
 
     </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/content_recycler"
         android:layout_width="wrap_content"

@@ -17,7 +17,6 @@ import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.CarouselWithTitl
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.feature_tabs.ui.home.mapper.HomeDtoToUiMapper
 import com.dev.miasnikoff.feature_tabs.ui.home.mapper.HomeEntityToUiMapper
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,8 +28,6 @@ class HomeViewModel @Inject constructor(
     router: FlowRouter,
     private val eventBus: EventBus
 ) : BaseListViewModel(router) {
-
-    private var job: Job? = null
 
     init {
         getInitialData()
@@ -50,6 +47,11 @@ class HomeViewModel @Inject constructor(
 
     override fun getInitialData() {
         mutableStateFlow.value = ListState.EmptyLoading
+        getHomeData()
+    }
+
+    private fun getHomeData() {
+        job?.cancel()
         job = viewModelScope.launch {
             val homeList = mutableListOf<RecyclerItem>()
             interactor.getBookOfDay()

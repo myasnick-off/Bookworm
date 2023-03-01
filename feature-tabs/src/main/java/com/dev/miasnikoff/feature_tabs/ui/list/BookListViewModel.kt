@@ -19,7 +19,6 @@ import com.dev.miasnikoff.feature_tabs.ui.list.mapper.DtoToUiMapper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,8 +31,6 @@ class BookListViewModel @Inject constructor(
     private val query: String?,
     private val category: Category?
 ) : BaseListViewModel(router) {
-
-    private var job: Job? = null
 
     private var currentList: MutableList<RecyclerItem> = mutableListOf()
     private var startIndex: Int = DEFAULT_START_INDEX
@@ -49,7 +46,7 @@ class BookListViewModel @Inject constructor(
     private fun handleAppEvents() {
         viewModelScope.launch {
             eventBus.events.collectLatest { event ->
-                when(event) {
+                when (event) {
                     is AppEvent.FavoriteUpdate -> updateBookList()
                     else -> {}
                 }
@@ -77,13 +74,14 @@ class BookListViewModel @Inject constructor(
         loadInitialPage()
     }
 
-    fun getData(query: String) {
+    fun getDataByQuery(query: String) {
         currentQuery = query
         loadInitialPage()
     }
 
     private fun loadInitialPage() {
         mutableStateFlow.value = ListState.EmptyLoading
+        startIndex = DEFAULT_START_INDEX
         currentList.clear()
         getBookList()
     }
@@ -94,30 +92,28 @@ class BookListViewModel @Inject constructor(
     }
 
     private fun getBookList() {
-        if (stateFlow.value !is ListState.Success) {
-            job?.cancel()
-            job = viewModelScope.launch {
-                interactor.getBooksList(
-                    query = currentQuery,
-                    filter = filter,
-                    orderBy = orderBy,
-                    startIndex = startIndex,
-                    maxResults = DEFAULT_MAX_VALUES
-                )
-                    .onSuccess { volumeResponse ->
-                        mutableStateFlow.value = volumeResponse.volumes?.let { volumesDTO ->
-                            startIndex += DEFAULT_MAX_VALUES
-                            val newList = mutableListOf<RecyclerItem>().apply {
-                                addAll((currentList + dtoToUiMapper.toItemList(volumesDTO)).distinctBy { it.id })
-                            }
-                            currentList = newList
-                            if (newList.isEmpty()) ListState.Empty
-                            else ListState.Success(newList, newList.size < volumeResponse.totalItems)
-                        } ?: if (currentList.isEmpty()) ListState.Empty
-                             else ListState.Success(currentList, false)
-                    }
-                    .onFailure(::postError)
-            }
+        job?.cancel()
+        job = viewModelScope.launch {
+            interactor.getBooksList(
+                query = currentQuery,
+                filter = filter,
+                orderBy = orderBy,
+                startIndex = startIndex,
+                maxResults = DEFAULT_MAX_VALUES
+            )
+                .onSuccess { volumeResponse ->
+                    mutableStateFlow.value = volumeResponse.volumes?.let { volumesDTO ->
+                        startIndex += DEFAULT_MAX_VALUES
+                        val newList = mutableListOf<RecyclerItem>().apply {
+                            addAll((currentList + dtoToUiMapper.toItemList(volumesDTO)).distinctBy { it.id })
+                        }
+                        currentList = newList
+                        if (newList.isEmpty()) ListState.Empty
+                        else ListState.Success(newList, newList.size < volumeResponse.totalItems)
+                    } ?: if (currentList.isEmpty()) ListState.Empty
+                    else ListState.Success(currentList, false)
+                }
+                .onFailure(::postError)
         }
     }
 

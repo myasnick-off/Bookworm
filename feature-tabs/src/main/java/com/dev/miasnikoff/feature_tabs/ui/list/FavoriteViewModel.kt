@@ -41,7 +41,6 @@ class FavoriteViewModel @Inject constructor(
 
     override fun getInitialData() {
         mutableStateFlow.value = ListState.EmptyLoading
-        currentList.clear()
         getAllFavorite()
     }
 

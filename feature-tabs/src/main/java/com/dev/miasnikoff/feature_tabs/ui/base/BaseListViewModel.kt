@@ -2,6 +2,7 @@ package com.dev.miasnikoff.feature_tabs.ui.base
 
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.core_ui.BaseViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -14,6 +15,8 @@ abstract class BaseListViewModel(router: FlowRouter) : BaseViewModel(router) {
 
     protected val mutableSharedFlow = MutableSharedFlow<String?>()
     val sharedFlow = mutableSharedFlow.asSharedFlow()
+
+    protected var job: Job? = null
 
     abstract fun getInitialData()
 }

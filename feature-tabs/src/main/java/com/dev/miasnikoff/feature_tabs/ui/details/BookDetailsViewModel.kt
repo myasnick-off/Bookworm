@@ -42,10 +42,14 @@ class BookDetailsViewModel @AssistedInject constructor(
             }
         }
     }
-
     override fun getInitialData() {
         mutableStateFlow.value = ListState.EmptyLoading
-        viewModelScope.launch {
+        getDetails()
+    }
+
+    private fun getDetails() {
+        job?.cancel()
+        job = viewModelScope.launch {
             interactor.getDetails(bookId)
                 .onSuccess { details ->
                     mutableStateFlow.value = ListState.Success(mapper.toList(details))

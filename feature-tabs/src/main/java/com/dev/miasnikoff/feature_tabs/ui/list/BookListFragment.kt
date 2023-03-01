@@ -1,17 +1,16 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.adapter.BasePagedListAdapter
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
+import com.dev.miasnikoff.core_ui.extensions.createObjectAnimator
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentListBinding
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
@@ -42,9 +41,7 @@ class BookListFragment : BaseListFragment(R.layout.fragment_list) {
         }
 
         override fun onItemLongClick(itemId: String) {
-            //todo: change toast to real action
-            Toast.makeText(context, "Made long click on item with id #$itemId", Toast.LENGTH_SHORT)
-                .show()
+            viewModel.setFavorite(itemId)
         }
 
         override fun onFavoriteClick(itemId: String) {
@@ -78,23 +75,20 @@ class BookListFragment : BaseListFragment(R.layout.fragment_list) {
     override fun initView() {
         super.initView()
         binding.contentRecycler.adapter = bookListAdapter
-        val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
-        val animScaleY = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_Y, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
-        val animAlpha = ObjectAnimator.ofFloat(binding.listFab, View.ALPHA, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
+        binding.contentRecycler.itemAnimator = null
+        initFab()
+    }
+
+
+    private fun initFab() = with(binding) {
+        val animScaleX = listFab.createObjectAnimator(View.SCALE_X, FAB_ANIMATION_DURATION)
+        val animScaleY = listFab.createObjectAnimator(View.SCALE_Y, FAB_ANIMATION_DURATION)
+        val animAlpha = listFab.createObjectAnimator(View.ALPHA, FAB_ANIMATION_DURATION)
         fabAnimSet = AnimatorSet().apply {
             playTogether(animScaleX, animScaleY, animAlpha)
             start()
         }
-        binding.listFab.setOnClickListener {
+        listFab.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 fabAnimSet?.reverse()
             }
@@ -106,7 +100,7 @@ class BookListFragment : BaseListFragment(R.layout.fragment_list) {
         SearchDialogFragment.newInstance().apply {
             setOnSearchClickListener(object : SearchClickListener {
                 override fun onSearchClick(phrase: String) {
-                    viewModel.getData(query = phrase)
+                    viewModel.getDataByQuery(query = phrase)
                 }
 
                 override fun onDialogDismiss() {

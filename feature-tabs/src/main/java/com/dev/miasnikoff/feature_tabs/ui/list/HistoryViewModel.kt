@@ -32,7 +32,7 @@ class HistoryViewModel @Inject constructor(
         viewModelScope.launch {
             eventBus.events.collectLatest { event ->
                 when(event) {
-                    is AppEvent.FavoriteUpdate, is AppEvent.HistoryUpdate -> getAllHistory()
+                    is AppEvent.FavoriteUpdate, is AppEvent.HistoryUpdate -> getHistoryData()
                     else -> {}
                 }
             }
@@ -41,12 +41,12 @@ class HistoryViewModel @Inject constructor(
 
     override fun getInitialData() {
         mutableStateFlow.value = ListState.EmptyLoading
-        currentList.clear()
-        getAllHistory()
+        getHistoryData()
     }
 
-    private fun getAllHistory() {
-        viewModelScope.launch {
+    private fun getHistoryData() {
+        job?.cancel()
+        job = viewModelScope.launch {
             val newList = mutableListOf<RecyclerItem>().apply {
                 addAll(entityToUiMapper.toItemList(interactor.getHistory()))
                 sortBy { it.id }

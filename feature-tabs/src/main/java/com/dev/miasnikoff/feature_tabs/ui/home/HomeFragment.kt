@@ -67,6 +67,10 @@ class HomeFragment : BaseListFragment(R.layout.fragment_home) {
 
     override fun initView() {
         binding.contentRecycler.adapter = homeListAdapter
+        binding.refresh.setOnRefreshListener {
+            binding.refresh.isRefreshing = false
+            viewModel.getInitialData()
+        }
     }
 
     override fun initMenu() {

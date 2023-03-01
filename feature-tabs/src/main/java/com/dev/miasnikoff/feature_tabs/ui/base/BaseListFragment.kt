@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.R
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
@@ -30,8 +31,15 @@ abstract class BaseListFragment(layoutRes: Int): BaseFragment(layoutRes) {
     private val errorView: ImageView?
         get() = view?.findViewById(R.id.error)
 
-    open fun getData() {
-        viewModel.getInitialData()
+    private val refreshLayout: SwipeRefreshLayout?
+        get() = view?.findViewById(R.id.refresh)
+
+    override fun initView() {
+        super.initView()
+        refreshLayout?.setOnRefreshListener {
+            refreshLayout?.isRefreshing = false
+            viewModel.getInitialData()
+        }
     }
 
     open fun initViewModel() {
@@ -88,6 +96,6 @@ abstract class BaseListFragment(layoutRes: Int): BaseFragment(layoutRes) {
             message = getString(R.string.message_error),
             actionText = getString(R.string.reload),
             length = Snackbar.LENGTH_LONG,
-        ) { getData() }
+        ) { viewModel.getInitialData() }
     }
 }
