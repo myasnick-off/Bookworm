@@ -43,7 +43,8 @@ abstract class BaseListFragment(layoutRes: Int): BaseFragment(layoutRes) {
     }
 
     open fun initViewModel() {
-        viewModel.stateFlow.onEach(::renderState).launchIn(lifecycleScope)
+        viewModel.screenState.onEach(::renderState).launchIn(lifecycleScope)
+        viewModel.screenEvent.onEach(::renderEvent).launchIn(lifecycleScope)
     }
 
     abstract fun updateList(data: List<RecyclerItem>, loadMore: Boolean)
@@ -55,6 +56,12 @@ abstract class BaseListFragment(layoutRes: Int): BaseFragment(layoutRes) {
             is ListState.Loading -> showLoading()
             is ListState.Failure -> showError()
             is ListState.Success -> showData(state.data, state.loadMore)
+        }
+    }
+
+    private fun renderEvent(event: ScreenEvent) {
+        when(event) {
+            is ScreenEvent.Error -> showErrorMessage()
         }
     }
 
@@ -92,6 +99,14 @@ abstract class BaseListFragment(layoutRes: Int): BaseFragment(layoutRes) {
         contentRecycler?.visibility = View.GONE
         emptyView?.visibility = View.GONE
         errorView?.visibility = View.VISIBLE
+        binding.root.showSnackBar(
+            message = getString(R.string.message_error),
+            actionText = getString(R.string.reload),
+            length = Snackbar.LENGTH_LONG,
+        ) { viewModel.getInitialData() }
+    }
+
+    private fun showErrorMessage() {
         binding.root.showSnackBar(
             message = getString(R.string.message_error),
             actionText = getString(R.string.reload),

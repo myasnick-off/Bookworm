@@ -6,8 +6,8 @@ import androidx.lifecycle.asLiveData
 import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core.event.EventBusImpl
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeDTO
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeInfoDTO
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookDTO
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookInfoDTO
 import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractor
 import com.dev.miasnikoff.feature_tabs.domain.model.Either
@@ -24,7 +24,8 @@ import com.dev.miasnikoff.feature_tabs.ui.list.mapper.DtoToUiMapper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -69,15 +70,15 @@ class BookListViewModelTest {
         testVolumeResponse = VolumeResponse(
             kind = "kind",
             volumes = listOf(
-                VolumeDTO(
+                BookDTO(
                     id = TEST_ID,
                     selfLink = "self/link1",
-                    volumeInfo = VolumeInfoDTO(title = "Test Title 1")
+                    bookInfo = BookInfoDTO(title = "Test Title 1")
                 ),
-                VolumeDTO(
+                BookDTO(
                     id = TEST_ID_FAVORITE,
                     selfLink = "self/link2",
-                    volumeInfo = VolumeInfoDTO(title = "Test Title 2"),
+                    bookInfo = BookInfoDTO(title = "Test Title 2"),
                     isFavorite = true
                 )
             ),
@@ -109,12 +110,12 @@ class BookListViewModelTest {
         )
 
         observer = Observer<ListState> {}
-        bookListViewModel.stateFlow.asLiveData().observeForever(observer)
+        bookListViewModel.screenState.asLiveData().observeForever(observer)
     }
 
     @After
     fun clear() {
-        bookListViewModel.stateFlow.asLiveData().removeObserver(observer)
+        bookListViewModel.screenState.asLiveData().removeObserver(observer)
     }
 
     @Test
@@ -176,9 +177,9 @@ class BookListViewModelTest {
                 data = listOf(testBookItem, testBookItemFavorite),
                 loadMore = false
             )
-            val actualVal = bookListViewModel.stateFlow.value as? ListState.Success
+            val actualVal = bookListViewModel.screenState.value as? ListState.Success
 
-            assertNotNull(bookListViewModel.stateFlow.value)
+            assertNotNull(bookListViewModel.screenState.value)
             assertEquals(expectedVal, actualVal)
         }
     }
@@ -198,7 +199,7 @@ class BookListViewModelTest {
 
         bookListViewModel.getDataByQuery(TEST_QUERY)
             val expectedVal = ListState.Failure
-            val actualVal = bookListViewModel.stateFlow.value as? ListState.Failure
+            val actualVal = bookListViewModel.screenState.value as? ListState.Failure
 
             assertNotNull(actualVal)
             assertEquals(expectedVal, actualVal)

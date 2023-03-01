@@ -1,35 +1,35 @@
 package com.dev.miasnikoff.feature_tabs.ui.details.mapper
 
 import com.dev.miasnikoff.feature_tabs.data.local.BookEntity
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookDTO
 import com.dev.miasnikoff.feature_tabs.data.remote.model.ImageLinksDTO
 import com.dev.miasnikoff.feature_tabs.data.remote.model.ImageSize
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.feature_tabs.domain.model.BookDetails
 import javax.inject.Inject
 
 class BookDetailsMapper @Inject constructor() {
 
-    fun fromDto(dto: VolumeDTO): BookDetails =
+    fun fromDto(dto: BookDTO): BookDetails =
         BookDetails(
             id = dto.id,
-            title = dto.volumeInfo.title,
-            subtitle = dto.volumeInfo.subtitle.orEmpty(),
-            authors = dto.volumeInfo.authors?.joinToString().orEmpty(),
-            publisher = dto.volumeInfo.publisher.orEmpty(),
-            publishedDate = dto.volumeInfo.publishedDate.orEmpty(),
-            categories = dto.volumeInfo.categories?.joinToString()
-                ?: dto.volumeInfo.mainCategory.orEmpty(),
-            averageRating = dto.volumeInfo.averageRating.toFloat(),
-            ratingsCount = dto.volumeInfo.ratingsCount,
-            description = dto.volumeInfo.description.orEmpty(),
-            pageCount = dto.volumeInfo.pageCount ?: 0,
-            printType = dto.volumeInfo.printType.orEmpty(),
-            imageLinkSmall = getImageOfSize(dto.volumeInfo.imageLinks, ImageSize.S),
-            imageLinkLarge = getImageOfSize(dto.volumeInfo.imageLinks, ImageSize.M),
-            language = dto.volumeInfo.language.orEmpty(),
-            previewLink = formatUrl(dto.volumeInfo.previewLink.orEmpty()),
-            infoLink = formatUrl(dto.volumeInfo.infoLink.orEmpty()),
-            canonicalLink = formatUrl(dto.volumeInfo.canonicalVolumeLink.orEmpty()),
+            title = dto.bookInfo.title,
+            subtitle = dto.bookInfo.subtitle.orEmpty(),
+            authors = dto.bookInfo.authors?.joinToString().orEmpty(),
+            publisher = dto.bookInfo.publisher.orEmpty(),
+            publishedDate = dto.bookInfo.publishedDate.orEmpty(),
+            categories = dto.bookInfo.categories?.joinToString()
+                ?: dto.bookInfo.mainCategory.orEmpty(),
+            averageRating = dto.bookInfo.averageRating.toFloat(),
+            ratingsCount = dto.bookInfo.ratingsCount,
+            description = dto.bookInfo.description.orEmpty(),
+            pageCount = dto.bookInfo.pageCount ?: 0,
+            printType = dto.bookInfo.printType.orEmpty(),
+            imageLinkSmall = getImageOfSize(dto.bookInfo.imageLinks, ImageSize.S),
+            imageLinkLarge = getImageOfSize(dto.bookInfo.imageLinks, ImageSize.M),
+            language = dto.bookInfo.language.orEmpty(),
+            previewLink = formatUrl(dto.bookInfo.previewLink.orEmpty()),
+            infoLink = formatUrl(dto.bookInfo.infoLink.orEmpty()),
+            canonicalLink = formatUrl(dto.bookInfo.canonicalVolumeLink.orEmpty()),
             isFavorite = dto.isFavorite
         )
 

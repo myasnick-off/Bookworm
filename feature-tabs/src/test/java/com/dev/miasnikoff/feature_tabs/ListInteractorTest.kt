@@ -1,8 +1,8 @@
 package com.dev.miasnikoff.feature_tabs
 
 import com.dev.miasnikoff.feature_tabs.data.local.BookEntity
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeDTO
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeInfoDTO
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookDTO
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookInfoDTO
 import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.feature_tabs.domain.LocalRepository
 import com.dev.miasnikoff.feature_tabs.domain.RemoteRepository
@@ -50,10 +50,10 @@ class ListInteractorTest {
         testVolumeResponse = VolumeResponse(
             kind = "kind",
             volumes = listOf(
-                VolumeDTO(
+                BookDTO(
                     id = TEST_ID,
                     selfLink = "self/link",
-                    volumeInfo = VolumeInfoDTO(title = "Test Title")
+                    bookInfo = BookInfoDTO(title = "Test Title")
                 )
             ),
             totalItems = 1
@@ -155,10 +155,10 @@ class ListInteractorTest {
     @Test
     fun `should mark remote books as favorite if they saved in local database`() {
         val expectedVolumes = listOf(
-            VolumeDTO(
+            BookDTO(
                 id = TEST_ID,
                 selfLink = "self/link",
-                volumeInfo = VolumeInfoDTO(title = "Test Title"),
+                bookInfo = BookInfoDTO(title = "Test Title"),
                 isFavorite = true
             )
         )

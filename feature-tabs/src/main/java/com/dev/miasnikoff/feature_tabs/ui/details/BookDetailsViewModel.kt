@@ -43,7 +43,7 @@ class BookDetailsViewModel @AssistedInject constructor(
         }
     }
     override fun getInitialData() {
-        mutableStateFlow.value = ListState.EmptyLoading
+        mScreenState.value = ListState.EmptyLoading
         getDetails()
     }
 
@@ -52,24 +52,24 @@ class BookDetailsViewModel @AssistedInject constructor(
         job = viewModelScope.launch {
             interactor.getDetails(bookId)
                 .onSuccess { details ->
-                    mutableStateFlow.value = ListState.Success(mapper.toList(details))
+                    mScreenState.value = ListState.Success(mapper.toList(details))
                     eventBus.emitEvent(AppEvent.HistoryUpdate(bookId))
                 }
                 .onFailure {
-                    mutableStateFlow.value = ListState.Failure
+                    mScreenState.value = ListState.Failure
                 }
         }
     }
 
     fun setFavorite() {
         viewModelScope.launch {
-            (stateFlow.value as? ListState.Success)?.let {
+            (screenState.value as? ListState.Success)?.let {
                 interactor.checkFavorite(bookId)
                     .onSuccess {
                         eventBus.emitEvent(AppEvent.FavoriteUpdate(bookId))
                     }
                     .onFailure {
-                        mutableStateFlow.value = ListState.Failure
+                        mScreenState.value = ListState.Failure
                     }
             }
         }
@@ -80,18 +80,15 @@ class BookDetailsViewModel @AssistedInject constructor(
             viewModelScope.launch {
                 interactor.getDetails(bookId)
                     .onSuccess { details ->
-                        mutableStateFlow.value = ListState.Success(mapper.toList(details))
+                        mScreenState.value = ListState.Success(mapper.toList(details))
                     }
-                    .onFailure { message ->
-                        mutableStateFlow.value = ListState.Failure
-                        mutableSharedFlow.emit(message)
-                    }
+                    .onFailure(::postError)
             }
         }
     }
 
     fun getBookUrl(): String? {
-        return (stateFlow.value as? ListState.Success)?.let { state ->
+        return (screenState.value as? ListState.Success)?.let { state ->
             val item = state.data.firstOrNull { it is BookControlsItem } as BookControlsItem?
             item?.previewLink
         }

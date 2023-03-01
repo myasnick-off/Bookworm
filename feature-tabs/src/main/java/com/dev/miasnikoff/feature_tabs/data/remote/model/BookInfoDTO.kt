@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlin.random.Random
 
 @Serializable
-data class VolumeInfoDTO(
+data class BookInfoDTO(
     @SerialName("title") val title: String,
     @SerialName("subtitle") val subtitle: String? = null,
     @SerialName("authors") val authors: List<String>? = null,

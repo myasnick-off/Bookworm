@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VolumeResponse(
     @SerialName("kind") val kind: String,
-    @SerialName("items") val volumes: List<VolumeDTO>? = null,
+    @SerialName("items") val volumes: List<BookDTO>? = null,
     @SerialName("totalItems") val totalItems: Int
 )

@@ -1,6 +1,6 @@
 package com.dev.miasnikoff.feature_tabs.data.remote
 
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeDTO
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookDTO
 import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.network.calladapter.ApiResponse
 import retrofit2.http.GET
@@ -23,5 +23,5 @@ interface ApiService {
     @GET("/books/v1/volumes/{volumeId}")
     suspend fun getVolume(
         @Path("volumeId") volumeId: String
-    ): ApiResponse<VolumeDTO>
+    ): ApiResponse<BookDTO>
 }

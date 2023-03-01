@@ -40,7 +40,7 @@ class FavoriteViewModel @Inject constructor(
     }
 
     override fun getInitialData() {
-        mutableStateFlow.value = ListState.EmptyLoading
+        mScreenState.value = ListState.EmptyLoading
         getAllFavorite()
     }
 
@@ -50,14 +50,14 @@ class FavoriteViewModel @Inject constructor(
                 addAll(entityToUiMapper.toItemList(interactor.getFavorite()))
             }
             currentList = newList
-            mutableStateFlow.value =
+            mScreenState.value =
                 if (currentList.isEmpty()) ListState.Empty
                 else ListState.Success(currentList, false)
         }
     }
 
     fun removeFromFavorite(itemId: String) {
-        mutableStateFlow.value = ListState.Loading
+        mScreenState.value = ListState.Loading
         viewModelScope.launch {
             val index = currentList.indexOfFirst { it.id == itemId }
             val bookItem = (currentList.firstOrNull { it.id == itemId } as? BookItem)

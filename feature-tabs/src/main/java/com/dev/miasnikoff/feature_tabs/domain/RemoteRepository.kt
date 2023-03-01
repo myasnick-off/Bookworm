@@ -1,6 +1,6 @@
 package com.dev.miasnikoff.feature_tabs.domain
 
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeDTO
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookDTO
 import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.feature_tabs.domain.model.OrderBy
 import com.dev.miasnikoff.feature_tabs.domain.model.PrintType
@@ -16,7 +16,7 @@ interface RemoteRepository {
         maxResults: Int = DEFAULT_MAX_VALUES
     ): ApiResponse<VolumeResponse>
 
-    suspend fun getVolume(id: String): ApiResponse<VolumeDTO>
+    suspend fun getVolume(id: String): ApiResponse<BookDTO>
 
     companion object {
         private const val DEFAULT_START_INDEX = 0

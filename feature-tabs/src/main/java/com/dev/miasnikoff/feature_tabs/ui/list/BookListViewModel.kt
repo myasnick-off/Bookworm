@@ -1,6 +1,5 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -80,14 +79,14 @@ class BookListViewModel @Inject constructor(
     }
 
     private fun loadInitialPage() {
-        mutableStateFlow.value = ListState.EmptyLoading
+        mScreenState.value = ListState.EmptyLoading
         startIndex = DEFAULT_START_INDEX
         currentList.clear()
         getBookList()
     }
 
     fun loadNextPage() {
-        mutableStateFlow.value = ListState.Loading
+        mScreenState.value = ListState.Loading
         getBookList()
     }
 
@@ -102,10 +101,10 @@ class BookListViewModel @Inject constructor(
                 maxResults = DEFAULT_MAX_VALUES
             )
                 .onSuccess { volumeResponse ->
-                    mutableStateFlow.value = volumeResponse.volumes?.let { volumesDTO ->
+                    mScreenState.value = volumeResponse.volumes?.let { booksDTO ->
                         startIndex += DEFAULT_MAX_VALUES
                         val newList = mutableListOf<RecyclerItem>().apply {
-                            addAll((currentList + dtoToUiMapper.toItemList(volumesDTO)).distinctBy { it.id })
+                            addAll((currentList + dtoToUiMapper.toItemList(booksDTO)).distinctBy { it.id })
                         }
                         currentList = newList
                         if (newList.isEmpty()) ListState.Empty
@@ -119,7 +118,7 @@ class BookListViewModel @Inject constructor(
 
     fun setFavorite(itemId: String?) {
         viewModelScope.launch {
-            (stateFlow.value as? ListState.Success)?.let { state ->
+            (screenState.value as? ListState.Success)?.let { state ->
                 val bookItem = (state.data.firstOrNull { it.id == itemId } as? BookItem)
                 bookItem?.let {
                     when (bookItem.isFavorite) {
@@ -135,8 +134,8 @@ class BookListViewModel @Inject constructor(
     private fun updateBookList() {
         viewModelScope.launch {
         val newList: MutableList<RecyclerItem> = mutableListOf()
-        (stateFlow.value as? ListState.Success)?.let { state ->
-            mutableStateFlow.value = ListState.Loading
+        (screenState.value as? ListState.Success)?.let { state ->
+            mScreenState.value = ListState.Loading
             val favoriteList = interactor.getFavorite()
             state.data.forEach { book ->
                 val index = favoriteList.indexOfFirst { favorite -> book.id == favorite.id }
@@ -149,14 +148,9 @@ class BookListViewModel @Inject constructor(
                 }
             }
             currentList = newList
-            mutableStateFlow.value = state.copy(data = currentList)
+            mScreenState.value = state.copy(data = currentList)
             }
         }
-    }
-
-    private fun postError(message: String? = null) {
-        Log.e("###", message ?: "")
-        mutableStateFlow.value = ListState.Failure
     }
 
     companion object {

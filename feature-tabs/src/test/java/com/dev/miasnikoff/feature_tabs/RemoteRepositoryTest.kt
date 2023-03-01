@@ -2,8 +2,8 @@ package com.dev.miasnikoff.feature_tabs
 
 import com.dev.miasnikoff.feature_tabs.data.remote.ApiService
 import com.dev.miasnikoff.feature_tabs.data.remote.RemoteRepositoryImpl
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeDTO
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeInfoDTO
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookDTO
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookInfoDTO
 import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.feature_tabs.domain.RemoteRepository
 import com.dev.miasnikoff.feature_tabs.domain.model.OrderBy
@@ -31,18 +31,18 @@ class RemoteRepositoryTest {
 
     lateinit var remoteRepository: RemoteRepository
     lateinit var testVolumeResponse: VolumeResponse
-    lateinit var testVolumeDTO: VolumeDTO
+    lateinit var testBookDTO: BookDTO
 
     @Before
     fun setup() {
         remoteRepository = RemoteRepositoryImpl(apiService)
-        testVolumeDTO = VolumeDTO(
+        testBookDTO = BookDTO(
             id = TEST_ID,
             selfLink = "self/link",
-            volumeInfo = VolumeInfoDTO(title = "Test Title")
+            bookInfo = BookInfoDTO(title = "Test Title")
         )
         testVolumeResponse =
-            VolumeResponse(kind = "kind", volumes = listOf(testVolumeDTO), totalItems = 1)
+            VolumeResponse(kind = "kind", volumes = listOf(testBookDTO), totalItems = 1)
     }
 
 
@@ -69,7 +69,7 @@ class RemoteRepositoryTest {
 
     @Test
     fun `should provide ApiResponse when Volume requested`() {
-        val expected = ApiResponse.Success(testVolumeDTO)
+        val expected = ApiResponse.Success(testBookDTO)
         runTest {
             `when`(apiService.getVolume(volumeId = TEST_ID)).thenReturn(expected)
 

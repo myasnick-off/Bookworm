@@ -1,6 +1,5 @@
 package com.dev.miasnikoff.feature_tabs.ui.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.dev.miasnikoff.core.event.AppEvent
 import com.dev.miasnikoff.core.event.EventBus
@@ -46,7 +45,7 @@ class HomeViewModel @Inject constructor(
     }
 
     override fun getInitialData() {
-        mutableStateFlow.value = ListState.EmptyLoading
+        mScreenState.value = ListState.EmptyLoading
         getHomeData()
     }
 
@@ -93,14 +92,14 @@ class HomeViewModel @Inject constructor(
                 .onFailure(::postError)
 
             if (homeList.size > 1) {
-                mutableStateFlow.value = ListState.Success(homeList)
-            } else mutableStateFlow.value = ListState.Failure
+                mScreenState.value = ListState.Success(homeList)
+            } else mScreenState.value = ListState.Failure
         }
     }
 
     private fun updateHistoryList() {
         viewModelScope.launch {
-            (stateFlow.value as? ListState.Success)?.let { state ->
+            (screenState.value as? ListState.Success)?.let { state ->
                 val newList: MutableList<RecyclerItem> = mutableListOf()
                 newList.addAll(state.data)
                 val historyList = homeEntityToUiMapper.toItemList(interactor.getHistory())
@@ -112,14 +111,9 @@ class HomeViewModel @Inject constructor(
                     index > INVALID_INDEX && historyList.isNotEmpty() -> newList[index] = (newList[index] as CarouselWithTitleItem).copy(items = historyList)
                     else -> newList.addNotNull(HISTORY_INDEX, CarouselWithTitleItem.createCarouselOfCategory(category = Category.LAST_VIEWED, items = historyList))
                 }
-                mutableStateFlow.value = state.copy(data = newList)
+                mScreenState.value = state.copy(data = newList)
             }
         }
-    }
-
-    private fun postError(message: String?) {
-        Log.e("###", message ?: "")
-        mutableStateFlow.value = ListState.Failure
     }
 
     companion object {

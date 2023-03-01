@@ -40,7 +40,7 @@ class HistoryViewModel @Inject constructor(
     }
 
     override fun getInitialData() {
-        mutableStateFlow.value = ListState.EmptyLoading
+        mScreenState.value = ListState.EmptyLoading
         getHistoryData()
     }
 
@@ -52,7 +52,7 @@ class HistoryViewModel @Inject constructor(
                 sortBy { it.id }
             }
             currentList = newList
-            mutableStateFlow.value = if (currentList.isEmpty()) {
+            mScreenState.value = if (currentList.isEmpty()) {
                 ListState.Empty
             } else {
                 ListState.Success(currentList, false)
@@ -62,7 +62,7 @@ class HistoryViewModel @Inject constructor(
 
     fun setFavorite(itemId: String) {
         viewModelScope.launch {
-            mutableStateFlow.value = ListState.Loading
+            mScreenState.value = ListState.Loading
             val index = currentList.indexOfFirst { it.id == itemId }
             val bookItem = (currentList.firstOrNull { it.id == itemId } as? BookItem)
             if (index > -1 && bookItem != null) {
@@ -85,7 +85,7 @@ class HistoryViewModel @Inject constructor(
 
     fun removeFromHistory(itemId: String) {
         viewModelScope.launch {
-            mutableStateFlow.value = ListState.Loading
+            mScreenState.value = ListState.Loading
             val index = currentList.indexOfFirst { it.id == itemId }
             val bookItem = (currentList.firstOrNull { it.id == itemId } as? BookItem)
             if (index > -1 && bookItem != null) {

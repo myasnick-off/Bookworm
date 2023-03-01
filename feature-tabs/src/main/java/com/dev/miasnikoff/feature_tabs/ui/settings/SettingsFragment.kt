@@ -6,14 +6,12 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.dev.miasnikoff.core.model.Themes
 import com.dev.miasnikoff.core.prefs.SettingsPrefsHelper
 import com.dev.miasnikoff.core_di.ViewModelFactory
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
-import com.dev.miasnikoff.core_ui.extensions.hideSoftKeyboard
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentSettingsBinding
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel

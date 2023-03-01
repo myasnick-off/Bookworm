@@ -40,9 +40,7 @@ class BookListFragment : BaseListFragment(R.layout.fragment_list) {
             navigateToDetails(itemId)
         }
 
-        override fun onItemLongClick(itemId: String) {
-            viewModel.setFavorite(itemId)
-        }
+        override fun onItemLongClick(itemId: String) {}
 
         override fun onFavoriteClick(itemId: String) {
             viewModel.setFavorite(itemId)
