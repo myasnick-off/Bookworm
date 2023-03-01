@@ -70,8 +70,8 @@ class ListInteractorTest {
             printType = null,
             mainCategory = null,
             categories = null,
-            averageRating = null,
-            ratingsCount = null,
+            averageRating = 5.0f,
+            ratingsCount = 0,
             imageLinkSmall = null,
             imageLinkLarge = null,
             language = null,
@@ -87,6 +87,7 @@ class ListInteractorTest {
             publishedDate = "",
             mainCategory = "",
             averageRating = 5.0f,
+            averageRatingTxt = "5.0",
             imageLink = null,
             language = ""
         )
@@ -247,8 +248,7 @@ class ListInteractorTest {
             `when`(localRepository.getAllHistory()).thenReturn(listOf(testBookEntity))
             val actual = listInteractor.getHistory()
 
-            verify(localRepository, times(1))
-                .getAllHistory()
+            verify(localRepository, times(1)).getAllHistory()
             assertNotNull(actual)
             assertEquals(listOf(testBookEntity), actual)
         }

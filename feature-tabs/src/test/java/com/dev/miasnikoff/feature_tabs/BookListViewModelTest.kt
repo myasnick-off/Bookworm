@@ -2,6 +2,9 @@ package com.dev.miasnikoff.feature_tabs
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
+import com.dev.miasnikoff.core.event.EventBus
+import com.dev.miasnikoff.core.event.EventBusImpl
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeDTO
 import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeInfoDTO
@@ -13,11 +16,11 @@ import com.dev.miasnikoff.feature_tabs.domain.model.OrderBy
 import com.dev.miasnikoff.feature_tabs.domain.model.QueryFields
 import com.dev.miasnikoff.feature_tabs.mock.MockDirections
 import com.dev.miasnikoff.feature_tabs.rule.MainDispatcherRule
+import com.dev.miasnikoff.feature_tabs.ui.base.ListState
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.feature_tabs.ui.list.BookListViewModel
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookItem
 import com.dev.miasnikoff.feature_tabs.ui.list.mapper.DtoToUiMapper
-import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -48,8 +51,11 @@ class BookListViewModelTest {
     @Mock
     lateinit var router: FlowRouter
 
+    //@Mock
+    lateinit var eventBus: EventBus
+
     lateinit var bookListViewModel: BookListViewModel
-    lateinit var observer: Observer<PagedListState>
+    lateinit var observer: Observer<ListState>
     private lateinit var mapper: DtoToUiMapper
     private lateinit var testVolumeResponse: VolumeResponse
     private lateinit var testBookItem: BookItem
@@ -57,8 +63,9 @@ class BookListViewModelTest {
 
     @Before
     fun setup() {
+        eventBus = EventBusImpl()
         mapper = DtoToUiMapper()
-        bookListViewModel = BookListViewModel(listInteractor, mapper, router, TEST_QUERY, null)
+        bookListViewModel = BookListViewModel(listInteractor, mapper, router, eventBus, TEST_QUERY, null)
         testVolumeResponse = VolumeResponse(
             kind = "kind",
             volumes = listOf(
@@ -83,6 +90,7 @@ class BookListViewModelTest {
             publishedDate = "",
             mainCategory = "",
             averageRating = 0.0f,
+            averageRatingTxt = "0.0",
             imageLink = null,
             language = ""
         )
@@ -93,19 +101,20 @@ class BookListViewModelTest {
             publishedDate = "",
             mainCategory = "",
             averageRating = 0.0f,
+            averageRatingTxt = "0.0",
             imageLink = null,
             language = "",
             isFavorite = true,
             favoriteIcon = 2131230832
         )
 
-        observer = Observer<PagedListState> {}
-        bookListViewModel.liveData.observeForever(observer)
+        observer = Observer<ListState> {}
+        bookListViewModel.stateFlow.asLiveData().observeForever(observer)
     }
 
     @After
     fun clear() {
-        bookListViewModel.liveData.removeObserver(observer)
+        bookListViewModel.stateFlow.asLiveData().removeObserver(observer)
     }
 
     @Test
@@ -123,7 +132,7 @@ class BookListViewModelTest {
 
     @Test
     fun `should execute interactor's getBooksList method when request data by NEWEST category`() {
-        bookListViewModel = BookListViewModel(listInteractor, mapper, router, null, Category.NEWEST)
+        bookListViewModel = BookListViewModel(listInteractor, mapper, router, eventBus, null, Category.NEWEST)
         runTest {
             verify(listInteractor, times(1)).getBooksList(
                 query = QueryFields.IN_TITLE.type,
@@ -137,7 +146,7 @@ class BookListViewModelTest {
 
     @Test
     fun `should execute interactor's getBooksList method when request data by FREE category`() {
-        bookListViewModel = BookListViewModel(listInteractor, mapper, router, null, Category.FREE)
+        bookListViewModel = BookListViewModel(listInteractor, mapper, router, eventBus, null, Category.FREE)
         runTest {
             verify(listInteractor, times(1)).getBooksList(
                 query = QueryFields.IN_TITLE.type,
@@ -162,14 +171,14 @@ class BookListViewModelTest {
                 )
             ).thenReturn(Either.Success(testVolumeResponse))
 
-            bookListViewModel.getData()
-            val expectedVal = PagedListState.Success(
+            bookListViewModel.getInitialData()
+            val expectedVal = ListState.Success(
                 data = listOf(testBookItem, testBookItemFavorite),
                 loadMore = false
             )
-            val actualVal = bookListViewModel.liveData.value as? PagedListState.Success
+            val actualVal = bookListViewModel.stateFlow.value as? ListState.Success
 
-            assertNotNull(bookListViewModel.liveData.value)
+            assertNotNull(bookListViewModel.stateFlow.value)
             assertEquals(expectedVal, actualVal)
         }
     }
@@ -187,13 +196,12 @@ class BookListViewModelTest {
                 )
             ).thenReturn(Either.Error(TEST_ERROR_MESSAGE))
 
-            bookListViewModel.getData()
-            val expectedVal = PagedListState.Failure(TEST_ERROR_MESSAGE)
-            val actualVal = bookListViewModel.liveData.value as? PagedListState.Failure
+        bookListViewModel.getDataByQuery(TEST_QUERY)
+            val expectedVal = ListState.Failure
+            val actualVal = bookListViewModel.stateFlow.value as? ListState.Failure
 
             assertNotNull(actualVal)
             assertEquals(expectedVal, actualVal)
-            assertSame(expectedVal.message, actualVal?.message)
         }
     }
 
@@ -210,7 +218,7 @@ class BookListViewModelTest {
                 )
             ).thenReturn(Either.Success(testVolumeResponse))
 
-            bookListViewModel.getData()
+            bookListViewModel.getInitialData()
             bookListViewModel.setFavorite(TEST_ID)
             verify(listInteractor, times(1)).saveInFavorite(testBookItem)
         }
@@ -229,7 +237,7 @@ class BookListViewModelTest {
                 )
             ).thenReturn(Either.Success(testVolumeResponse))
 
-            bookListViewModel.getData()
+            bookListViewModel.getInitialData()
             bookListViewModel.setFavorite(TEST_ID_FAVORITE)
             verify(listInteractor, times(1)).removeFromFavorite(testBookItemFavorite)
         }
