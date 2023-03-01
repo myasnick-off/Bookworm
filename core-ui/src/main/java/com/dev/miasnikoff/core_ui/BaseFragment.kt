@@ -23,10 +23,10 @@ abstract class BaseFragment(layoutRes: Int) : Fragment(layoutRes) {
     open val shareAction: () -> Unit = {}
     open val removeAllAction: () -> Unit = {}
 
-    val toolbar: Toolbar?
+    private val toolbar: Toolbar?
         get() = view?.findViewById(R.id.toolbar)
 
-    val collapsingToolbar: CollapsingToolbarLayout?
+    private val collapsingToolbar: CollapsingToolbarLayout?
         get() = view?.findViewById(R.id.collapsing_toolbar)
 
     open fun initMenu() {
@@ -61,7 +61,6 @@ abstract class BaseFragment(layoutRes: Int) : Fragment(layoutRes) {
                         true
                     }
                     R.id.menu_remove_selected -> {
-                        //viewModel.removeSelected()
                         true
                     }
                     R.id.menu_share -> {
@@ -69,7 +68,6 @@ abstract class BaseFragment(layoutRes: Int) : Fragment(layoutRes) {
                         true
                     }
                     R.id.menu_favorite -> {
-                        //viewModel.addToFavorite()
                         true
                     }
                     else -> false

@@ -99,11 +99,6 @@ abstract class BaseListFragment(layoutRes: Int): BaseFragment(layoutRes) {
         contentRecycler?.visibility = View.GONE
         emptyView?.visibility = View.GONE
         errorView?.visibility = View.VISIBLE
-        binding.root.showSnackBar(
-            message = getString(R.string.message_error),
-            actionText = getString(R.string.reload),
-            length = Snackbar.LENGTH_LONG,
-        ) { viewModel.getInitialData() }
     }
 
     private fun showErrorMessage() {
