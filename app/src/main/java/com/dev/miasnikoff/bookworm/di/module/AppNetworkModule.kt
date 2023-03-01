@@ -18,7 +18,7 @@ import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
 @Module
-class AppNetworkModule {
+object AppNetworkModule {
 
     @Provides
     fun retrofit(
@@ -73,8 +73,6 @@ class AppNetworkModule {
         }
     }
 
-    companion object {
-        private const val CONNECT_TIMEOUT_VALUE = 10L
-        private const val READ_TIMEOUT_VALUE = 10L
-    }
+    private const val CONNECT_TIMEOUT_VALUE = 10L
+    private const val READ_TIMEOUT_VALUE = 10L
 }

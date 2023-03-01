@@ -1,10 +1,8 @@
 package com.dev.miasnikoff.feature_tabs.ui.home
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavDirections
+import com.dev.miasnikoff.core.event.AppEvent
+import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core.extensions.addNotNull
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
@@ -12,12 +10,13 @@ import com.dev.miasnikoff.feature_tabs.data.remote.model.ImageSize
 import com.dev.miasnikoff.feature_tabs.domain.interactor.HomeDataInteractor
 import com.dev.miasnikoff.feature_tabs.domain.model.onFailure
 import com.dev.miasnikoff.feature_tabs.domain.model.onSuccess
+import com.dev.miasnikoff.feature_tabs.ui.base.BaseListViewModel
+import com.dev.miasnikoff.feature_tabs.ui.base.ListState
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.CarouselWithTitleItem
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.feature_tabs.ui.home.mapper.HomeDtoToUiMapper
 import com.dev.miasnikoff.feature_tabs.ui.home.mapper.HomeEntityToUiMapper
-import com.dev.miasnikoff.feature_tabs.ui.home.model.HomeState
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,20 +24,33 @@ class HomeViewModel @Inject constructor(
     private val interactor: HomeDataInteractor,
     private val homeDtoToUiMapper: HomeDtoToUiMapper,
     private val homeEntityToUiMapper: HomeEntityToUiMapper,
-    private val router: FlowRouter
-): ViewModel() {
-
-    private var job: Job? = null
-
-    private val _liveData: MutableLiveData<HomeState> = MutableLiveData()
-    val liveData: LiveData<HomeState> get() = _liveData
+    router: FlowRouter,
+    private val eventBus: EventBus
+) : BaseListViewModel(router) {
 
     init {
+        getInitialData()
+        handleAppEvents()
+    }
+
+    private fun handleAppEvents() {
+        viewModelScope.launch {
+            eventBus.events.collectLatest { event ->
+                when(event) {
+                    is AppEvent.HistoryUpdate -> updateHistoryList()
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    override fun getInitialData() {
+        mScreenState.value = ListState.EmptyLoading
         getHomeData()
     }
 
-    fun getHomeData() {
-        _liveData.value = HomeState.Loading
+    private fun getHomeData() {
+        job?.cancel()
         job = viewModelScope.launch {
             val homeList = mutableListOf<RecyclerItem>()
             interactor.getBookOfDay()
@@ -80,21 +92,32 @@ class HomeViewModel @Inject constructor(
                 .onFailure(::postError)
 
             if (homeList.size > 1) {
-                _liveData.value = HomeState.Success(homeList)
-            } else _liveData.value = HomeState.Failure(EMPTY_RESULT_MESSAGE)
+                mScreenState.value = ListState.Success(homeList)
+            } else mScreenState.value = ListState.Failure
         }
     }
 
-    fun navigate(direction: NavDirections) {
-        router.navigateTo(direction)
-    }
-
-    private fun postError(message: String?) {
-        _liveData.value = HomeState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
+    private fun updateHistoryList() {
+        viewModelScope.launch {
+            (screenState.value as? ListState.Success)?.let { state ->
+                val newList: MutableList<RecyclerItem> = mutableListOf()
+                newList.addAll(state.data)
+                val historyList = homeEntityToUiMapper.toItemList(interactor.getHistory())
+                val index = newList.indexOfFirst {
+                    it is CarouselWithTitleItem && it.category == Category.LAST_VIEWED
+                }
+                when {
+                    index > INVALID_INDEX && historyList.isEmpty() -> newList.removeAt(index)
+                    index > INVALID_INDEX && historyList.isNotEmpty() -> newList[index] = (newList[index] as CarouselWithTitleItem).copy(items = historyList)
+                    else -> newList.addNotNull(HISTORY_INDEX, CarouselWithTitleItem.createCarouselOfCategory(category = Category.LAST_VIEWED, items = historyList))
+                }
+                mScreenState.value = state.copy(data = newList)
+            }
+        }
     }
 
     companion object {
-        private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
-        private const val EMPTY_RESULT_MESSAGE = "Nothing found!"
+        private const val INVALID_INDEX = -1
+        private const val HISTORY_INDEX = 2
     }
 }

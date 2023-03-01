@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings">Настройки</string>
+    <string name="favorite">Избранное</string>
+    <string name="popular_genres">Популярные жанры</string>
+    <string name="last_viewed">Недавно просмотренные</string>
+    <string name="newest">Новинки</string>
+    <string name="free_books">Бесплатные книги</string>
+    <string name="profile">Профиль</string>
+    <string name="search">Поиск</string>
+
+    <string name="about_volume">О книге</string>
+    <string name="open_with">Открыть с помощью…</string>
+    <string name="browser_error">Браузер не найден!</string>
+    <string name="no_ratings">Пока нет оценок</string>
+    <string name="empty_result">Ничего не найдено!</string>
+    <string name="share_link">Поделиться ссылкой…</string>
+    <string name="messenger_error">Мессенджкр не найден!</string>
+    <string name="profile_edit">Редактировать профиль</string>
+    <string name="berth_date">Дата рождения</string>
+    <string name="view_history">История просмотров</string>
+    <string name="remove_favorites_warning">Очистить избранное?</string>
+
+
+    <plurals name="rating_count_suffix">
+        <item quantity="one">%d отзыв</item>
+        <item quantity="two">%d отзыва</item>
+        <item quantity="few">%d отзыва</item>
+        <item quantity="many">%d отзывов</item>
+        <item quantity="other">%d отзывов</item>
+    </plurals>
+</resources>

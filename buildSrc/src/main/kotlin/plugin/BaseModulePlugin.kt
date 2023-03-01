@@ -1,14 +1,16 @@
 package plugin
 
-import com.android.build.gradle.BaseExtension
+import AppVersions
+import Dependencies
 import com.android.build.gradle.AppExtension
+import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.LibraryExtension
 import org.gradle.api.JavaVersion
-import org.gradle.kotlin.dsl.dependencies
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 abstract class BaseModulePlugin : Plugin<Project> {
 

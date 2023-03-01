@@ -1,6 +1,6 @@
 package com.dev.miasnikoff.feature_tabs.data.remote
 
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeDTO
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookDTO
 import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.feature_tabs.domain.RemoteRepository
 import com.dev.miasnikoff.network.calladapter.ApiResponse
@@ -31,7 +31,7 @@ class RemoteRepositoryImpl @Inject constructor(private val apiService: ApiServic
         }
     }
 
-    override suspend fun getVolume(id: String): ApiResponse<VolumeDTO> {
+    override suspend fun getVolume(id: String): ApiResponse<BookDTO> {
         return withContext(Dispatchers.IO) {
             apiService.getVolume(volumeId = id)
         }

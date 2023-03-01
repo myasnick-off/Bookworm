@@ -1,12 +1,8 @@
 package com.dev.miasnikoff.feature_tabs.ui.profile
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.dev.miasnikoff.core.model.UserModel
 import com.dev.miasnikoff.core.prefs.UserPrefsHelper
@@ -24,12 +20,15 @@ import javax.inject.Inject
 class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     override lateinit var binding: FragmentProfileBinding
+    override val titleRes = R.string.profile
+    override val isStickyToolbar = true
+    override val hasBackButton = false
     private lateinit var userPrefsHelper: UserPrefsHelper
     private lateinit var user: UserModel
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: ProfileViewModel by viewModels { viewModelFactory }
+    override val viewModel: ProfileViewModel by viewModels { viewModelFactory }
 
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
@@ -48,6 +47,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     override fun initView() = with(binding) {
+        super.initView()
         nameText.text = user.name
         berthText.text = user.berthDate?.let { dateFormat.format(it) }
         addressText.text = user.address
@@ -63,23 +63,5 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private fun navigateToLogin() {
         viewModel.navigate(link = DeepLink.LOGIN_LINK)
-    }
-
-    private fun sendData() {
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "message/rfc822"
-            putExtra(Intent.EXTRA_TEXT, user.toString())
-        }
-        try {
-            startActivity(Intent.createChooser(intent, getString(com.dev.miasnikoff.core_ui.R.string.send_message)))
-        } catch (ex: ActivityNotFoundException) {
-            Log.e(LOG_TAG, ex.message ?: ERROR_MESSAGE)
-            Toast.makeText(requireContext(), ERROR_MESSAGE, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    companion object {
-        private const val LOG_TAG = "InfoFragment"
-        private const val ERROR_MESSAGE = "Failed to send e-mail!"
     }
 }

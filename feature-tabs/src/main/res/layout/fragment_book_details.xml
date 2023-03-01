@@ -4,38 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
     tools:context=".ui.details.BookDetailsFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/details_appbar"
+    <include layout="@layout/item_toolbar_main" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorSurface">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/details_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="top"
-                app:layout_collapseMode="pin" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/content_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_8"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_book_details_main" />
 
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/details_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_8"
-        android:clipToPadding="true"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:itemCount="3"
-        tools:listitem="@layout/item_book_details_main"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/error_image"
+        android:id="@+id/error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -44,7 +37,7 @@
         tools:visibility="visible" />
 
     <ProgressBar
-        android:id="@+id/details_loader"
+        android:id="@+id/loader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

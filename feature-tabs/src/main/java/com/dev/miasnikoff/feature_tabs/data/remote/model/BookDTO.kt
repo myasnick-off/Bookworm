@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VolumeDTO(
+data class BookDTO(
     @SerialName("id") val id: String,
     @SerialName("selfLink") val selfLink: String? = null,
-    @SerialName("volumeInfo") val volumeInfo: VolumeInfoDTO,
+    @SerialName("volumeInfo") val bookInfo: BookInfoDTO,
     val isFavorite: Boolean = false
 )

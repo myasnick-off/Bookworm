@@ -9,10 +9,8 @@ data class BookOfDayItem(
     val publisher: String,
     val publishedDate: String,
     val averageRating: Float,
+    val averageRatingTxt: String,
     val ratingsCount: Int,
-    val imageLink: String?
-    ) : RecyclerItem {
-
+    val imageLink: String?,
     val hasRating: Boolean
-        get() = averageRating > 0 && ratingsCount > 0
-    }
+) : RecyclerItem

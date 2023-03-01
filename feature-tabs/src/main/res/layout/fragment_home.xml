@@ -13,7 +13,7 @@
         android:background="?attr/colorPrimary">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/home_col_toolbar"
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|enterAlways">
@@ -26,8 +26,8 @@
                 android:layout_marginStart="@dimen/margin_12"
                 android:layout_marginEnd="@dimen/margin_36"
                 android:background="@null"
-                android:inputType="text"
                 android:hint="@string/quick_search"
+                android:inputType="text"
                 android:maxLength="100"
                 android:maxLines="1"
                 android:selectAllOnFocus="true"
@@ -49,19 +49,26 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/home_list"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingHorizontal="@dimen/margin_4"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:itemCount="4"
-        tools:listitem="@layout/item_carousel_with_title_list" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/content_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingHorizontal="@dimen/margin_4"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_carousel_with_title_list" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/error_image"
+        android:id="@+id/error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -70,7 +77,7 @@
         tools:visibility="visible" />
 
     <ProgressBar
-        android:id="@+id/home_loader"
+        android:id="@+id/loader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

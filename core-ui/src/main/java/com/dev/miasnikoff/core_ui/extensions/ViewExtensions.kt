@@ -1,14 +1,18 @@
 package com.dev.miasnikoff.core_ui.extensions
 
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.res.Configuration
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Property
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.annotation.PluralsRes
 import androidx.core.content.getSystemService
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
@@ -37,6 +41,7 @@ fun View.hideSoftKeyboard() {
 fun View.getLocalizedQuantityString(
     @PluralsRes id: Int,
     quantity: Int,
+    vararg formatArgs: Any,
     locale: Locale = Locale("ru")
 ): String {
     return runCatching {
@@ -44,6 +49,16 @@ fun View.getLocalizedQuantityString(
         val configuration = Configuration(resources.configuration)
         configuration.setLocale(locale)
         resources = context.createConfigurationContext(configuration).resources
-        resources.getQuantityString(id, quantity)
+        resources.getQuantityString(id, quantity, *formatArgs)
     }.getOrDefault("")
+}
+
+fun ImageView.setImageById(imageRes: Int) {
+    setImageDrawable(ResourcesCompat.getDrawable(context.resources, imageRes, context.theme))
+}
+
+fun View.createObjectAnimator(property: Property<View, Float>, animDuration: Long): ObjectAnimator =
+    ObjectAnimator.ofFloat(this, property, 0f, 1f).apply {
+        duration = animDuration
+        start()
 }

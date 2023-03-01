@@ -16,7 +16,6 @@ class HomeEntityToUiMapper @Inject constructor(): BaseUiDataMapper<BookEntity>()
             id = item.id,
             title = item.title.orEmpty(),
             authors = item.authors.orEmpty(),
-            averageRating = item.averageRating ?: 0f,
             imageLink = item.imageLinkSmall
         )
 
@@ -27,10 +26,12 @@ class HomeEntityToUiMapper @Inject constructor(): BaseUiDataMapper<BookEntity>()
                 title = item.title.orEmpty(),
                 authors = item.authors.orEmpty(),
                 publisher = item.publisher.orEmpty(),
-                publishedDate = item.publishedDate.orEmpty().customDateFormat("dd MMMM yyyy"),
-                averageRating = item.averageRating ?: 0f,
-                ratingsCount = item.ratingsCount ?: 0,
-                imageLink = item.imageLinkLarge
+                publishedDate = item.publishedDate.orEmpty().customDateFormat(DATE_FORMAT),
+                averageRating = item.averageRating,
+                averageRatingTxt = String.format(FLOAT_FORMAT, item.averageRating),
+                ratingsCount = item.ratingsCount,
+                imageLink = item.imageLinkLarge,
+                hasRating = item.ratingsCount > 0
             )
         }
 }

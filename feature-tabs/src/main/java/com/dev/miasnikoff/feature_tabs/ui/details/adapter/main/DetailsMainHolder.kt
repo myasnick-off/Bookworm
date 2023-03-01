@@ -4,6 +4,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dev.miasnikoff.core_ui.extensions.getLocalizedQuantityString
+import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.ItemBookDetailsMainBinding
 
 class DetailsMainHolder(private val binding: ItemBookDetailsMainBinding) :
@@ -16,12 +17,13 @@ class DetailsMainHolder(private val binding: ItemBookDetailsMainBinding) :
         ratingBar.rating = item.averageRating
         bookRating.apply {
             isVisible = item.hasRating
-            text = item.averageRating.toString()
+            text = item.averageRatingTxt
         }
         bookRatingCount.text = if (item.hasRating) root.getLocalizedQuantityString(
-            com.dev.miasnikoff.core_ui.R.plurals.rating_count_suffix,
+            R.plurals.rating_count_suffix,
+            item.ratingsCount,
             item.ratingsCount
-        ) else root.context.getString(com.dev.miasnikoff.core_ui.R.string.no_ratings)
+        ) else root.context.getString(R.string.no_ratings)
 
         Glide.with(bookImage.context)
             .load(item.imageLink)

@@ -1,34 +1,35 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
-import androidx.lifecycle.*
-import androidx.navigation.NavDirections
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.dev.miasnikoff.core.event.AppEvent
+import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
+import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.domain.interactor.ListInteractor
 import com.dev.miasnikoff.feature_tabs.domain.model.*
+import com.dev.miasnikoff.feature_tabs.ui.base.BaseListViewModel
+import com.dev.miasnikoff.feature_tabs.ui.base.ListState
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel.Category
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookItem
 import com.dev.miasnikoff.feature_tabs.ui.list.mapper.DtoToUiMapper
-import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class BookListViewModel @Inject constructor(
     private val interactor: ListInteractor,
     private val dtoToUiMapper: DtoToUiMapper,
-    private val router: FlowRouter,
+    router: FlowRouter,
+    private val eventBus: EventBus,
     private val query: String?,
     private val category: Category?
-) : ViewModel() {
-
-    private var job: Job? = null
-
-    private val _liveData: MutableLiveData<PagedListState> = MutableLiveData()
-    val liveData: LiveData<PagedListState> get() = _liveData
+) : BaseListViewModel(router) {
 
     private var currentList: MutableList<RecyclerItem> = mutableListOf()
     private var startIndex: Int = DEFAULT_START_INDEX
@@ -37,10 +38,22 @@ class BookListViewModel @Inject constructor(
     private var orderBy: String? = null
 
     init {
-        getData()
+        getInitialData()
+        handleAppEvents()
     }
 
-    fun getData() {
+    private fun handleAppEvents() {
+        viewModelScope.launch {
+            eventBus.events.collectLatest { event ->
+                when (event) {
+                    is AppEvent.FavoriteUpdate -> updateBookList()
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    override fun getInitialData() {
         if (query.isNullOrEmpty()) {
             when (category) {
                 Category.NEWEST -> {
@@ -60,97 +73,89 @@ class BookListViewModel @Inject constructor(
         loadInitialPage()
     }
 
-    fun getData(query: String) {
+    fun getDataByQuery(query: String) {
         currentQuery = query
         loadInitialPage()
     }
 
     private fun loadInitialPage() {
-        _liveData.value = PagedListState.Loading
+        mScreenState.value = ListState.EmptyLoading
+        startIndex = DEFAULT_START_INDEX
         currentList.clear()
-        getVolumeList()
+        getBookList()
     }
 
     fun loadNextPage() {
-        _liveData.value = PagedListState.MoreLoading
-        getVolumeList()
+        mScreenState.value = ListState.Loading
+        getBookList()
     }
 
-    private fun getVolumeList() {
-        if (liveData.value !is PagedListState.Success) {
-            job?.cancel()
-            job = viewModelScope.launch {
-                interactor.getBooksList(
-                    query = currentQuery,
-                    filter = filter,
-                    orderBy = orderBy,
-                    startIndex = startIndex,
-                    maxResults = DEFAULT_MAX_VALUES
-                )
-                    .onSuccess { volumeResponse ->
-                        _liveData.value = volumeResponse.volumes?.let { volumesDTO ->
-                            startIndex += DEFAULT_MAX_VALUES
-                            val newList = mutableListOf<RecyclerItem>().apply {
-                                addAll((currentList + dtoToUiMapper.toItemList(volumesDTO)).distinctBy { it.id })
-                            }
-                            currentList = newList
-                            PagedListState.Success(currentList, newList.size < volumeResponse.totalItems)
-                        } ?: if (currentList.isEmpty()) {
-                            PagedListState.Failure(EMPTY_RESULT_MESSAGE)
-                        } else {
-                            PagedListState.Success(currentList, false)
+    private fun getBookList() {
+        job?.cancel()
+        job = viewModelScope.launch {
+            interactor.getBooksList(
+                query = currentQuery,
+                filter = filter,
+                orderBy = orderBy,
+                startIndex = startIndex,
+                maxResults = DEFAULT_MAX_VALUES
+            )
+                .onSuccess { volumeResponse ->
+                    mScreenState.value = volumeResponse.volumes?.let { booksDTO ->
+                        startIndex += DEFAULT_MAX_VALUES
+                        val newList = mutableListOf<RecyclerItem>().apply {
+                            addAll((currentList + dtoToUiMapper.toItemList(booksDTO)).distinctBy { it.id })
                         }
-                    }
-                    .onFailure { message ->
-                        _liveData.value = PagedListState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
-                    }
-
-            }
-        }
-    }
-
-    fun setFavorite(itemId: String) {
-        viewModelScope.launch {
-            val newList: MutableList<RecyclerItem> = mutableListOf()
-            val currentState = liveData.value as? PagedListState.Success
-            currentState?.let { state ->
-                newList.addAll(state.data)
-                val index = newList.indexOfFirst { it.id == itemId }
-                val bookItem = (newList.firstOrNull { it.id == itemId } as? BookItem)
-                if (index > -1 && bookItem != null) {
-                    newList[index] = if (bookItem.isFavorite) {
-                        interactor.removeFromFavorite(bookItem)
-                        bookItem.copy(
-                            isFavorite = false,
-                            favoriteIcon = com.dev.miasnikoff.core_ui.R.drawable.ic_bookmark_border_24
-                        )
-                    } else {
-                        interactor.saveInFavorite(bookItem)
-                        bookItem.copy(
-                            isFavorite = true,
-                            favoriteIcon = com.dev.miasnikoff.core_ui.R.drawable.ic_bookmark_24
-                        )
-                    }
+                        currentList = newList
+                        if (newList.isEmpty()) ListState.Empty
+                        else ListState.Success(newList, newList.size < volumeResponse.totalItems)
+                    } ?: if (currentList.isEmpty()) ListState.Empty
+                    else ListState.Success(currentList, false)
                 }
-                currentList = newList
-                _liveData.value = state.copy(data = currentList)
+                .onFailure(::postError)
+        }
+    }
+
+    fun setFavorite(itemId: String?) {
+        viewModelScope.launch {
+            (screenState.value as? ListState.Success)?.let { state ->
+                val bookItem = (state.data.firstOrNull { it.id == itemId } as? BookItem)
+                bookItem?.let {
+                    when (bookItem.isFavorite) {
+                        true -> interactor.removeFromFavorite(bookItem)
+                        false -> interactor.saveInFavorite(bookItem)
+                    }
+                    eventBus.emitEvent(AppEvent.FavoriteUpdate(itemId))
+                }
             }
         }
     }
 
-    fun navigate(direction: NavDirections) {
-        router.navigateTo(direction)
-    }
-
-    fun back() {
-        router.back()
+    private fun updateBookList() {
+        viewModelScope.launch {
+        val newList: MutableList<RecyclerItem> = mutableListOf()
+        (screenState.value as? ListState.Success)?.let { state ->
+            mScreenState.value = ListState.Loading
+            val favoriteList = interactor.getFavorite()
+            state.data.forEach { book ->
+                val index = favoriteList.indexOfFirst { favorite -> book.id == favorite.id }
+                when {
+                    index > -1 && (book as BookItem).isFavorite.not() ->
+                        newList.add(book.copy(isFavorite = true, favoriteIcon = R.drawable.ic_bookmark_24))
+                    index == -1 && (book as BookItem).isFavorite ->
+                        newList.add(book.copy(isFavorite = false, favoriteIcon = R.drawable.ic_bookmark_border_24))
+                    else -> newList.add(book)
+                }
+            }
+            currentList = newList
+            mScreenState.value = state.copy(data = currentList)
+            }
+        }
     }
 
     companion object {
         private const val DEFAULT_START_INDEX = 0
         private const val DEFAULT_MAX_VALUES = 20
-        private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
-        private const val EMPTY_RESULT_MESSAGE = "Nothing found!"
     }
 }
 
@@ -159,12 +164,13 @@ class BookListViewModelFactory @AssistedInject constructor(
     private val interactor: ListInteractor,
     private val dtoToUiMapper: DtoToUiMapper,
     private val router: FlowRouter,
+    private val eventBus: EventBus,
     @Assisted private val query: String?,
     @Assisted private val category: Category?
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         assert(modelClass == BookListViewModel::class.java)
-        return BookListViewModel(interactor, dtoToUiMapper, router, query, category) as T
+        return BookListViewModel(interactor, dtoToUiMapper, router, eventBus, query, category) as T
     }
 }
 

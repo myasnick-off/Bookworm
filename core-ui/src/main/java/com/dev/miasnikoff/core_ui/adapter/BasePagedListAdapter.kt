@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class BasePagedListAdapter(
     diffUtilItemCallback: DiffUtil.ItemCallback<RecyclerItem> = BaseDiffUtilItemCallback(),
-    private val pageListener: PageListener,
+    private val pageListener: PageListener?,
     vararg cells: Cell<RecyclerItem>
 ) : BaseListAdapter(diffUtilItemCallback, *cells) {
 
@@ -20,7 +20,7 @@ abstract class BasePagedListAdapter(
         super.onBindViewHolder(holder, position)
         if (loadMore && (position + ITEMS_LEFT) >= itemCount) {
             loadMore = false
-            pageListener.loadNextPage()
+            pageListener?.loadNextPage()
         }
     }
 

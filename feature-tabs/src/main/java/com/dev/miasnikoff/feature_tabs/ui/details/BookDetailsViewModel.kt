@@ -1,55 +1,97 @@
 package com.dev.miasnikoff.feature_tabs.ui.details
 
-import androidx.lifecycle.*
-import androidx.navigation.NavDirections
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.dev.miasnikoff.core.event.AppEvent
+import com.dev.miasnikoff.core.event.EventBus
 import com.dev.miasnikoff.core_navigation.router.FlowRouter
 import com.dev.miasnikoff.feature_tabs.domain.interactor.DetailsInteractor
 import com.dev.miasnikoff.feature_tabs.domain.model.onFailure
 import com.dev.miasnikoff.feature_tabs.domain.model.onSuccess
+import com.dev.miasnikoff.feature_tabs.ui.base.BaseListViewModel
+import com.dev.miasnikoff.feature_tabs.ui.base.ListState
+import com.dev.miasnikoff.feature_tabs.ui.details.adapter.controls.BookControlsItem
 import com.dev.miasnikoff.feature_tabs.ui.details.mapper.BookDetailsToListMapper
-import com.dev.miasnikoff.feature_tabs.ui.details.model.DetailsState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class BookDetailsViewModel @AssistedInject constructor(
     private val interactor: DetailsInteractor,
-    private val router: FlowRouter,
+    router: FlowRouter,
     private val mapper: BookDetailsToListMapper,
+    private val eventBus: EventBus,
     private val bookId: String
-) : ViewModel() {
-
-    private var _liveData: MutableLiveData<DetailsState> = MutableLiveData()
-    val liveData: LiveData<DetailsState> get() = _liveData
+) : BaseListViewModel(router) {
 
     init {
+        getInitialData()
+        handleAppEvents()
+    }
+
+    private fun handleAppEvents() {
+        viewModelScope.launch {
+            eventBus.events.collectLatest { event ->
+                when(event) {
+                    is AppEvent.FavoriteUpdate -> updateDetails(event.bookId)
+                    else -> {}
+                }
+            }
+        }
+    }
+    override fun getInitialData() {
+        mScreenState.value = ListState.EmptyLoading
         getDetails()
     }
 
-    fun getDetails() {
-        _liveData.value = DetailsState.Loading
-        viewModelScope.launch {
+    private fun getDetails() {
+        job?.cancel()
+        job = viewModelScope.launch {
             interactor.getDetails(bookId)
                 .onSuccess { details ->
-                    _liveData.value = DetailsState.Success(mapper.toList(details))
+                    mScreenState.value = ListState.Success(mapper.toList(details))
+                    eventBus.emitEvent(AppEvent.HistoryUpdate(bookId))
                 }
-                .onFailure { message ->
-                    _liveData.value = DetailsState.Failure(message ?: DEFAULT_ERROR_MESSAGE)
+                .onFailure {
+                    mScreenState.value = ListState.Failure
                 }
         }
     }
 
-    fun navigate(direction: NavDirections) {
-        router.navigateTo(direction)
+    fun setFavorite() {
+        viewModelScope.launch {
+            (screenState.value as? ListState.Success)?.let {
+                interactor.checkFavorite(bookId)
+                    .onSuccess {
+                        eventBus.emitEvent(AppEvent.FavoriteUpdate(bookId))
+                    }
+                    .onFailure {
+                        mScreenState.value = ListState.Failure
+                    }
+            }
+        }
     }
 
-    fun back() {
-        router.back()
+    private fun updateDetails(bookId: String?) {
+        if (bookId != null && bookId == this.bookId) {
+            viewModelScope.launch {
+                interactor.getDetails(bookId)
+                    .onSuccess { details ->
+                        mScreenState.value = ListState.Success(mapper.toList(details))
+                    }
+                    .onFailure(::postError)
+            }
+        }
     }
 
-    companion object {
-        private const val DEFAULT_ERROR_MESSAGE = "Unknown error!"
+    fun getBookUrl(): String? {
+        return (screenState.value as? ListState.Success)?.let { state ->
+            val item = state.data.firstOrNull { it is BookControlsItem } as BookControlsItem?
+            item?.previewLink
+        }
     }
 }
 
@@ -58,11 +100,12 @@ class BookDetailsViewModelFactory @AssistedInject constructor(
     private val interactor: DetailsInteractor,
     private val router: FlowRouter,
     private val mapper: BookDetailsToListMapper,
+    private val eventBus: EventBus,
     @Assisted private val bookId: String
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         assert(modelClass == BookDetailsViewModel::class.java)
-        return BookDetailsViewModel(interactor, router, mapper, bookId) as T
+        return BookDetailsViewModel(interactor, router, mapper, eventBus, bookId) as T
     }
 }
 

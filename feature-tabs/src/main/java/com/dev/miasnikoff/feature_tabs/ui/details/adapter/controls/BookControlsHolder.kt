@@ -1,8 +1,8 @@
 package com.dev.miasnikoff.feature_tabs.ui.details.adapter.controls
 
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.dev.miasnikoff.core_ui.extensions.setImageById
 import com.dev.miasnikoff.feature_tabs.databinding.ItemBookControlsBinding
 
 
@@ -13,14 +13,16 @@ class BookControlsHolder(
 
     fun bind(item: BookControlsItem) = with(binding) {
         favoriteButton.apply {
-            setImageDrawable(
-                ResourcesCompat.getDrawable(context.resources, item.favoriteIcon, context.theme)
-            )
+            setImageById(item.favoriteIcon)
             setOnClickListener { controlsClickListener.onFavoriteClick() }
         }
         previewButton.apply {
             isVisible = item.isPreviewVisible
             setOnClickListener { controlsClickListener.onPreviewClick(item.previewLink) }
         }
+    }
+
+    fun updateFavoriteButton(iconRes: Int) {
+        binding.favoriteButton.setImageById(iconRes)
     }
 }

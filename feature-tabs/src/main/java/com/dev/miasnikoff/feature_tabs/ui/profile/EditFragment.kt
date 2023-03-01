@@ -3,7 +3,6 @@ package com.dev.miasnikoff.feature_tabs.ui.profile
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.activity.addCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -13,10 +12,11 @@ import com.dev.miasnikoff.core.prefs.UserPrefsHelper
 import com.dev.miasnikoff.core_di.ViewModelFactory
 import com.dev.miasnikoff.core_navigation.viewModel
 import com.dev.miasnikoff.core_ui.BaseFragment
+import com.dev.miasnikoff.core_ui.extensions.hideSoftKeyboard
+import com.dev.miasnikoff.core_ui.extensions.showDatePickerDialog
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentEditBinding
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
-import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -24,6 +24,8 @@ import javax.inject.Inject
 class EditFragment : BaseFragment(R.layout.fragment_edit) {
 
     override lateinit var binding: FragmentEditBinding
+    override val titleRes = R.string.profile_edit
+    override val isStickyToolbar = true
     private lateinit var userPrefsHelper: UserPrefsHelper
 
     private val args: EditFragmentArgs by navArgs()
@@ -31,7 +33,7 @@ class EditFragment : BaseFragment(R.layout.fragment_edit) {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private val viewModel: EditViewModel by viewModels { viewModelFactory }
+    override val viewModel: EditViewModel by viewModels { viewModelFactory }
 
     override fun onAttach(context: Context) {
         viewModel<TabsFeatureComponentViewModel>().component.inject(this)
@@ -45,13 +47,11 @@ class EditFragment : BaseFragment(R.layout.fragment_edit) {
         initView()
         initMenu()
         initViewModel()
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            viewModel.back()
-        }
     }
 
     override fun initView() = with(binding) {
-        root.setOnClickListener { hideSoftKeyboard() }
+        super.initView()
+        root.setOnClickListener { root.hideSoftKeyboard() }
         nameEditText.setText(args.user.name)
         nameEditText.doOnTextChanged { _, _, _, _ ->
             nameInputLayout.isErrorEnabled = false
@@ -70,11 +70,11 @@ class EditFragment : BaseFragment(R.layout.fragment_edit) {
         }
         berthInputLayout.setStartIconOnClickListener {
             berthInputLayout.isErrorEnabled = false
-            hideSoftKeyboard()
-            showDatePickerDialog()
+            root.hideSoftKeyboard()
+            showDatePickerDialog(R.string.berth_date) { date -> setBerthDate(date) }
         }
         saveButton.setOnClickListener {
-            hideSoftKeyboard()
+            root.hideSoftKeyboard()
             val hasNoErrors = viewModel.checkFields(
                 name = binding.nameEditText.text,
                 date = binding.berthEditText.text,
@@ -108,18 +108,6 @@ class EditFragment : BaseFragment(R.layout.fragment_edit) {
             error = getString(field.messageResId)
             isErrorEnabled = true
         }
-    }
-
-    private fun showDatePickerDialog() {
-        val datePickerDialog = MaterialDatePicker.Builder
-            .datePicker()
-            .setTitleText(getString(com.dev.miasnikoff.core_ui.R.string.berth_date))
-            .setSelection(MaterialDatePicker.thisMonthInUtcMilliseconds())
-            .build()
-        datePickerDialog.addOnPositiveButtonClickListener {
-            datePickerDialog.selection?.let { date -> setBerthDate(date) }
-        }
-        datePickerDialog.show(parentFragmentManager, null)
     }
 
     private fun setBerthDate(date: Long) {

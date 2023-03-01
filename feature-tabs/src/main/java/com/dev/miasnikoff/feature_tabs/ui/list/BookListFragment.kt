@@ -1,47 +1,37 @@
 package com.dev.miasnikoff.feature_tabs.ui.list
 
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.activity.addCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
 import com.dev.miasnikoff.core_navigation.viewModel
-import com.dev.miasnikoff.core_ui.BaseFragment
 import com.dev.miasnikoff.core_ui.adapter.BasePagedListAdapter
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
-import com.dev.miasnikoff.core_ui.extensions.showSnackBar
+import com.dev.miasnikoff.core_ui.extensions.createObjectAnimator
 import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.databinding.FragmentListBinding
 import com.dev.miasnikoff.feature_tabs.di.TabsFeatureComponentViewModel
+import com.dev.miasnikoff.feature_tabs.ui.base.BaseListFragment
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookCell
 import com.dev.miasnikoff.feature_tabs.ui.list.adapter.BookListAdapter
-import com.dev.miasnikoff.feature_tabs.ui.list.model.PagedListState
 import com.dev.miasnikoff.feature_tabs.ui.search.SearchClickListener
 import com.dev.miasnikoff.feature_tabs.ui.search.SearchDialogFragment
-import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
-class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
+class BookListFragment : BaseListFragment(R.layout.fragment_list) {
 
     override lateinit var binding: FragmentListBinding
-
     private val args: BookListFragmentArgs by navArgs()
+
+    override val titleRes: Int?
+        get() = if (args.query.isNullOrEmpty()) args.category.titleRes else null
 
     @Inject
     lateinit var viewModelFactory: BookListViewModelAssistedFactory
-    private val viewModel: BookListViewModel by viewModels {
+    override val viewModel: BookListViewModel by viewModels {
         viewModelFactory.create(args.query, args.category)
     }
 
@@ -50,11 +40,7 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
             navigateToDetails(itemId)
         }
 
-        override fun onItemLongClick(itemId: String) {
-            //todo: change toast to real action
-            Toast.makeText(context, "Made long click on item with id #$itemId", Toast.LENGTH_SHORT)
-                .show()
-        }
+        override fun onItemLongClick(itemId: String) {}
 
         override fun onFavoriteClick(itemId: String) {
             viewModel.setFavorite(itemId)
@@ -81,43 +67,26 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
         binding = FragmentListBinding.bind(view)
         initView()
         initMenu()
-        initPresenter()
-    }
-
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return when(menuItem.itemId) {
-            android.R.id.home -> {
-                viewModel.back()
-                true
-            }
-            else -> false
-        }
+        initViewModel()
     }
 
     override fun initView() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            viewModel.back()
-        }
-        binding.volumeList.adapter = bookListAdapter
-        val animScaleX = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_X, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
-        val animScaleY = ObjectAnimator.ofFloat(binding.listFab, View.SCALE_Y, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
-        val animAlpha = ObjectAnimator.ofFloat(binding.listFab, View.ALPHA, 0f, 1f).apply {
-            duration = FAB_ANIMATION_DURATION
-            start()
-        }
+        super.initView()
+        binding.contentRecycler.adapter = bookListAdapter
+        binding.contentRecycler.itemAnimator = null
+        initFab()
+    }
+
+
+    private fun initFab() = with(binding) {
+        val animScaleX = listFab.createObjectAnimator(View.SCALE_X, FAB_ANIMATION_DURATION)
+        val animScaleY = listFab.createObjectAnimator(View.SCALE_Y, FAB_ANIMATION_DURATION)
+        val animAlpha = listFab.createObjectAnimator(View.ALPHA, FAB_ANIMATION_DURATION)
         fabAnimSet = AnimatorSet().apply {
             playTogether(animScaleX, animScaleY, animAlpha)
             start()
         }
-        binding.listFab.setOnClickListener {
+        listFab.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 fabAnimSet?.reverse()
             }
@@ -125,20 +94,11 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
         }
     }
 
-    override fun initMenu() {
-        (requireActivity() as AppCompatActivity).apply {
-            setSupportActionBar(binding.listToolbar)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        }
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
     private fun showSearchDialog() {
         SearchDialogFragment.newInstance().apply {
             setOnSearchClickListener(object : SearchClickListener {
                 override fun onSearchClick(phrase: String) {
-                    viewModel.getData(query = phrase)
+                    viewModel.getDataByQuery(query = phrase)
                 }
 
                 override fun onDialogDismiss() {
@@ -148,47 +108,8 @@ class BookListFragment : BaseFragment(R.layout.fragment_list), MenuProvider {
         }.show(parentFragmentManager, null)
     }
 
-    private fun initPresenter() {
-        viewModel.liveData.observe(viewLifecycleOwner, ::renderState)
-    }
-
-    private fun renderState(state: PagedListState) {
-        when (state) {
-            is PagedListState.Loading -> showLoading()
-            is PagedListState.MoreLoading -> showMoreLoading()
-            is PagedListState.Failure -> showError(state.message)
-            is PagedListState.Success -> showData(state.data, state.loadMore)
-        }
-    }
-
-    private fun showLoading() {
-        binding.listLoader.visibility = View.VISIBLE
-        binding.errorImage.visibility = View.GONE
-        binding.volumeList.visibility = View.GONE
-    }
-
-    private fun showMoreLoading() {
-        binding.listLoader.visibility = View.VISIBLE
-        binding.volumeList.visibility = View.VISIBLE
-        binding.errorImage.visibility = View.GONE
-    }
-
-    private fun showData(volumes: List<RecyclerItem>, loadMore: Boolean) {
-        binding.listLoader.visibility = View.GONE
-        binding.errorImage.visibility = View.GONE
-        binding.volumeList.visibility = View.VISIBLE
-        bookListAdapter.updateList(volumes, loadMore)
-    }
-
-    private fun showError(message: String) {
-        binding.listLoader.visibility = View.GONE
-        binding.volumeList.visibility = View.GONE
-        binding.errorImage.visibility = View.VISIBLE
-        binding.root.showSnackBar(
-            message = "${getString(com.dev.miasnikoff.core_ui.R.string.error)} $message",
-            actionText = getString(com.dev.miasnikoff.core_ui.R.string.reload),
-            length = Snackbar.LENGTH_LONG,
-        ) { viewModel.getData() }
+     override fun updateList(data: List<RecyclerItem>, loadMore: Boolean) {
+        bookListAdapter.updateList(data, loadMore)
     }
 
     private fun navigateToDetails(bookId: String) {

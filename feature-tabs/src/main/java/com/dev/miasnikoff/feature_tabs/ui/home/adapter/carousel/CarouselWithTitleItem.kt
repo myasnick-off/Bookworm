@@ -2,6 +2,7 @@ package com.dev.miasnikoff.feature_tabs.ui.home.adapter.carousel
 
 import android.os.Parcelable
 import com.dev.miasnikoff.core_ui.adapter.RecyclerItem
+import com.dev.miasnikoff.feature_tabs.R
 import com.dev.miasnikoff.feature_tabs.ui.home.adapter.genre.GenreItem
 import kotlinx.parcelize.Parcelize
 
@@ -31,10 +32,10 @@ data class CarouselWithTitleItem(
 
 @Parcelize
 enum class Category(val titleRes: Int) : Parcelable {
-    POP_GENRES(titleRes = com.dev.miasnikoff.core_ui.R.string.popular_genres),
-    LAST_VIEWED(titleRes = com.dev.miasnikoff.core_ui.R.string.last_viewed),
-    NEWEST(titleRes = com.dev.miasnikoff.core_ui.R.string.newest),
-    FREE(titleRes = com.dev.miasnikoff.core_ui.R.string.free_books),
-    FAVORITE(titleRes = com.dev.miasnikoff.core_ui.R.string.favorite),
+    POP_GENRES(titleRes = R.string.popular_genres),
+    LAST_VIEWED(titleRes = R.string.last_viewed),
+    NEWEST(titleRes = R.string.newest),
+    FREE(titleRes = R.string.free_books),
+    FAVORITE(titleRes = R.string.favorite),
     NONE(titleRes = -1);
 }

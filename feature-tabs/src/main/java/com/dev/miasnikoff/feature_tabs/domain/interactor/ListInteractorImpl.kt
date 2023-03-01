@@ -1,7 +1,7 @@
 package com.dev.miasnikoff.feature_tabs.domain.interactor
 
 import com.dev.miasnikoff.feature_tabs.data.local.BookEntity
-import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeDTO
+import com.dev.miasnikoff.feature_tabs.data.remote.model.BookDTO
 import com.dev.miasnikoff.feature_tabs.data.remote.model.VolumeResponse
 import com.dev.miasnikoff.feature_tabs.domain.LocalRepository
 import com.dev.miasnikoff.feature_tabs.domain.RemoteRepository
@@ -34,7 +34,7 @@ class ListInteractorImpl @Inject constructor(
             maxResults = maxResults
         )
         val favoriteList = localRepository.getAllFavorite()
-        val resultList = mutableListOf<VolumeDTO>()
+        val resultList = mutableListOf<BookDTO>()
         return when (response) {
             is ApiResponse.Success -> {
                 response.data.volumes?.let { books ->

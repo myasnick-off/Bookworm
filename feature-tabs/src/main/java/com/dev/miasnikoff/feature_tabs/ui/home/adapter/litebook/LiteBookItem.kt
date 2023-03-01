@@ -6,6 +6,5 @@ data class LiteBookItem(
     override val id: String,
     val title: String,
     val authors: String,
-    val averageRating: Float,
     val imageLink: String?,
     ) : RecyclerItem

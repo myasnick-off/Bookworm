@@ -14,9 +14,8 @@ class DetailsInteractor @Inject constructor(
     private val mapper: BookDetailsMapper,
 ) {
     suspend fun getDetails(bookId: String): Either<BookDetails> {
-        val detailsEntity = localRepository.getBook(bookId)
         var inFavorite = false
-        if (detailsEntity != null) {
+        localRepository.getBook(bookId)?.let { detailsEntity ->
             if (detailsEntity.inHistory) {
                 return Either.Success(data = mapper.fromEntity(detailsEntity))
             }
@@ -30,5 +29,14 @@ class DetailsInteractor @Inject constructor(
             }
             is ApiResponse.Failure -> { Either.Error(message = response.message)}
         }
+    }
+
+    suspend fun checkFavorite(bookId: String): Either<Boolean> {
+        localRepository.getBook(bookId)?.let { detailsEntity ->
+            val newDetailsEntity = detailsEntity.copy(inFavorite = !detailsEntity.inFavorite)
+            localRepository.saveBook(newDetailsEntity)
+            return Either.Success(data = true)
+        }
+        return Either.Error()
     }
 }

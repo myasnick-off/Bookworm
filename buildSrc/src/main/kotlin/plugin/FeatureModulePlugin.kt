@@ -42,6 +42,7 @@ class FeatureModulePlugin : BaseModulePlugin() {
             add("implementation", Dependencies.ANDROID_MATERIAL)
             add("implementation", Dependencies.FRAGMENT_KTX)
             add("implementation", Dependencies.CONSTRAINT_LAYOUT)
+            add("implementation", Dependencies.SWIPE_REFRESH)
 
             //Lifecycle and ViewModel
             add("implementation", Dependencies.LIVECYCLE_LIVEDATA)
