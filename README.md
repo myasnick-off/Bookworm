@@ -16,4 +16,11 @@ Bookworm - это приложение на базе Google Books API, пред�
 * Navigation Component  
 * Glide
 -------------------
-![photo_2023-02-28_20-46-06__1_](/uploads/d727fff715c2439089d216f55bf57a6e/photo_2023-02-28_20-46-06__1_.jpg)  ![photo_2023-02-28_20-46-03__1_](/uploads/1bd92ae0d578a78c9ba5a06f08760bfb/photo_2023-02-28_20-46-03__1_.jpg)  ![photo_2023-02-28_20-46-08](/uploads/9043043d7fb58aafd91a6f97a74789fa/photo_2023-02-28_20-46-08.jpg)  ![photo_2023-02-28_20-45-55](/uploads/3e26c082ad19804289ad2ff16822ceae/photo_2023-02-28_20-45-55.jpg)  ![photo_2023-02-28_20-46-15](/uploads/b2c53fade2c2a57b851ae351de612063/photo_2023-02-28_20-46-15.jpg)  ![photo_2023-02-28_20-45-51](/uploads/8296e372d3447f888b7e3a3500c1b0d2/photo_2023-02-28_20-45-51.jpg)  ![photo_2023-02-28_20-46-19](/uploads/bbfb16ed5f87547ba0437a04b1550153/photo_2023-02-28_20-46-19.jpg)  ![photo_2023-02-28_20-46-23](/uploads/53c9a6a05b762cbe62277401f4f5bc08/photo_2023-02-28_20-46-23.jpg)
+![photo_2023-02-28_20-46-06 (1)](https://user-images.githubusercontent.com/85755027/229359479-f17f704f-6ba8-45d0-9370-7baa55d776d6.jpg) ![photo_2023-02-28_20-46-03 (1)](https://user-images.githubusercontent.com/85755027/229359494-959baf71-257a-4cc2-9e0c-989381db8750.jpg) ![photo_2023-02-28_20-46-08](https://user-images.githubusercontent.com/85755027/229359519-85746070-dea3-413a-a35b-8004eaa1c2e8.jpg) ![photo_2023-02-28_20-46-15](https://user-images.githubusercontent.com/85755027/229359537-6ac43689-a6ef-4168-ab82-a3488bfa89dc.jpg) ![photo_2023-02-28_20-45-55](https://user-images.githubusercontent.com/85755027/229359567-6718e3b7-f595-47f8-9861-ecadf4534e3b.jpg) ![photo_2023-02-28_20-45-51](https://user-images.githubusercontent.com/85755027/229359586-95bc2e84-aaec-4bfc-ba5a-f7ccd4b00300.jpg) ![photo_2023-02-28_20-46-23](https://user-images.githubusercontent.com/85755027/229359600-890c32c9-40b4-4e4e-9ed2-4b2723ba460b.jpg) ![photo_2023-02-28_20-46-19](https://user-images.githubusercontent.com/85755027/229359613-90e5055a-7f4a-4db1-b838-47969240dca8.jpg)
+
+
+
+
+
+
+
